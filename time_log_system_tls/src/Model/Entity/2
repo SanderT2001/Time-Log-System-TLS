@@ -1,0 +1,195 @@
+<?php
+namespace App\Controller;
+
+use App\Controller\AppController;
+use Cake\I18n\Time;
+
+/**
+ * Logs Controller
+ *
+ * @property \App\Model\Table\LogsTable $Logs
+ *
+ * @method \App\Model\Entity\Log[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ */
+class LogsController extends AppController
+{
+
+    /**
+     * Index method
+     *
+     * @return \Cake\Http\Response|void
+     */
+    public function index()
+    {
+        $this->paginate = [
+            'contain' => ['Projects', 'Assignments', 'Others']
+        ];
+		$logs = $this->paginate($this->Logs);
+
+		$projects = $this->Logs->Projects->find('list');
+        $assignments = $this->Logs->Assignments->find('list');
+		$others = $this->Logs->Others->find('list');	
+
+		$this->set(compact('logs', 'projects', 'assignments', 'others'));
+    }
+
+    /**
+     * View method
+     *
+     * @param string|null $id Log id.
+     * @return \Cake\Http\Response|void
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function view($id = null)
+    {
+        $log = $this->Logs->get($id, [
+            'contain' => ['Projects', 'Assignments', 'Others']
+        ]);
+
+        $this->set('log', $log);
+    }
+
+    /**
+     * Add method
+     *
+     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
+     */
+    public function add()
+    {
+        $log = $this->Logs->newEntity();
+        if ($this->request->is('post')) {
+            $log = $this->Logs->patchEntity($log, $this->request->getData());
+            if ($this->Logs->save($log)) {
+                $this->Flash->success(__('The log has been saved.'));
+
+                return $this->redirect(['action' => 'index']);
+            }
+            $this->Flash->error(__('The log could not be saved. Please, try again.'));
+        }
+        $projects = $this->Logs->Projects->find('list', ['limit' => 200]);
+        $assignments = $this->Logs->Assignments->find('list', ['limit' => 200]);
+        $others = $this->Logs->Others->find('list', ['limit' => 200]);
+        $this->set(compact('log', 'projects', 'assignments', 'others'));
+    }
+
+    /**
+     * Edit method
+     *
+     * @param string|null $id Log id.
+     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
+     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     */
+    public function edit($id = null)
+    {
+        $log = $this->Logs->get($id, [
+            'contain' => []
+        ]);
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $log = $this->Logs->patchEntity($log, $this->request->getData());
+            if ($this->Logs->save($log)) {
+                $this->Flash->success(__('The log has been saved.'));
+
+                return $this->redirect(['action' => 'index']);
+            }
+            $this->Flash->error(__('The log could not be saved. Please, try again.'));
+        }
+        $projects = $this->Logs->Projects->find('list', ['limit' => 200]);
+        $assignments = $this->Logs->Assignments->find('list', ['limit' => 200]);
+        $others = $this->Logs->Others->find('list', ['limit' => 200]);
+        $this->set(compact('log', 'projects', 'assignments', 'others'));
+    }
+
+    /**
+     * Delete method
+     *
+     * @param string|null $id Log id.
+     * @return \Cake\Http\Response|null Redirects to index.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function delete($id = null)
+    {
+        $this->request->allowMethod(['post', 'delete']);
+        $log = $this->Logs->get($id);
+        if ($this->Logs->delete($log)) {
+            $this->Flash->success(__('The log has been deleted.'));
+        } else {
+            $this->Flash->error(__('The log could not be deleted. Please, try again.'));
+        }
+
+        return $this->redirect(['action' => 'index']);
+	}
+
+	/**
+	 * getData mehotd
+	 *
+	 * This is a extended version of the view() method in which the collected data is being put into a array to then convert it to a json readable data source. 
+	 * The json encode is needed for the ajax call to return a result.
+	 * Also autoRender is disabled to make sure the ajax call won't trigger CakePHP to look for an template of getData.
+	 * Also when project, assignment or other is empty it will be set to None, to avoid a ajax error.
+	 */ 
+
+	public function getData($id)
+	{
+		$this->autoRender = false;
+
+		if ($this->request->is(array('ajax')))
+		{
+	        $data = $this->Logs->get($id, [
+            'contain' => ['Projects', 'Assignments', 'Others']
+			]);
+			
+			$projectName = (empty($data->project->project_name)) ? '' : $data->project->project_name;			
+			$assignmentName = (empty($data->assignment->assignment_name)) ? '' : $data->assignment->assignment_name;
+			$otherName = (empty($data->other->other_name)) ? '' : $data->other->other_name;	
+
+			$date = $data->log_date->i18nFormat('yyyy-MM-dd');
+
+			$startTime = $data->log_start_time->i18nFormat('HH:mm:ss');
+			$endTime = $data->log_end_time->i18nFormat('HH:mm:ss');
+			$diffTime = $data->log_time_difference->i18nFormat('HH:mm:ss');
+
+			$json_data = json_encode(
+				array('result' => [
+					'id' => $data->ID,
+					'project' => $projectName,
+					'assignment' => $assignmentName,
+					'other' => $otherName,
+					'summary' => $data->log_summary,
+					'description' => $data->log_description,
+					'retrospective' => $data->log_retrospective,
+					'date' => $date,
+					'start_time' => $startTime,
+					'end_time' => $endTime,
+					'difference_time' => $diffTime,
+				])
+			);
+
+			$this->response->type('json');
+			$this->response->body($json_data);
+			return $this->response;
+		}	
+	}
+
+	public function deleteData($id)
+	{
+		$this->autoRender = false;
+        	$this->request->allowMethod(['get', 'delete']);
+		
+		if ($this->request->is(array('ajax')))
+		{
+        	$this->request->allowMethod(['get', 'delete']);
+			$log = $this->Logs->get($id);
+        	
+			if ($this->Logs->delete($log)) 
+			{
+            	$this->Flash->success(__('The log has been deleted.'));
+			} else 
+			{
+            	$this->Flash->error(__('The log could not be deleted. Please, try again.'));
+			}
+
+			$this->response->type('html');
+			return $this->response;
+		}
+	}
+}
