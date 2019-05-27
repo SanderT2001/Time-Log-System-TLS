@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Controller\AppController;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
+use Cake\I18n\Time;
 
 /**
  * Users Controller
@@ -168,7 +169,7 @@ class UsersController extends AppController
 				$field = 'last_login_at';
 				$userData = $table->get($this->Auth->user('ID'));
 
-        		$userData->$field = date(DATE_ATOM);
+        		$userData->$field = Time::now();
         		$table->save($userData);
 
 				$this->redirect($this->Auth->redirectUrl('/'));
