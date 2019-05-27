@@ -168,7 +168,7 @@ class UsersController extends AppController
 				$field = 'last_login_at';
 				$userData = $table->get($this->Auth->user('ID'));
 
-        		$userData->$field = date(DATE_ATOM);
+        		$userData->$field = Time::now();
         		$table->save($userData);
 
 				$this->redirect($this->Auth->redirectUrl('/'));
