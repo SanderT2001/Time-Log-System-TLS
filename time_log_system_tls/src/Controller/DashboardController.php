@@ -104,7 +104,7 @@ class DashboardController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
-	public function dashboard()
-	{
-	}
+    public function dashboard()
+    {
+    }
 }

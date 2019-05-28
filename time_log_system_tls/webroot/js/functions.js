@@ -9,35 +9,35 @@ var timeDiffInMin;
  */
 function addData(operation)
 {
-	if (operation == 'view')
-	{
-		$("#add-modal-date").attr("type", "date");
-		$("#addDataModal").modal("show");
-	}
-	else if (operation == 'add')
-	{
-		calcTimeDiffMin(($("#add-modal-start-time").val()), ($("#add-modal-end-time").val()));
+    if (operation == 'view')
+    {
+        $("#add-modal-date").attr("type", "date");
+        $("#addDataModal").modal("show");
+    }
+    else if (operation == 'add')
+    {
+        calcTimeDiffMin(($("#add-modal-start-time").val()), ($("#add-modal-end-time").val()));
 
-		$.ajax(
-		{
-			type: 'put',
-			url: './addData',
-			headers: { 'X-CSRF-Token': $('[name= "_csrfToken"]').val() },
-			data: "time_type_id= " + $("#add-modal-time-type").val() + "&project_id= " + $("#add-modal-project").val() + "&log_summary= " + $("#add-modal-summary").val() + "&log_description= " + $("#add-modal-description").val() + "&log_retrospective= " + $("#add-modal-retrospective").val() + "&log_date= " + $("#add-modal-date").val() + "&log_start_time= " + $("#add-modal-start-time").val() + "&log_end_time= " + $("#add-modal-end-time").val() + "&log_time_diff_min= " + timeDiffInMin,
-			dataType: 'html',
+        $.ajax(
+            {
+                type: 'put',
+                url: './addData',
+                headers: { 'X-CSRF-Token': $('[name= "_csrfToken"]').val() },
+                data: "time_type_id= " + $("#add-modal-time-type").val() + "&project_id= " + $("#add-modal-project").val() + "&log_summary= " + $("#add-modal-summary").val() + "&log_description= " + $("#add-modal-description").val() + "&log_retrospective= " + $("#add-modal-retrospective").val() + "&log_date= " + $("#add-modal-date").val() + "&log_start_time= " + $("#add-modal-start-time").val() + "&log_end_time= " + $("#add-modal-end-time").val() + "&log_time_diff_min= " + timeDiffInMin,
+                dataType: 'html',
 
-			success: function(response)
-			{
-				$("#addDataModal").modal("hide");
-			},
+                success: function(response)
+                {
+                    $("#addDataModal").modal("hide");
+                },
 
-			error: function(e)
-			{
-				alert("An error occurred: " + e.responseText.message);
-				console.log(e);
-			}
-		});
-	}
+                error: function(e)
+                {
+                    alert("An error occurred: " + e.responseText.message);
+                    console.log(e);
+                }
+            });
+    }
 }
 
 /*
@@ -47,67 +47,67 @@ function addData(operation)
  */
 function enlargeButtonClick(logId, action)
 {
-	$.ajax (
-	{
-		type: 'get',
-		url: './getData/' + logId,
-		dataType: 'json',
-		contentType: 'json',
-		
-		success: function(response) 
-		{
-			if (response.result) 
-			{
-				var result = response.result;	
+    $.ajax (
+        {
+            type: 'get',
+            url: './getData/' + logId,
+            dataType: 'json',
+            contentType: 'json',
 
-				$("#modal-id").attr("value", result.id);
+            success: function(response) 
+            {
+                if (response.result) 
+                {
+                    var result = response.result;	
 
-				$("#modal-time-type option").filter(function () 
-				{ 
-					return $(this).text() == result.time_type;
-				}).prop("selected", true);
+                    $("#modal-id").attr("value", result.id);
 
-				$("#modal-project option").filter(function () 
-				{ 
-					return $(this).text() == result.project;
-				}).prop("selected", true);
+                    $("#modal-time-type option").filter(function () 
+                        { 
+                            return $(this).text() == result.time_type;
+                        }).prop("selected", true);
 
-				$("#modal-summary").attr("value", result.summary);
-				$("#modal-description").html(result.description);
-				$("#modal-retrospective").html(result.retrospective);
-				$("#modal-date").attr("type", "date");
-				$("#modal-date").attr("value", result.date);
-				$("#modal-start-time").val(result.start_time);
-				$("#modal-end-time").val(result.end_time);
-				$("#modal-difference-time").val(result.difference_time);
+                    $("#modal-project option").filter(function () 
+                        { 
+                            return $(this).text() == result.project;
+                        }).prop("selected", true);
 
-				$(".readonly-dropdown").each(function()
-				{
-					$(".readonly-dropdown").prop("disabled", true);
-				});
+                    $("#modal-summary").attr("value", result.summary);
+                    $("#modal-description").html(result.description);
+                    $("#modal-retrospective").html(result.retrospective);
+                    $("#modal-date").attr("type", "date");
+                    $("#modal-date").attr("value", result.date);
+                    $("#modal-start-time").val(result.start_time);
+                    $("#modal-end-time").val(result.end_time);
+                    $("#modal-difference-time").val(result.difference_time);
 
-				$(".readonly").each(function() 
-				{
-					$(".readonly").prop("readonly", true);
-				});
+                    $(".readonly-dropdown").each(function()
+                        {
+                            $(".readonly-dropdown").prop("disabled", true);
+                        });
 
-				$("#edit-data-button").html("Edit data");
+                    $(".readonly").each(function() 
+                        {
+                            $(".readonly").prop("readonly", true);
+                        });
 
-				$("#viewDataModal").modal("show");
+                    $("#edit-data-button").html("Edit data");
 
-				if (action == 'edit')
-				{
-					editData();
-				}
-			}
-		},
-		
-		error: function(e) 
-		{
-			alert("An error occurred: " + e.responseText.message);
-			console.log(e);
-		}
-	});
+                    $("#viewDataModal").modal("show");
+
+                    if (action == 'edit')
+                    {
+                        editData();
+                    }
+                }
+            },
+
+            error: function(e) 
+            {
+                alert("An error occurred: " + e.responseText.message);
+                console.log(e);
+            }
+        });
 }
 
 /*
@@ -119,66 +119,66 @@ function enlargeButtonClick(logId, action)
  */
 function editData(logId)
 {
-	var log;
+    var log;
 
-	log = (logId == null) ? $("#modal-id").val() : logId;
+    log = (logId == null) ? $("#modal-id").val() : logId;
 
-	if (($("#edit-data-button").html() === "Edit data"))
-	{
-		$(".readonly-dropdown").each(function()
-		{
-			$(".readonly-dropdown").prop("disabled", false);
-		});
+    if (($("#edit-data-button").html() === "Edit data"))
+    {
+        $(".readonly-dropdown").each(function()
+            {
+                $(".readonly-dropdown").prop("disabled", false);
+            });
 
-		$(".readonly").each(function() 
-		{
-			$(".readonly").prop("readonly", false);
-		});
+        $(".readonly").each(function() 
+            {
+                $(".readonly").prop("readonly", false);
+            });
 
-		$("#edit-data-button").html("Save data");	
-	}
-	else if (($("#edit-data-button").html() === "Save data"))
-	{
-		$(".readonly-dropdown").each(function()
-		{
-			$(".readonly-dropdown").prop("disabled", true);
-		});
+        $("#edit-data-button").html("Save data");	
+    }
+    else if (($("#edit-data-button").html() === "Save data"))
+    {
+        $(".readonly-dropdown").each(function()
+            {
+                $(".readonly-dropdown").prop("disabled", true);
+            });
 
-		$(".readonly").each(function() 
-		{
-			$(".readonly").prop("readonly", true);
-		});			
-		
-		$("#modal-date").attr("value", $("#modal-date").val());
+        $(".readonly").each(function() 
+            {
+                $(".readonly").prop("readonly", true);
+            });			
 
-		var startTimeModal = $("#modal-start-time").val();
-		var endTimeModal = $("#modal-end-time").val();
+        $("#modal-date").attr("value", $("#modal-date").val());
 
-		calcTimeDiffMin(startTimeModal, endTimeModal);
-		$("#modal-difference-time").val(timeDiffInMin);
-		
-		$.ajax(
-		{
-			type: 'put',
-			url: './editData/' + log,
-			headers: { 'X-CSRF-Token': $('[name= "_csrfToken"]').val() },
-			data: "time_type_id= " + $("#modal-time-type").val() + "&project_id= " + $("#modal-project").val() + "&log_summary= " + $("#modal-summary").val() + "&log_description= " + $("#modal-description").val() + "&log_retrospective= " + $("#modal-retrospective").val() + "&log_date= " + $("#modal-date").attr("value") + "&log_start_time= " + $("#modal-start-time").val() + "&log_end_time= " + $("#modal-end-time").val() + "&log_time_diff_min= " + $("#modal-difference-time").val(),
-			dataType: 'html',
+        var startTimeModal = $("#modal-start-time").val();
+        var endTimeModal = $("#modal-end-time").val();
 
-			success: function(response)
-			{
+        calcTimeDiffMin(startTimeModal, endTimeModal);
+        $("#modal-difference-time").val(timeDiffInMin);
 
-			},
+        $.ajax(
+            {
+                type: 'put',
+                url: './editData/' + log,
+                headers: { 'X-CSRF-Token': $('[name= "_csrfToken"]').val() },
+                data: "time_type_id= " + $("#modal-time-type").val() + "&project_id= " + $("#modal-project").val() + "&log_summary= " + $("#modal-summary").val() + "&log_description= " + $("#modal-description").val() + "&log_retrospective= " + $("#modal-retrospective").val() + "&log_date= " + $("#modal-date").attr("value") + "&log_start_time= " + $("#modal-start-time").val() + "&log_end_time= " + $("#modal-end-time").val() + "&log_time_diff_min= " + $("#modal-difference-time").val(),
+                dataType: 'html',
 
-			error: function(e)
-			{
-				alert("An error occurred: " + e.responseText.message);
-				console.log(e);
-			}
-		});
+                success: function(response)
+                {
 
-		$("#edit-data-button").html("Edit data");
-	}
+                },
+
+                error: function(e)
+                {
+                    alert("An error occurred: " + e.responseText.message);
+                    console.log(e);
+                }
+            });
+
+        $("#edit-data-button").html("Edit data");
+    }
 }
 
 /*
@@ -188,29 +188,29 @@ function editData(logId)
  */
 function deleteData(logId)
 {
-	var log;
+    var log;
 
-	log = (logId == null) ? $("#modal-id").val() : logId;
-	
-	$.ajax (
-	{
-		type: 'post',
-		url: './deleteData/' + log,
-		headers : { 'X-CSRF-Token': $('[name= "_csrfToken"]').val() },
-		dataType: 'html',
-		
-		success: function(response) 
-		{
-			$("#dataModal").modal("hide");
-			$("#" + log).remove();
-		},
-		
-		error: function(e) 
-		{
-			alert("An error occurred: " + e.responseText.message);
-			console.log(e);
-		}
-	});
+    log = (logId == null) ? $("#modal-id").val() : logId;
+
+    $.ajax (
+        {
+            type: 'post',
+            url: './deleteData/' + log,
+            headers : { 'X-CSRF-Token': $('[name= "_csrfToken"]').val() },
+            dataType: 'html',
+
+            success: function(response) 
+            {
+                $("#dataModal").modal("hide");
+                $("#" + log).remove();
+            },
+
+            error: function(e) 
+            {
+                alert("An error occurred: " + e.responseText.message);
+                console.log(e);
+            }
+        });
 }
 
 /*
@@ -221,5 +221,5 @@ function deleteData(logId)
  */
 function calcTimeDiffMin(startTime, endTime)
 {
-	timeDiffInMin = (new Date("2018-08-27 " + endTime) - new Date("2018-08-27 " + startTime)) / 1000 / 60;
+    timeDiffInMin = (new Date("2018-08-27 " + endTime) - new Date("2018-08-27 " + startTime)) / 1000 / 60;
 }
