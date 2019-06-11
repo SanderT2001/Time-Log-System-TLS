@@ -15,13 +15,13 @@ function addData(operation)
 		$("#addDataModal").modal("show");
 	}
 	else if (operation == 'add')
-	{
+	{	
 		calcTimeDiffMin(($("#add-modal-start-time").val()), ($("#add-modal-end-time").val()));
 
 		$.ajax(
 		{
 			type: 'put',
-			url: './addData',
+			url: 'logs/addData',
 			headers: { 'X-CSRF-Token': $('[name= "_csrfToken"]').val() },
 			data: "time_type_id= " + $("#add-modal-time-type").val() + "&project_id= " + $("#add-modal-project").val() + "&log_summary= " + $("#add-modal-summary").val() + "&log_description= " + $("#add-modal-description").val() + "&log_retrospective= " + $("#add-modal-retrospective").val() + "&log_date= " + $("#add-modal-date").val() + "&log_start_time= " + $("#add-modal-start-time").val() + "&log_end_time= " + $("#add-modal-end-time").val() + "&log_time_diff_min= " + timeDiffInMin,
 			dataType: 'html',
@@ -50,7 +50,7 @@ function enlargeButtonClick(logId, action)
 	$.ajax (
 	{
 		type: 'get',
-		url: './getData/' + logId,
+		url:  'logs/getData/' + logId,
 		dataType: 'json',
 		contentType: 'json',
 		
@@ -160,7 +160,7 @@ function editData(logId)
 		$.ajax(
 		{
 			type: 'put',
-			url: './editData/' + log,
+			url:  'logs/editData/' + log,
 			headers: { 'X-CSRF-Token': $('[name= "_csrfToken"]').val() },
 			data: "time_type_id= " + $("#modal-time-type").val() + "&project_id= " + $("#modal-project").val() + "&log_summary= " + $("#modal-summary").val() + "&log_description= " + $("#modal-description").val() + "&log_retrospective= " + $("#modal-retrospective").val() + "&log_date= " + $("#modal-date").attr("value") + "&log_start_time= " + $("#modal-start-time").val() + "&log_end_time= " + $("#modal-end-time").val() + "&log_time_diff_min= " + $("#modal-difference-time").val(),
 			dataType: 'html',
@@ -195,7 +195,7 @@ function deleteData(logId)
 	$.ajax (
 	{
 		type: 'post',
-		url: './deleteData/' + log,
+		url:  'logs/deleteData/' + log,
 		headers : { 'X-CSRF-Token': $('[name= "_csrfToken"]').val() },
 		dataType: 'html',
 		
