@@ -1,12 +1,9 @@
-# Vagrant specific files #
-##########################
-.vagrant*
-
 # CakePHP specific files #
 ##########################
-/public_html/logs/*
-/public_html/tmp/*
-/public_html/tests/*
+/time_log_system_tls/config/.env
+/time_log_system_tls/logs/*
+/time_log_system_tls/tmp/*
+/time_log_system_tls/vendor/*
 
 # OS generated files #
 ######################

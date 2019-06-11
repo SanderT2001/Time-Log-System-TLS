@@ -126,8 +126,8 @@ class UsersController extends AppController
      * After doing a submit on the registration form ('register.ctp') it will create a new table entity (Model\Entity\User.php) with the filled form data.
      * If all correct, it will 'register' (store) the new entity and redirect you to the login form.
      */
-	public function register()
-	{
+    public function register()
+    {
         $user = $this->Users->newEntity($this->request->data);
 
         if ($this->request->is('post'))
@@ -146,7 +146,7 @@ class UsersController extends AppController
                 $this->redirect(['action' => 'login']);
             }
         }
-	}
+    }
 
     /**
      * Login method
@@ -157,29 +157,29 @@ class UsersController extends AppController
      */
     public function login()
     {
-		if ($this->request->is('post'))
-		{
-			$user = $this->Auth->identify($this->request->data);
+        if ($this->request->is('post'))
+        {
+            $user = $this->Auth->identify($this->request->data);
 
-			if ($user)
-			{
+            if ($user)
+            {
                 $this->Auth->setUser($user);
 
-				$table = TableRegistry::get('Users');
-				$field = 'last_login_at';
-				$userData = $table->get($this->Auth->user('ID'));
+                $table = TableRegistry::get('Users');
+                $field = 'last_login_at';
+                $userData = $table->get($this->Auth->user('ID'));
 
-        		$userData->$field = Time::now();
-        		$table->save($userData);
+                $userData->$field = Time::now();
+                $table->save($userData);
 
-				$this->redirect($this->Auth->redirectUrl('/'));
+                $this->redirect($this->Auth->redirectUrl('/'));
 
-			}
-			else
-			{
-			    $this->Flash->error('The Username or Password is incorrect');
-			}
-		}
+            }
+            else
+            {
+                $this->Flash->error('The Username or Password is incorrect');
+            }
+        }
     }
 
     /**
@@ -187,8 +187,8 @@ class UsersController extends AppController
      *
      * When pressing on logout, you'll be logged out and redirected to login.
      */
-	public function logout()
-	{
-	    return $this->redirect($this->Auth->logout());
+    public function logout()
+    {
+        return $this->redirect($this->Auth->logout());
     }
 }

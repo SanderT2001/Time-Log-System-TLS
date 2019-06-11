@@ -131,21 +131,21 @@ $cakeDescription = 'CakePHP: the rapid development PHP framework';
 <div class="row">
     <div class="columns large-6">
         <h4>Database</h4>
-        <?php
-        try {
-            $connection = ConnectionManager::get('default');
-            $connected = $connection->connect();
-        } catch (Exception $connectionError) {
-            $connected = false;
-            $errorMsg = $connectionError->getMessage();
-            if (method_exists($connectionError, 'getAttributes')) :
-                $attributes = $connectionError->getAttributes();
-                if (isset($errorMsg['message'])) :
-                    $errorMsg .= '<br />' . $attributes['message'];
-                endif;
-            endif;
-        }
-        ?>
+<?php
+try {
+    $connection = ConnectionManager::get('default');
+    $connected = $connection->connect();
+} catch (Exception $connectionError) {
+    $connected = false;
+    $errorMsg = $connectionError->getMessage();
+    if (method_exists($connectionError, 'getAttributes')) :
+        $attributes = $connectionError->getAttributes();
+    if (isset($errorMsg['message'])) :
+        $errorMsg .= '<br />' . $attributes['message'];
+endif;
+endif;
+}
+?>
         <ul>
         <?php if ($connected) : ?>
             <li class="bullet success">CakePHP is able to connect to the database.</li>
@@ -267,7 +267,7 @@ $cakeDescription = 'CakePHP: the rapid development PHP framework';
                 <ul><li>Learn to use the CakePHP framework</li></ul>
             </li>
             <li class="bullet cutlery">
-				<a href="https://certification.cakephp.org/">CakePHP Certification</a>
+                <a href="https://certification.cakephp.org/">CakePHP Certification</a>
                 <ul><li>Become a certified CakePHP developer</li></ul>
             </li>
         </ul>

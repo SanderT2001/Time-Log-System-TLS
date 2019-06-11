@@ -49,16 +49,16 @@ class User extends Entity
         'password'
     ];
 
-	/*
-	 * Check if the submitted password is filled, by counting.
-	 *
-	 * If password if filled, hash the password before inserting into dataset.
-	 */
-	  protected function _setPassword($password)
+    /*
+     * Check if the submitted password is filled, by counting.
+     *
+     * If password if filled, hash the password before inserting into dataset.
+     */
+    protected function _setPassword($password)
     {
         if (strlen($password) > 0)
         {
             return (new DefaultPasswordHasher)->hash($password);
-		}
+        }
     }
 }
