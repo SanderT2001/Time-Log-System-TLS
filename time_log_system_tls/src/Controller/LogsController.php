@@ -105,6 +105,7 @@ class LogsController extends AppController
 			$log->log_date = $this->request->getData(log_date);
 			$log->log_start_time = $this->request->getData(log_start_time);
 			$log->log_end_time = $this->request->getData(log_end_time);
+			$log->by_user = $this->Auth->user('ID');
 
 			if ($this->Logs->save($log)) 
 			{
