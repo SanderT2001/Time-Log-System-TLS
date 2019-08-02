@@ -1,0 +1,529 @@
+2019-08-01 20:48:07 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-01 20:48:07 Warning: Warning (2): chmod(): Operation not permitted in [/media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Cache/Engine/FileEngine.php, line 403]
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 159
+Cake\Core\BasePlugin::{closure}() - ROOT/vendor/cakephp/debug_kit/config/bootstrap.php, line 41
+chmod - [internal], line ??
+Cake\Cache\Engine\FileEngine::_setKey() - CORE/src/Cache/Engine/FileEngine.php, line 403
+Cake\Cache\Engine\FileEngine::write() - CORE/src/Cache/Engine/FileEngine.php, line 134
+Cake\Cache\Cache::write() - CORE/src/Cache/Cache.php, line 281
+Cake\Cache\Cache::remember() - CORE/src/Cache/Cache.php, line 633
+Cake\Routing\Middleware\RoutingMiddleware::buildRouteCollection() - CORE/src/Routing/Middleware/RoutingMiddleware.php, line 95
+Cake\Routing\Middleware\RoutingMiddleware::loadRoutes() - CORE/src/Routing/Middleware/RoutingMiddleware.php, line 81
+Cake\Routing\Middleware\RoutingMiddleware::__invoke() - CORE/src/Routing/Middleware/RoutingMiddleware.php, line 131
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Routing\Middleware\AssetMiddleware::__invoke() - CORE/src/Routing/Middleware/AssetMiddleware.php, line 88
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Error\Middleware\ErrorHandlerMiddleware::__invoke() - CORE/src/Error/Middleware/ErrorHandlerMiddleware.php, line 98
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Http\Runner::run() - CORE/src/Http/Runner.php, line 51
+Cake\Http\Server::run() - CORE/src/Http/Server.php, line 98
+require - ROOT/webroot/index.php, line 40
+[main] - ROOT/index.php, line 16
+
+
+
+2019-08-01 20:48:07 Warning: Warning (512): Could not apply permission mask "/media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/tmp/cache/myapp_cake_routes_route_collection" on cache file "436" in [/media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Cache/Engine/FileEngine.php, line 408]
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 159
+Cake\Core\BasePlugin::{closure}() - ROOT/vendor/cakephp/debug_kit/config/bootstrap.php, line 41
+Cake\Cache\Engine\FileEngine::_setKey() - CORE/src/Cache/Engine/FileEngine.php, line 408
+Cake\Cache\Engine\FileEngine::write() - CORE/src/Cache/Engine/FileEngine.php, line 134
+Cake\Cache\Cache::write() - CORE/src/Cache/Cache.php, line 281
+Cake\Cache\Cache::remember() - CORE/src/Cache/Cache.php, line 633
+Cake\Routing\Middleware\RoutingMiddleware::buildRouteCollection() - CORE/src/Routing/Middleware/RoutingMiddleware.php, line 95
+Cake\Routing\Middleware\RoutingMiddleware::loadRoutes() - CORE/src/Routing/Middleware/RoutingMiddleware.php, line 81
+Cake\Routing\Middleware\RoutingMiddleware::__invoke() - CORE/src/Routing/Middleware/RoutingMiddleware.php, line 131
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Routing\Middleware\AssetMiddleware::__invoke() - CORE/src/Routing/Middleware/AssetMiddleware.php, line 88
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Error\Middleware\ErrorHandlerMiddleware::__invoke() - CORE/src/Error/Middleware/ErrorHandlerMiddleware.php, line 98
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Http\Runner::run() - CORE/src/Http/Runner.php, line 51
+Cake\Http\Server::run() - CORE/src/Http/Server.php, line 98
+require - ROOT/webroot/index.php, line 40
+[main] - ROOT/index.php, line 16
+
+
+
+2019-08-01 20:48:07 Warning: Warning (2): chmod() [<a href='https://secure.php.net/function.chmod'>function.chmod</a>]: Operation not permitted in [/media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Cache/Engine/FileEngine.php, line 403]
+Request URL: /
+Referer URL: http://192.168.56.101/Projects/Time-Log-System-TLS/time_log_system_tls/
+Client IP: 192.168.56.1
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 159
+Cake\Core\BasePlugin::{closure}() - ROOT/vendor/cakephp/debug_kit/config/bootstrap.php, line 41
+chmod - [internal], line ??
+Cake\Cache\Engine\FileEngine::_setKey() - CORE/src/Cache/Engine/FileEngine.php, line 403
+Cake\Cache\Engine\FileEngine::write() - CORE/src/Cache/Engine/FileEngine.php, line 134
+Cake\I18n\TranslatorRegistry::get() - CORE/src/I18n/TranslatorRegistry.php, line 151
+Aura\Intl\TranslatorLocator::get() - ROOT/vendor/aura/intl/src/TranslatorLocator.php, line 188
+Cake\I18n\TranslatorRegistry::_getFromLoader() - CORE/src/I18n/TranslatorRegistry.php, line 272
+Cake\I18n\TranslatorRegistry::_getTranslator() - CORE/src/I18n/TranslatorRegistry.php, line 176
+Cake\I18n\TranslatorRegistry::get() - CORE/src/I18n/TranslatorRegistry.php, line 150
+Cake\I18n\I18n::getTranslator() - CORE/src/I18n/I18n.php, line 210
+__d - CORE/src/I18n/functions.php, line 91
+Cake\Controller\Component\AuthComponent::_setDefaults() - CORE/src/Controller/Component/AuthComponent.php, line 500
+Cake\Controller\Component\AuthComponent::authCheck() - CORE/src/Controller/Component/AuthComponent.php, line 304
+Cake\Controller\Component\AuthComponent::startup() - CORE/src/Controller/Component/AuthComponent.php, line 276
+Cake\Event\EventManager::_callListener() - CORE/src/Event/EventManager.php, line 353
+Cake\Event\EventManager::dispatch() - CORE/src/Event/EventManager.php, line 330
+Cake\Controller\Controller::dispatchEvent() - CORE/src/Event/EventDispatcherTrait.php, line 114
+Cake\Controller\Controller::startupProcess() - CORE/src/Controller/Controller.php, line 662
+Cake\Http\ActionDispatcher::_invoke() - CORE/src/Http/ActionDispatcher.php, line 115
+Cake\Http\ActionDispatcher::dispatch() - CORE/src/Http/ActionDispatcher.php, line 94
+Cake\Http\BaseApplication::__invoke() - CORE/src/Http/BaseApplication.php, line 232
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Http\Middleware\CsrfProtectionMiddleware::__invoke() - CORE/src/Http/Middleware/CsrfProtectionMiddleware.php, line 103
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Routing\Middleware\RoutingMiddleware::__invoke() - CORE/src/Routing/Middleware/RoutingMiddleware.php, line 157
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Routing\Middleware\AssetMiddleware::__invoke() - CORE/src/Routing/Middleware/AssetMiddleware.php, line 88
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Error\Middleware\ErrorHandlerMiddleware::__invoke() - CORE/src/Error/Middleware/ErrorHandlerMiddleware.php, line 98
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Http\Runner::run() - CORE/src/Http/Runner.php, line 51
+Cake\Http\Server::run() - CORE/src/Http/Server.php, line 98
+require - ROOT/webroot/index.php, line 40
+[main] - ROOT/index.php, line 16
+
+
+
+2019-08-01 20:48:07 Warning: Warning (512): Could not apply permission mask "/media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/tmp/cache/persistent/myapp_cake_core_translations_default_nl__n_l" on cache file "436" in [/media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Cache/Engine/FileEngine.php, line 408]
+Request URL: /
+Referer URL: http://192.168.56.101/Projects/Time-Log-System-TLS/time_log_system_tls/
+Client IP: 192.168.56.1
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 159
+Cake\Core\BasePlugin::{closure}() - ROOT/vendor/cakephp/debug_kit/config/bootstrap.php, line 41
+Cake\Cache\Engine\FileEngine::_setKey() - CORE/src/Cache/Engine/FileEngine.php, line 408
+Cake\Cache\Engine\FileEngine::write() - CORE/src/Cache/Engine/FileEngine.php, line 134
+Cake\I18n\TranslatorRegistry::get() - CORE/src/I18n/TranslatorRegistry.php, line 151
+Aura\Intl\TranslatorLocator::get() - ROOT/vendor/aura/intl/src/TranslatorLocator.php, line 188
+Cake\I18n\TranslatorRegistry::_getFromLoader() - CORE/src/I18n/TranslatorRegistry.php, line 272
+Cake\I18n\TranslatorRegistry::_getTranslator() - CORE/src/I18n/TranslatorRegistry.php, line 176
+Cake\I18n\TranslatorRegistry::get() - CORE/src/I18n/TranslatorRegistry.php, line 150
+Cake\I18n\I18n::getTranslator() - CORE/src/I18n/I18n.php, line 210
+__d - CORE/src/I18n/functions.php, line 91
+Cake\Controller\Component\AuthComponent::_setDefaults() - CORE/src/Controller/Component/AuthComponent.php, line 500
+Cake\Controller\Component\AuthComponent::authCheck() - CORE/src/Controller/Component/AuthComponent.php, line 304
+Cake\Controller\Component\AuthComponent::startup() - CORE/src/Controller/Component/AuthComponent.php, line 276
+Cake\Event\EventManager::_callListener() - CORE/src/Event/EventManager.php, line 353
+Cake\Event\EventManager::dispatch() - CORE/src/Event/EventManager.php, line 330
+Cake\Controller\Controller::dispatchEvent() - CORE/src/Event/EventDispatcherTrait.php, line 114
+Cake\Controller\Controller::startupProcess() - CORE/src/Controller/Controller.php, line 662
+Cake\Http\ActionDispatcher::_invoke() - CORE/src/Http/ActionDispatcher.php, line 115
+Cake\Http\ActionDispatcher::dispatch() - CORE/src/Http/ActionDispatcher.php, line 94
+Cake\Http\BaseApplication::__invoke() - CORE/src/Http/BaseApplication.php, line 232
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Http\Middleware\CsrfProtectionMiddleware::__invoke() - CORE/src/Http/Middleware/CsrfProtectionMiddleware.php, line 103
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Routing\Middleware\RoutingMiddleware::__invoke() - CORE/src/Routing/Middleware/RoutingMiddleware.php, line 157
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Routing\Middleware\AssetMiddleware::__invoke() - CORE/src/Routing/Middleware/AssetMiddleware.php, line 88
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Error\Middleware\ErrorHandlerMiddleware::__invoke() - CORE/src/Error/Middleware/ErrorHandlerMiddleware.php, line 98
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Http\Runner::run() - CORE/src/Http/Runner.php, line 51
+Cake\Http\Server::run() - CORE/src/Http/Server.php, line 98
+require - ROOT/webroot/index.php, line 40
+[main] - ROOT/index.php, line 16
+
+
+
+2019-08-01 20:48:07 Warning: Warning (2): chmod() [<a href='https://secure.php.net/function.chmod'>function.chmod</a>]: Operation not permitted in [/media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Cache/Engine/FileEngine.php, line 403]
+Request URL: /
+Referer URL: http://192.168.56.101/Projects/Time-Log-System-TLS/time_log_system_tls/
+Client IP: 192.168.56.1
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 159
+Cake\Core\BasePlugin::{closure}() - ROOT/vendor/cakephp/debug_kit/config/bootstrap.php, line 41
+chmod - [internal], line ??
+Cake\Cache\Engine\FileEngine::_setKey() - CORE/src/Cache/Engine/FileEngine.php, line 403
+Cake\Cache\Engine\FileEngine::write() - CORE/src/Cache/Engine/FileEngine.php, line 134
+Cake\I18n\TranslatorRegistry::get() - CORE/src/I18n/TranslatorRegistry.php, line 151
+Cake\I18n\I18n::getTranslator() - CORE/src/I18n/I18n.php, line 210
+__d - CORE/src/I18n/functions.php, line 91
+Cake\Controller\Component\AuthComponent::_setDefaults() - CORE/src/Controller/Component/AuthComponent.php, line 500
+Cake\Controller\Component\AuthComponent::authCheck() - CORE/src/Controller/Component/AuthComponent.php, line 304
+Cake\Controller\Component\AuthComponent::startup() - CORE/src/Controller/Component/AuthComponent.php, line 276
+Cake\Event\EventManager::_callListener() - CORE/src/Event/EventManager.php, line 353
+Cake\Event\EventManager::dispatch() - CORE/src/Event/EventManager.php, line 330
+Cake\Controller\Controller::dispatchEvent() - CORE/src/Event/EventDispatcherTrait.php, line 114
+Cake\Controller\Controller::startupProcess() - CORE/src/Controller/Controller.php, line 662
+Cake\Http\ActionDispatcher::_invoke() - CORE/src/Http/ActionDispatcher.php, line 115
+Cake\Http\ActionDispatcher::dispatch() - CORE/src/Http/ActionDispatcher.php, line 94
+Cake\Http\BaseApplication::__invoke() - CORE/src/Http/BaseApplication.php, line 232
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Http\Middleware\CsrfProtectionMiddleware::__invoke() - CORE/src/Http/Middleware/CsrfProtectionMiddleware.php, line 103
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Routing\Middleware\RoutingMiddleware::__invoke() - CORE/src/Routing/Middleware/RoutingMiddleware.php, line 157
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Routing\Middleware\AssetMiddleware::__invoke() - CORE/src/Routing/Middleware/AssetMiddleware.php, line 88
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Error\Middleware\ErrorHandlerMiddleware::__invoke() - CORE/src/Error/Middleware/ErrorHandlerMiddleware.php, line 98
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Http\Runner::run() - CORE/src/Http/Runner.php, line 51
+Cake\Http\Server::run() - CORE/src/Http/Server.php, line 98
+require - ROOT/webroot/index.php, line 40
+[main] - ROOT/index.php, line 16
+
+
+
+2019-08-01 20:48:07 Warning: Warning (512): Could not apply permission mask "/media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/tmp/cache/persistent/myapp_cake_core_translations_cake_nl__n_l" on cache file "436" in [/media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Cache/Engine/FileEngine.php, line 408]
+Request URL: /
+Referer URL: http://192.168.56.101/Projects/Time-Log-System-TLS/time_log_system_tls/
+Client IP: 192.168.56.1
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 159
+Cake\Core\BasePlugin::{closure}() - ROOT/vendor/cakephp/debug_kit/config/bootstrap.php, line 41
+Cake\Cache\Engine\FileEngine::_setKey() - CORE/src/Cache/Engine/FileEngine.php, line 408
+Cake\Cache\Engine\FileEngine::write() - CORE/src/Cache/Engine/FileEngine.php, line 134
+Cake\I18n\TranslatorRegistry::get() - CORE/src/I18n/TranslatorRegistry.php, line 151
+Cake\I18n\I18n::getTranslator() - CORE/src/I18n/I18n.php, line 210
+__d - CORE/src/I18n/functions.php, line 91
+Cake\Controller\Component\AuthComponent::_setDefaults() - CORE/src/Controller/Component/AuthComponent.php, line 500
+Cake\Controller\Component\AuthComponent::authCheck() - CORE/src/Controller/Component/AuthComponent.php, line 304
+Cake\Controller\Component\AuthComponent::startup() - CORE/src/Controller/Component/AuthComponent.php, line 276
+Cake\Event\EventManager::_callListener() - CORE/src/Event/EventManager.php, line 353
+Cake\Event\EventManager::dispatch() - CORE/src/Event/EventManager.php, line 330
+Cake\Controller\Controller::dispatchEvent() - CORE/src/Event/EventDispatcherTrait.php, line 114
+Cake\Controller\Controller::startupProcess() - CORE/src/Controller/Controller.php, line 662
+Cake\Http\ActionDispatcher::_invoke() - CORE/src/Http/ActionDispatcher.php, line 115
+Cake\Http\ActionDispatcher::dispatch() - CORE/src/Http/ActionDispatcher.php, line 94
+Cake\Http\BaseApplication::__invoke() - CORE/src/Http/BaseApplication.php, line 232
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Http\Middleware\CsrfProtectionMiddleware::__invoke() - CORE/src/Http/Middleware/CsrfProtectionMiddleware.php, line 103
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Routing\Middleware\RoutingMiddleware::__invoke() - CORE/src/Routing/Middleware/RoutingMiddleware.php, line 157
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Routing\Middleware\AssetMiddleware::__invoke() - CORE/src/Routing/Middleware/AssetMiddleware.php, line 88
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Error\Middleware\ErrorHandlerMiddleware::__invoke() - CORE/src/Error/Middleware/ErrorHandlerMiddleware.php, line 98
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Http\Runner::run() - CORE/src/Http/Runner.php, line 51
+Cake\Http\Server::run() - CORE/src/Http/Server.php, line 98
+require - ROOT/webroot/index.php, line 40
+[main] - ROOT/index.php, line 16
+
+
+
+2019-08-01 20:48:07 Warning: Warning (512): Unable to emit headers. Headers sent in file=/media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Error/Debugger.php line=853 in [/media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 48]
+Request URL: /
+Referer URL: http://192.168.56.101/Projects/Time-Log-System-TLS/time_log_system_tls/
+Client IP: 192.168.56.1
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 159
+Cake\Core\BasePlugin::{closure}() - ROOT/vendor/cakephp/debug_kit/config/bootstrap.php, line 41
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 48
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 141
+require - ROOT/webroot/index.php, line 40
+[main] - ROOT/index.php, line 16
+
+
+
+2019-08-01 20:48:07 Warning: Warning (2): Cannot modify header information - headers already sent by (output started at /media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Error/Debugger.php:853) in [/media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 148]
+Request URL: /
+Referer URL: http://192.168.56.101/Projects/Time-Log-System-TLS/time_log_system_tls/
+Client IP: 192.168.56.1
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 159
+Cake\Core\BasePlugin::{closure}() - ROOT/vendor/cakephp/debug_kit/config/bootstrap.php, line 41
+header - [internal], line ??
+Cake\Http\ResponseEmitter::emitStatusLine() - CORE/src/Http/ResponseEmitter.php, line 148
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 54
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 141
+require - ROOT/webroot/index.php, line 40
+[main] - ROOT/index.php, line 16
+
+
+
+2019-08-01 20:48:07 Warning: Warning (2): Cannot modify header information - headers already sent by (output started at /media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Error/Debugger.php:853) in [/media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 181]
+Request URL: /
+Referer URL: http://192.168.56.101/Projects/Time-Log-System-TLS/time_log_system_tls/
+Client IP: 192.168.56.1
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 159
+Cake\Core\BasePlugin::{closure}() - ROOT/vendor/cakephp/debug_kit/config/bootstrap.php, line 41
+header - [internal], line ??
+Cake\Http\ResponseEmitter::emitHeaders() - CORE/src/Http/ResponseEmitter.php, line 181
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 55
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 141
+require - ROOT/webroot/index.php, line 40
+[main] - ROOT/index.php, line 16
+
+
+
+2019-08-01 20:48:07 Warning: Warning (2): Cannot modify header information - headers already sent by (output started at /media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Error/Debugger.php:853) in [/media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 181]
+Request URL: /
+Referer URL: http://192.168.56.101/Projects/Time-Log-System-TLS/time_log_system_tls/
+Client IP: 192.168.56.1
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 159
+Cake\Core\BasePlugin::{closure}() - ROOT/vendor/cakephp/debug_kit/config/bootstrap.php, line 41
+header - [internal], line ??
+Cake\Http\ResponseEmitter::emitHeaders() - CORE/src/Http/ResponseEmitter.php, line 181
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 55
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 141
+require - ROOT/webroot/index.php, line 40
+[main] - ROOT/index.php, line 16
+
+
+
+2019-08-01 20:48:07 Warning: Warning (2): Cannot modify header information - headers already sent by (output started at /media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Error/Debugger.php:853) in [/media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 206]
+Request URL: /
+Referer URL: http://192.168.56.101/Projects/Time-Log-System-TLS/time_log_system_tls/
+Client IP: 192.168.56.1
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 159
+Cake\Core\BasePlugin::{closure}() - ROOT/vendor/cakephp/debug_kit/config/bootstrap.php, line 41
+setcookie - [internal], line ??
+Cake\Http\ResponseEmitter::emitCookies() - CORE/src/Http/ResponseEmitter.php, line 206
+Cake\Http\ResponseEmitter::emitHeaders() - CORE/src/Http/ResponseEmitter.php, line 186
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 55
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 141
+require - ROOT/webroot/index.php, line 40
+[main] - ROOT/index.php, line 16
+
+
+
+2019-08-01 20:48:21 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 13:29:21 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 13:31:44 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 13:31:44 Error: [Cake\Controller\Exception\MissingActionException] Action ProjectsController::timeLogSystemTLS() could not be found, or is not accessible.
+Exception Attributes: array (
+  'controller' => 'ProjectsController',
+  'action' => 'timeLogSystemTLS',
+  'prefix' => '',
+  'plugin' => false,
+)
+Request URL: /Projects/Time-Log-System-TLS/time_log_system_tls/login
+Stack Trace:
+#0 /media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Http/ActionDispatcher.php(120): Cake\Controller\Controller->invokeAction()
+#1 /media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Http/ActionDispatcher.php(94): Cake\Http\ActionDispatcher->_invoke(Object(App\Controller\ProjectsController))
+#2 /media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Http/BaseApplication.php(232): Cake\Http\ActionDispatcher->dispatch(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#3 /media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Http\BaseApplication->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#4 /media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Http/Middleware/CsrfProtectionMiddleware.php(107): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#5 /media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Http\Middleware\CsrfProtectionMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#6 /media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Routing/Middleware/RoutingMiddleware.php(157): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#7 /media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Routing\Middleware\RoutingMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#8 /media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Routing/Middleware/AssetMiddleware.php(88): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#9 /media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Routing\Middleware\AssetMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#10 /media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Error/Middleware/ErrorHandlerMiddleware.php(98): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#11 /media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Error\Middleware\ErrorHandlerMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#12 /media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Http/Runner.php(51): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#13 /media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/vendor/cakephp/cakephp/src/Http/Server.php(98): Cake\Http\Runner->run(Object(Cake\Http\MiddlewareQueue), Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#14 /media/sf_public_html/Projects/Time-Log-System-TLS/time_log_system_tls/webroot/index.php(40): Cake\Http\Server->run()
+#15 {main}
+
+
+2019-08-02 13:36:48 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 13:36:49 Error: [Cake\Controller\Exception\MissingActionException] Action ProjectsController::timeLogSystemTLS() could not be found, or is not accessible.
+Exception Attributes: array (
+  'controller' => 'ProjectsController',
+  'action' => 'timeLogSystemTLS',
+  'prefix' => '',
+  'plugin' => false,
+)
+Request URL: /Projects/Time-Log-System-TLS/time_log_system_tls/login
+Stack Trace:
+#0 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/ActionDispatcher.php(120): Cake\Controller\Controller->invokeAction()
+#1 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/ActionDispatcher.php(94): Cake\Http\ActionDispatcher->_invoke(Object(App\Controller\ProjectsController))
+#2 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/BaseApplication.php(232): Cake\Http\ActionDispatcher->dispatch(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#3 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Http\BaseApplication->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#4 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Middleware/CsrfProtectionMiddleware.php(107): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#5 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Http\Middleware\CsrfProtectionMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#6 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Routing/Middleware/RoutingMiddleware.php(157): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#7 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Routing\Middleware\RoutingMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#8 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Routing/Middleware/AssetMiddleware.php(88): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#9 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Routing\Middleware\AssetMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#10 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Error/Middleware/ErrorHandlerMiddleware.php(98): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#11 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Error\Middleware\ErrorHandlerMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#12 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(51): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#13 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Server.php(98): Cake\Http\Runner->run(Object(Cake\Http\MiddlewareQueue), Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#14 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/webroot/index.php(40): Cake\Http\Server->run()
+#15 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/index.php(16): require('/media/sf_publi...')
+#16 {main}
+
+
+2019-08-02 13:36:49 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 13:36:49 Error: [Cake\Routing\Exception\MissingControllerException] Controller class Favicon.ico could not be found.
+Exception Attributes: array (
+  'class' => 'Favicon.ico',
+  'plugin' => false,
+  'prefix' => false,
+  '_ext' => false,
+)
+Request URL: /favicon.ico
+Stack Trace:
+#0 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/ControllerFactory.php(86): Cake\Http\ControllerFactory->missingController(Object(Cake\Http\ServerRequest))
+#1 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/ControllerFactory.php(37): Cake\Http\ControllerFactory->getControllerClass(Object(Cake\Http\ServerRequest))
+#2 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/ActionDispatcher.php(91): Cake\Http\ControllerFactory->create(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#3 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/BaseApplication.php(232): Cake\Http\ActionDispatcher->dispatch(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#4 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Http\BaseApplication->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#5 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Middleware/CsrfProtectionMiddleware.php(103): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#6 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Http\Middleware\CsrfProtectionMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#7 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Routing/Middleware/RoutingMiddleware.php(157): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#8 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Routing\Middleware\RoutingMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#9 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Routing/Middleware/AssetMiddleware.php(97): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#10 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Routing\Middleware\AssetMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#11 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Error/Middleware/ErrorHandlerMiddleware.php(98): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#12 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Error\Middleware\ErrorHandlerMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#13 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(51): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#14 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Server.php(98): Cake\Http\Runner->run(Object(Cake\Http\MiddlewareQueue), Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#15 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/webroot/index.php(40): Cake\Http\Server->run()
+#16 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/index.php(16): require('/media/sf_publi...')
+#17 {main}
+
+
+2019-08-02 13:36:53 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 13:36:53 Error: [Cake\Controller\Exception\MissingActionException] Action ProjectsController::timeLogSystemTLS() could not be found, or is not accessible.
+Exception Attributes: array (
+  'controller' => 'ProjectsController',
+  'action' => 'timeLogSystemTLS',
+  'prefix' => '',
+  'plugin' => false,
+)
+Request URL: /Projects/Time-Log-System-TLS/
+Stack Trace:
+#0 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/ActionDispatcher.php(120): Cake\Controller\Controller->invokeAction()
+#1 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/ActionDispatcher.php(94): Cake\Http\ActionDispatcher->_invoke(Object(App\Controller\ProjectsController))
+#2 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/BaseApplication.php(232): Cake\Http\ActionDispatcher->dispatch(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#3 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Http\BaseApplication->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#4 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Middleware/CsrfProtectionMiddleware.php(103): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#5 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Http\Middleware\CsrfProtectionMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#6 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Routing/Middleware/RoutingMiddleware.php(157): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#7 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Routing\Middleware\RoutingMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#8 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Routing/Middleware/AssetMiddleware.php(88): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#9 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Routing\Middleware\AssetMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#10 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Error/Middleware/ErrorHandlerMiddleware.php(98): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#11 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Error\Middleware\ErrorHandlerMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#12 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(51): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#13 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Server.php(98): Cake\Http\Runner->run(Object(Cake\Http\MiddlewareQueue), Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#14 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/webroot/index.php(40): Cake\Http\Server->run()
+#15 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/index.php(16): require('/media/sf_publi...')
+#16 {main}
+
+
+2019-08-02 13:36:55 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 13:36:55 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 13:36:56 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 13:36:56 Error: [Cake\Routing\Exception\MissingControllerException] Controller class Js could not be found.
+Exception Attributes: array (
+  'class' => 'Js',
+  'plugin' => false,
+  'prefix' => false,
+  '_ext' => false,
+)
+Request URL: /js/functions.js
+Referer URL: http://192.168.56.102/login?redirect=%2FProjects%2F
+Stack Trace:
+#0 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/ControllerFactory.php(39): Cake\Http\ControllerFactory->missingController(Object(Cake\Http\ServerRequest))
+#1 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/ActionDispatcher.php(91): Cake\Http\ControllerFactory->create(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#2 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/BaseApplication.php(232): Cake\Http\ActionDispatcher->dispatch(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#3 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Http\BaseApplication->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#4 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Middleware/CsrfProtectionMiddleware.php(107): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#5 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Http\Middleware\CsrfProtectionMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#6 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Routing/Middleware/RoutingMiddleware.php(157): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#7 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Routing\Middleware\RoutingMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#8 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Routing/Middleware/AssetMiddleware.php(97): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#9 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Routing\Middleware\AssetMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#10 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Error/Middleware/ErrorHandlerMiddleware.php(98): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#11 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Error\Middleware\ErrorHandlerMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#12 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(51): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#13 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Server.php(98): Cake\Http\Runner->run(Object(Cake\Http\MiddlewareQueue), Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#14 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/webroot/index.php(40): Cake\Http\Server->run()
+#15 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/index.php(16): require('/media/sf_publi...')
+#16 {main}
+
+
+2019-08-02 13:37:12 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 13:37:12 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 13:37:12 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 13:37:12 Error: [Cake\Routing\Exception\MissingControllerException] Controller class Js could not be found.
+Exception Attributes: array (
+  'class' => 'Js',
+  'plugin' => false,
+  'prefix' => false,
+  '_ext' => false,
+)
+Request URL: /js/functions.js
+Referer URL: http://192.168.56.102/login
+Stack Trace:
+#0 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/ControllerFactory.php(39): Cake\Http\ControllerFactory->missingController(Object(Cake\Http\ServerRequest))
+#1 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/ActionDispatcher.php(91): Cake\Http\ControllerFactory->create(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#2 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/BaseApplication.php(232): Cake\Http\ActionDispatcher->dispatch(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#3 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Http\BaseApplication->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#4 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Middleware/CsrfProtectionMiddleware.php(107): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#5 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Http\Middleware\CsrfProtectionMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#6 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Routing/Middleware/RoutingMiddleware.php(157): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#7 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Routing\Middleware\RoutingMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#8 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Routing/Middleware/AssetMiddleware.php(97): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#9 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Routing\Middleware\AssetMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#10 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Error/Middleware/ErrorHandlerMiddleware.php(98): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#11 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Error\Middleware\ErrorHandlerMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#12 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(51): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#13 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Server.php(98): Cake\Http\Runner->run(Object(Cake\Http\MiddlewareQueue), Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#14 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/webroot/index.php(40): Cake\Http\Server->run()
+#15 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/index.php(16): require('/media/sf_publi...')
+#16 {main}
+
+
+2019-08-02 13:38:44 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 13:39:00 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 13:51:00 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 13:51:02 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 13:51:18 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 13:51:19 Error: [PDOException] SQLSTATE[HY000] [1049] Unknown database 'time_log_system_tls_production'
+Request URL: /login
+Referer URL: http://192.168.56.102/login
+Stack Trace:
+#0 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Database/Driver.php(92): PDO->__construct('mysql:host=loca...', 'root', '', Array)
+#1 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Database/Driver/Mysql.php(106): Cake\Database\Driver->_connect('mysql:host=loca...', Array)
+#2 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Database/Schema/BaseSchema.php(45): Cake\Database\Driver\Mysql->connect()
+#3 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Database/Dialect/MysqlDialectTrait.php(63): Cake\Database\Schema\BaseSchema->__construct(Object(Cake\Database\Driver\Mysql))
+#4 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Database/Schema/Collection.php(52): Cake\Database\Driver\Mysql->schemaDialect()
+#5 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Database/Schema/CachedCollection.php(42): Cake\Database\Schema\Collection->__construct(Object(Cake\Database\Connection))
+#6 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Database/Connection.php(391): Cake\Database\Schema\CachedCollection->__construct(Object(Cake\Database\Connection), true)
+#7 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/ORM/Table.php(547): Cake\Database\Connection->getSchemaCollection()
+#8 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/ORM/Query.php(270): Cake\ORM\Table->getSchema()
+#9 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/ORM/Query.php(168): Cake\ORM\Query->addDefaultTypes(Object(App\Model\Table\UsersTable))
+#10 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/ORM/Table.php(1758): Cake\ORM\Query->__construct(Object(Cake\Database\Connection), Object(App\Model\Table\UsersTable))
+#11 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/ORM/Table.php(1350): Cake\ORM\Table->query()
+#12 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Auth/BaseAuthenticate.php(179): Cake\ORM\Table->find('all', Array)
+#13 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Auth/BaseAuthenticate.php(117): Cake\Auth\BaseAuthenticate->_query('sa@sa.com')
+#14 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Auth/FormAuthenticate.php(78): Cake\Auth\BaseAuthenticate->_findUser('sa@sa.com', 'test')
+#15 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Controller/Component/AuthComponent.php(824): Cake\Auth\FormAuthenticate->authenticate(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#16 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/src/Controller/UsersController.php(162): Cake\Controller\Component\AuthComponent->identify(Array)
+#17 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Controller/Controller.php(596): App\Controller\UsersController->login()
+#18 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/ActionDispatcher.php(120): Cake\Controller\Controller->invokeAction()
+#19 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/ActionDispatcher.php(94): Cake\Http\ActionDispatcher->_invoke(Object(App\Controller\UsersController))
+#20 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/BaseApplication.php(232): Cake\Http\ActionDispatcher->dispatch(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#21 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Http\BaseApplication->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#22 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Middleware/CsrfProtectionMiddleware.php(107): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#23 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Http\Middleware\CsrfProtectionMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#24 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Routing/Middleware/RoutingMiddleware.php(157): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#25 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Routing\Middleware\RoutingMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#26 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Routing/Middleware/AssetMiddleware.php(88): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#27 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Routing\Middleware\AssetMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#28 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Error/Middleware/ErrorHandlerMiddleware.php(98): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#29 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Error\Middleware\ErrorHandlerMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#30 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Runner.php(51): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#31 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/vendor/cakephp/cakephp/src/Http/Server.php(98): Cake\Http\Runner->run(Object(Cake\Http\MiddlewareQueue), Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#32 /media/sf_public_html/Projects/Time-Log-System-TLS/public_html/webroot/index.php(40): Cake\Http\Server->run()
+#33 {main}
+
+
+2019-08-02 13:51:20 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 19:30:12 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 19:30:13 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 19:31:15 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 19:38:41 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 19:40:41 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 19:48:33 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 19:50:14 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 19:50:36 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 19:50:40 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 19:55:04 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 19:55:07 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2019-08-02 19:56:14 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
