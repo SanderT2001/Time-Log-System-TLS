@@ -1,9 +1,9 @@
 # CakePHP specific files #
 ##########################
-/time_log_system_tls/config/.env
-/time_log_system_tls/logs/*
-/time_log_system_tls/tmp/*
-/time_log_system_tls/vendor/*
+/public_html/config/.env
+/public_html/logs/*
+/public_html/tmp/*
+/public_html/vendor/*
 
 # OS generated files #
 ######################
