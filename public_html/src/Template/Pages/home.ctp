@@ -17,7 +17,7 @@ use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Datasource\ConnectionManager;
 use Cake\Error\Debugger;
-use Cake\Network\Exception\NotFoundException;
+use Cake\Http\Exception\NotFoundException;
 
 $this->layout = false;
 
@@ -131,21 +131,21 @@ $cakeDescription = 'CakePHP: the rapid development PHP framework';
 <div class="row">
     <div class="columns large-6">
         <h4>Database</h4>
-<?php
-try {
-    $connection = ConnectionManager::get('default');
-    $connected = $connection->connect();
-} catch (Exception $connectionError) {
-    $connected = false;
-    $errorMsg = $connectionError->getMessage();
-    if (method_exists($connectionError, 'getAttributes')) :
-        $attributes = $connectionError->getAttributes();
-    if (isset($errorMsg['message'])) :
-        $errorMsg .= '<br />' . $attributes['message'];
-endif;
-endif;
-}
-?>
+        <?php
+        try {
+            $connection = ConnectionManager::get('default');
+            $connected = $connection->connect();
+        } catch (Exception $connectionError) {
+            $connected = false;
+            $errorMsg = $connectionError->getMessage();
+            if (method_exists($connectionError, 'getAttributes')) :
+                $attributes = $connectionError->getAttributes();
+                if (isset($errorMsg['message'])) :
+                    $errorMsg .= '<br />' . $attributes['message'];
+                endif;
+            endif;
+        }
+        ?>
         <ul>
         <?php if ($connected) : ?>
             <li class="bullet success">CakePHP is able to connect to the database.</li>
@@ -157,7 +157,7 @@ endif;
     <div class="columns large-6">
         <h4>DebugKit</h4>
         <ul>
-        <?php if (Plugin::loaded('DebugKit')) : ?>
+        <?php if (Plugin::isLoaded('DebugKit')) : ?>
             <li class="bullet success">DebugKit is loaded.</li>
         <?php else : ?>
             <li class="bullet problem">DebugKit is NOT loaded. You need to either install pdo_sqlite, or define the "debug_kit" connection name.</li>
@@ -179,9 +179,7 @@ endif;
         <h3>Getting Started</h3>
         <ul>
             <li class="bullet book"><a target="_blank" href="https://book.cakephp.org/3.0/en/">CakePHP 3.0 Docs</a></li>
-            <li class="bullet book"><a target="_blank" href="https://book.cakephp.org/3.0/en/tutorials-and-examples/bookmarks/intro.html">The 15 min Bookmarker Tutorial</a></li>
-            <li class="bullet book"><a target="_blank" href="https://book.cakephp.org/3.0/en/tutorials-and-examples/blog/blog.html">The 15 min Blog Tutorial</a></li>
-            <li class="bullet book"><a target="_blank" href="https://book.cakephp.org/3.0/en/tutorials-and-examples/cms/installation.html">The 15 min CMS Tutorial</a></li>
+            <li class="bullet book"><a target="_blank" href="https://book.cakephp.org/3.0/en/tutorials-and-examples/cms/installation.html">The 20 min CMS Tutorial</a></li>
         </ul>
     </div>
 </div>

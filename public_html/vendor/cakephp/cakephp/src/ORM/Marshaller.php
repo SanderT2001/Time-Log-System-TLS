@@ -248,6 +248,7 @@ class Marshaller
         } elseif (is_string($options['validate'])) {
             $validator = $this->_table->getValidator($options['validate']);
         } elseif (is_object($options['validate'])) {
+            /** @var \Cake\Validation\Validator $validator */
             $validator = $options['validate'];
         }
 
@@ -308,7 +309,7 @@ class Marshaller
         $targetTable = $assoc->getTarget();
         $marshaller = $targetTable->marshaller();
         $types = [Association::ONE_TO_ONE, Association::MANY_TO_ONE];
-        if (in_array($assoc->type(), $types)) {
+        if (in_array($assoc->type(), $types, true)) {
             return $marshaller->one($value, (array)$options);
         }
         if ($assoc->type() === Association::ONE_TO_MANY || $assoc->type() === Association::MANY_TO_MANY) {
@@ -746,11 +747,22 @@ class Marshaller
         $targetTable = $assoc->getTarget();
         $marshaller = $targetTable->marshaller();
         $types = [Association::ONE_TO_ONE, Association::MANY_TO_ONE];
-        if (in_array($assoc->type(), $types)) {
+        if (in_array($assoc->type(), $types, true)) {
             return $marshaller->merge($original, $value, (array)$options);
         }
         if ($assoc->type() === Association::MANY_TO_MANY) {
             return $marshaller->_mergeBelongsToMany($original, $assoc, $value, (array)$options);
+        }
+
+        if ($assoc->type() === Association::ONE_TO_MANY) {
+            $hasIds = array_key_exists('_ids', $value);
+            $onlyIds = array_key_exists('onlyIds', $options) && $options['onlyIds'];
+            if ($hasIds && is_array($value['_ids'])) {
+                return $this->_loadAssociatedByIds($assoc, $value['_ids']);
+            }
+            if ($hasIds || $onlyIds) {
+                return [];
+            }
         }
 
         return $marshaller->mergeMany($original, $value, (array)$options);
@@ -780,7 +792,7 @@ class Marshaller
             return [];
         }
 
-        if (!empty($associated) && !in_array('_joinData', $associated) && !isset($associated['_joinData'])) {
+        if (!empty($associated) && !in_array('_joinData', $associated, true) && !isset($associated['_joinData'])) {
             return $this->mergeMany($original, $value, $options);
         }
 

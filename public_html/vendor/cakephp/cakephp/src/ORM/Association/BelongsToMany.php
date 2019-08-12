@@ -825,12 +825,12 @@ class BelongsToMany extends Association
         $targetPrimaryKey = (array)$target->getPrimaryKey();
         $bindingKey = (array)$this->getBindingKey();
         $jointProperty = $this->_junctionProperty;
-        $junctionAlias = $junction->getAlias();
+        $junctionRegistryAlias = $junction->getRegistryAlias();
 
         foreach ($targetEntities as $e) {
             $joint = $e->get($jointProperty);
             if (!$joint || !($joint instanceof EntityInterface)) {
-                $joint = new $entityClass([], ['markNew' => true, 'source' => $junctionAlias]);
+                $joint = new $entityClass([], ['markNew' => true, 'source' => $junctionRegistryAlias]);
             }
             $sourceKeys = array_combine($foreignKey, $sourceEntity->extract($bindingKey));
             $targetKeys = array_combine($assocForeignKey, $e->extract($targetPrimaryKey));
@@ -1129,7 +1129,8 @@ class BelongsToMany extends Association
     protected function _appendJunctionJoin($query, $conditions)
     {
         $name = $this->_junctionAssociationName();
-        $joins = $query->join();
+        /** @var array $joins */
+        $joins = $query->clause('join');
         $matching = [
             $name => [
                 'table' => $this->junction()->getTable(),
@@ -1386,6 +1387,7 @@ class BelongsToMany extends Association
         $assocForeignKey = (array)$belongsTo->getForeignKey();
         $sourceKey = $sourceEntity->extract((array)$source->getPrimaryKey());
 
+        $unions = [];
         foreach ($missing as $key) {
             $unions[] = $hasMany->find('all')
                 ->where(array_combine($foreignKey, $sourceKey))

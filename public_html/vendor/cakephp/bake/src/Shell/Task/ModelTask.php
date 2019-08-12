@@ -21,6 +21,7 @@ use Cake\Datasource\ConnectionManager;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
+use Cake\Validation\Validation;
 
 /**
  * Task class for generating model files.
@@ -290,7 +291,7 @@ class ModelTask extends BakeTask
             if ($tableClass === 'Cake\ORM\Table') {
                 $namespace = $appNamespace;
 
-                $className = $association->className();
+                $className = $association->getClassName();
                 if (strlen($className)) {
                     list($plugin, $className) = pluginSplit($className);
                     if ($plugin !== null) {
@@ -555,9 +556,12 @@ class ModelTask extends BakeTask
 
         $schema = $model->getSchema();
         foreach ($schema->columns() as $column) {
+            $columnSchema = $schema->getColumn($column);
+
             $properties[$column] = [
                 'kind' => 'column',
-                'type' => $schema->getColumnType($column)
+                'type' => $columnSchema['type'],
+                'null' => $columnSchema['null'],
             ];
         }
 
@@ -707,11 +711,25 @@ class ModelTask extends BakeTask
         } elseif ($metaData['type'] === 'uuid') {
             $rules['uuid'] = [];
         } elseif ($metaData['type'] === 'integer') {
-            $rules['integer'] = [];
+            if ($metaData['unsigned']) {
+                $rules['nonNegativeInteger'] = [];
+            } else {
+                $rules['integer'] = [];
+            }
         } elseif ($metaData['type'] === 'float') {
             $rules['numeric'] = [];
+            if ($metaData['unsigned']) {
+                $rules['greaterThanOrEqual'] = [
+                    0
+                ];
+            }
         } elseif ($metaData['type'] === 'decimal') {
             $rules['decimal'] = [];
+            if ($metaData['unsigned']) {
+                $rules['greaterThanOrEqual'] = [
+                    0
+                ];
+            }
         } elseif ($metaData['type'] === 'boolean') {
             $rules['boolean'] = [];
         } elseif ($metaData['type'] === 'date') {
@@ -731,20 +749,34 @@ class ModelTask extends BakeTask
             }
         }
 
-        if (in_array($fieldName, $primaryKey)) {
-            $rules['allowEmpty'] = ["'create'"];
-        } elseif ($metaData['null'] === true) {
-            $rules['allowEmpty'] = [];
-        } else {
-            $rules['requirePresence'] = ["'create'"];
-            $rules['notEmpty'] = [];
-        }
-
         $validation = [];
         foreach ($rules as $rule => $args) {
             $validation[$rule] = [
                 'rule' => $rule,
                 'args' => $args
+            ];
+        }
+
+        if (in_array($fieldName, $primaryKey)) {
+            $validation['allowEmpty'] = [
+                'rule' => $this->getEmptyMethod($fieldName, $metaData),
+                'args' => ['null', "'create'"],
+            ];
+        } elseif ($metaData['null'] === true) {
+            $validation['allowEmpty'] = [
+                'rule' => $this->getEmptyMethod($fieldName, $metaData),
+                'args' => [],
+            ];
+        } else {
+            if ($metaData['default'] === null || $metaData['default'] === false) {
+                $validation['requirePresence'] = [
+                    'rule' => 'requirePresence',
+                    'args' => ["'create'"],
+                ];
+            }
+            $validation['notEmpty'] = [
+                'rule' => $this->getEmptyMethod($fieldName, $metaData, 'not'),
+                'args' => [],
             ];
         }
 
@@ -761,6 +793,35 @@ class ModelTask extends BakeTask
         }
 
         return $validation;
+    }
+
+    /**
+     * Get the specific allow empty method for field based on metadata.
+     *
+     * @param string $fieldName Field name.
+     * @param array $metaData Field meta data.
+     * @param string $prefix Method name prefix.
+     * @return string
+     */
+    protected function getEmptyMethod($fieldName, array $metaData, $prefix = 'allow')
+    {
+        switch ($metaData['type']) {
+            case 'date':
+                return $prefix . 'EmptyDate';
+
+            case 'time':
+                return $prefix . 'EmptyTime';
+
+            case 'datetime':
+            case 'timestamp':
+                return $prefix . 'EmptyDateTime';
+        }
+
+        if (preg_match('/file|image/', $fieldName)) {
+            return $prefix . 'EmptyFile';
+        }
+
+        return $prefix . 'EmptyString';
     }
 
     /**

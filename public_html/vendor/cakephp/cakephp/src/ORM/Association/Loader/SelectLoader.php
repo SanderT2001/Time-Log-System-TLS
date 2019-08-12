@@ -396,7 +396,7 @@ class SelectLoader
     protected function _buildSubquery($query)
     {
         $filterQuery = clone $query;
-        $filterQuery->enableAutoFields(false);
+        $filterQuery->disableAutoFields();
         $filterQuery->mapReduce(null, null, true);
         $filterQuery->formatResults(null, true);
         $filterQuery->contain([], true);
@@ -459,8 +459,8 @@ class SelectLoader
     protected function _buildResultMap($fetchQuery, $options)
     {
         $resultMap = [];
-        $singleResult = in_array($this->associationType, [Association::MANY_TO_ONE, Association::ONE_TO_ONE]);
-        $keys = in_array($this->associationType, [Association::ONE_TO_ONE, Association::ONE_TO_MANY]) ?
+        $singleResult = in_array($this->associationType, [Association::MANY_TO_ONE, Association::ONE_TO_ONE], true);
+        $keys = in_array($this->associationType, [Association::ONE_TO_ONE, Association::ONE_TO_MANY], true) ?
             $this->foreignKey :
             $this->bindingKey;
         $key = (array)$keys;

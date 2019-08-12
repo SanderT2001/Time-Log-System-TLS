@@ -205,6 +205,7 @@ class Controller implements EventListenerInterface, EventDispatcherInterface
      *
      * @var array
      * @see \Cake\View\View
+     * @deprecated 3.7.0 Use ViewBuilder::setOptions() or any one of it's setter methods instead.
      */
     protected $_validViewOptions = [
         'passedArgs'
@@ -370,11 +371,24 @@ class Controller implements EventListenerInterface, EventDispatcherInterface
         }
 
         list($plugin, $class) = pluginSplit($this->modelClass, true);
-        if ($class !== $name) {
-            return false;
+        if ($class === $name) {
+            return $this->loadModel($plugin . $class);
         }
 
-        return $this->loadModel($plugin . $class);
+        $trace = debug_backtrace();
+        $parts = explode('\\', get_class($this));
+        trigger_error(
+            sprintf(
+                'Undefined property: %s::$%s in %s on line %s',
+                array_pop($parts),
+                $name,
+                $trace[0]['file'],
+                $trace[0]['line']
+            ),
+            E_USER_NOTICE
+        );
+
+        return false;
     }
 
     /**
@@ -498,7 +512,7 @@ class Controller implements EventListenerInterface, EventDispatcherInterface
     }
 
     /**
-     * Disbale automatic action rendering.
+     * Disable automatic action rendering.
      *
      * @return $this
      * @since 3.6.0
@@ -593,7 +607,12 @@ class Controller implements EventListenerInterface, EventDispatcherInterface
         /* @var callable $callable */
         $callable = [$this, $request->getParam('action')];
 
-        return $callable(...array_values($request->getParam('pass')));
+        $result = $callable(...array_values($request->getParam('pass')));
+        if ($result instanceof Response) {
+            $this->response = $result;
+        }
+
+        return $result;
     }
 
     /**
@@ -757,7 +776,7 @@ class Controller implements EventListenerInterface, EventDispatcherInterface
         }
 
         if ($this->request->getParam('bare')) {
-            $builder->enableAutoLayout(false);
+            $builder->disableAutoLayout();
         }
         $this->autoRender = false;
 
@@ -775,7 +794,7 @@ class Controller implements EventListenerInterface, EventDispatcherInterface
 
         $this->View = $this->createView();
         $contents = $this->View->render($view, $layout);
-        $this->response = $this->View->response->withStringBody($contents);
+        $this->setResponse($this->View->getResponse()->withStringBody($contents));
 
         return $this->response;
     }

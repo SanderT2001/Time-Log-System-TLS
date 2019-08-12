@@ -110,6 +110,38 @@ class InlineControlStructureSniff implements Sniff
             }
         }//end if
 
+        if (isset($tokens[$stackPtr]['parenthesis_opener'], $tokens[$stackPtr]['parenthesis_closer']) === false
+            && $tokens[$stackPtr]['code'] !== T_ELSE
+        ) {
+            if ($tokens[$stackPtr]['code'] !== T_DO) {
+                // Live coding or parse error.
+                return;
+            }
+
+            $nextWhile = $phpcsFile->findNext(T_WHILE, ($stackPtr + 1));
+            if ($nextWhile !== false
+                && isset($tokens[$nextWhile]['parenthesis_opener'], $tokens[$nextWhile]['parenthesis_closer']) === false
+            ) {
+                // Live coding or parse error.
+                return;
+            }
+
+            unset($nextWhile);
+        }
+
+        $start = $stackPtr;
+        if (isset($tokens[$stackPtr]['parenthesis_closer']) === true) {
+            $start = $tokens[$stackPtr]['parenthesis_closer'];
+        }
+
+        $nextNonEmpty = $phpcsFile->findNext(Tokens::$emptyTokens, ($start + 1), null, true);
+        if ($nextNonEmpty === false) {
+            // Live coding or parse error.
+            return;
+        }
+
+        unset($nextNonEmpty, $start);
+
         // This is a control structure without an opening brace,
         // so it is an inline statement.
         if ($this->error === true) {
@@ -153,7 +185,7 @@ class InlineControlStructureSniff implements Sniff
                 break;
             }
 
-            if (in_array($tokens[$end]['code'], $fixableScopeOpeners) === true
+            if (in_array($tokens[$end]['code'], $fixableScopeOpeners, true) === true
                 && isset($tokens[$end]['scope_opener']) === false
             ) {
                 // The best way to fix nested inline scopes is middle-out.
@@ -190,6 +222,12 @@ class InlineControlStructureSniff implements Sniff
                     // Account for TRY... CATCH statements.
                     if ($type === T_TRY && $nextType === T_CATCH) {
                         $end = $tokens[$next]['scope_closer'];
+                    }
+                } else if ($type === T_CLOSURE) {
+                    // There should be a semicolon after the closing brace.
+                    $next = $phpcsFile->findNext(Tokens::$emptyTokens, ($end + 1), null, true);
+                    if ($next !== false && $tokens[$next]['code'] === T_SEMICOLON) {
+                        $end = $next;
                     }
                 }//end if
 

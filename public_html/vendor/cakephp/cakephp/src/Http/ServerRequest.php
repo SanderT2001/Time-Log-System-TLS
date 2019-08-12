@@ -88,7 +88,7 @@ class ServerRequest implements ArrayAccess, ServerRequestInterface
      * The URL string used for the request.
      *
      * @var string
-     * @deprecated 3.6.0 This public property will be removed in 4.0.0. Use getRequestTarget() instead.
+     * @deprecated 3.6.0 This public property will be removed in 4.0.0. Use getPath() instead.
      */
     protected $url;
 
@@ -124,6 +124,13 @@ class ServerRequest implements ArrayAccess, ServerRequestInterface
      * @var bool
      */
     public $trustProxy = false;
+
+    /**
+     * trusted proxies list
+     *
+     * @var array
+     */
+    protected $trustedProxies = [];
 
     /**
      * Contents of php://input
@@ -267,7 +274,7 @@ class ServerRequest implements ArrayAccess, ServerRequestInterface
      * - `files` Uploaded file data formatted like $_FILES.
      * - `cookies` Cookies for this request.
      * - `environment` $_SERVER and $_ENV data.
-     * - ~~`url`~~ The URL without the base path for the request. This option is deprecated and will be removed in 4.0.0
+     * - `url` The URL without the base path for the request.
      * - `uri` The PSR7 UriInterface object. If null, one will be created.
      * - `base` The base URL for the request.
      * - `webroot` The webroot directory for the request.
@@ -308,7 +315,7 @@ class ServerRequest implements ArrayAccess, ServerRequestInterface
      */
     protected function _setConfig($config)
     {
-        if (!empty($config['url']) && $config['url'][0] === '/') {
+        if (strlen($config['url']) > 1 && $config['url'][0] === '/') {
             $config['url'] = substr($config['url'], 1);
         }
 
@@ -578,8 +585,24 @@ class ServerRequest implements ArrayAccess, ServerRequestInterface
     public function clientIp()
     {
         if ($this->trustProxy && $this->getEnv('HTTP_X_FORWARDED_FOR')) {
-            $addresses = explode(',', $this->getEnv('HTTP_X_FORWARDED_FOR'));
-            $ipaddr = end($addresses);
+            $addresses = array_map('trim', explode(',', $this->getEnv('HTTP_X_FORWARDED_FOR')));
+            $trusted = (count($this->trustedProxies) > 0);
+            $n = count($addresses);
+
+            if ($trusted) {
+                $trusted = array_diff($addresses, $this->trustedProxies);
+                $trusted = (count($trusted) === 1);
+            }
+
+            if ($trusted) {
+                return $addresses[0];
+            }
+
+            return $addresses[$n - 1];
+        }
+
+        if ($this->trustProxy && $this->getEnv('HTTP_X_REAL_IP')) {
+            $ipaddr = $this->getEnv('HTTP_X_REAL_IP');
         } elseif ($this->trustProxy && $this->getEnv('HTTP_CLIENT_IP')) {
             $ipaddr = $this->getEnv('HTTP_CLIENT_IP');
         } else {
@@ -587,6 +610,28 @@ class ServerRequest implements ArrayAccess, ServerRequestInterface
         }
 
         return trim($ipaddr);
+    }
+
+    /**
+     * register trusted proxies
+     *
+     * @param array $proxies ips list of trusted proxies
+     * @return void
+     */
+    public function setTrustedProxies(array $proxies)
+    {
+        $this->trustedProxies = $proxies;
+        $this->trustProxy = true;
+    }
+
+    /**
+     * Get trusted proxies
+     *
+     * @return array
+     */
+    public function getTrustedProxies()
+    {
+        return $this->trustedProxies;
     }
 
     /**
@@ -638,7 +683,7 @@ class ServerRequest implements ArrayAccess, ServerRequestInterface
 
             return $this->is(...$params);
         }
-        throw new BadMethodCallException(sprintf('Method %s does not exist', $name));
+        throw new BadMethodCallException(sprintf('Method "%s()" does not exist', $name));
     }
 
     /**
@@ -911,16 +956,15 @@ class ServerRequest implements ArrayAccess, ServerRequestInterface
 
     /**
      * Add a new detector to the list of detectors that a request can use.
-     * There are several different formats and types of detectors that can be set.
+     * There are several different types of detectors that can be set.
      *
-     * ### Callback detectors
+     * ### Callback comparison
      *
      * Callback detectors allow you to provide a callable to handle the check.
      * The callback will receive the request object as its only parameter.
      *
      * ```
      * addDetector('custom', function ($request) { //Return a boolean });
-     * addDetector('custom', ['SomeClass', 'somemethod']);
      * ```
      *
      * ### Environment value comparison
@@ -928,7 +972,36 @@ class ServerRequest implements ArrayAccess, ServerRequestInterface
      * An environment value comparison, compares a value fetched from `env()` to a known value
      * the environment value is equality checked against the provided value.
      *
-     * e.g `addDetector('post', ['env' => 'REQUEST_METHOD', 'value' => 'POST'])`
+     * ```
+     * addDetector('post', ['env' => 'REQUEST_METHOD', 'value' => 'POST']);
+     * ```
+     *
+     * ### Request parameter comparison
+     *
+     * Allows for custom detectors on the request parameters.
+     *
+     * ```
+     * addDetector('requested', ['param' => 'requested', 'value' => 1]);
+     * ```
+     *
+     * ### Accept comparison
+     *
+     * Allows for detector to compare against Accept header value.
+     *
+     * ```
+     * addDetector('csv', ['accept' => 'text/csv']);
+     * ```
+     *
+     * ### Header comparison
+     *
+     * Allows for one or more headers to be compared.
+     *
+     * ```
+     * addDetector('fancy', ['header' => ['X-Fancy' => 1]);
+     * ```
+     *
+     * The `param`, `env` and comparison types allow the following
+     * value comparison options:
      *
      * ### Pattern value comparison
      *
@@ -947,17 +1020,11 @@ class ServerRequest implements ArrayAccess, ServerRequestInterface
      * addDetector('mobile', ['env' => 'HTTP_USER_AGENT', 'options' => ['Fennec']]);
      * ```
      *
-     * ### Request parameter detectors
-     *
-     * Allows for custom detectors on the request parameters.
-     *
-     * e.g `addDetector('requested', ['param' => 'requested', 'value' => 1]`
-     *
-     * You can also make parameter detectors that accept multiple values
+     * You can also make compare against multiple values
      * using the `options` key. This is useful when you want to check
-     * if a request parameter is in a list of options.
+     * if a request value is in a list of options.
      *
-     * `addDetector('extension', ['param' => 'ext', 'options' => ['pdf', 'csv']]`
+     * `addDetector('extension', ['param' => '_ext', 'options' => ['pdf', 'csv']]`
      *
      * @param string $name The name of the detector.
      * @param callable|array $callable A callable or options array for the detector definition.
@@ -1493,8 +1560,8 @@ class ServerRequest implements ArrayAccess, ServerRequestInterface
     protected function _parseAcceptWithQualifier($header)
     {
         $accept = [];
-        $header = explode(',', $header);
-        foreach (array_filter($header) as $value) {
+        $headers = explode(',', $header);
+        foreach (array_filter($headers) as $value) {
             $prefValue = '1.0';
             $value = trim($value);
 
@@ -1812,7 +1879,7 @@ class ServerRequest implements ArrayAccess, ServerRequestInterface
      * Get the parsed request body data.
      *
      * If the request Content-Type is either application/x-www-form-urlencoded
-     * or multipart/form-data, nd the request method is POST, this will be the
+     * or multipart/form-data, and the request method is POST, this will be the
      * post data. For other content types, it may be the deserialized request
      * body.
      *
@@ -2446,5 +2513,5 @@ class ServerRequest implements ArrayAccess, ServerRequestInterface
     }
 }
 
-// @deprecated Add backwards compat alias.
+// @deprecated 3.4.0 Add backwards compat alias.
 class_alias('Cake\Http\ServerRequest', 'Cake\Network\Request');

@@ -41,17 +41,13 @@ class OperatorSpacingSniff implements Sniff
      */
     public function register()
     {
-        $comparison = Tokens::$comparisonTokens;
-        $operators  = Tokens::$operators;
-        $assignment = Tokens::$assignmentTokens;
-        $inlineIf   = [
-            T_INLINE_THEN,
-            T_INLINE_ELSE,
-        ];
+        $targets   = Tokens::$comparisonTokens;
+        $targets  += Tokens::$operators;
+        $targets  += Tokens::$assignmentTokens;
+        $targets[] = T_INLINE_THEN;
+        $targets[] = T_INLINE_ELSE;
 
-        return array_unique(
-            array_merge($comparison, $operators, $assignment, $inlineIf)
-        );
+        return $targets;
 
     }//end register()
 
@@ -220,11 +216,22 @@ class OperatorSpacingSniff implements Sniff
                     $operator,
                     $found,
                 ];
-                $fix   = $phpcsFile->addFixableError($error, $stackPtr, 'SpacingAfter', $data);
-                if ($fix === true) {
-                    $phpcsFile->fixer->replaceToken(($stackPtr + 1), ' ');
+
+                $nextNonWhitespace = $phpcsFile->findNext(T_WHITESPACE, ($stackPtr + 1), null, true);
+                if ($nextNonWhitespace !== false
+                    && isset(Tokens::$commentTokens[$tokens[$nextNonWhitespace]['code']]) === true
+                    && $found === 'newline'
+                ) {
+                    // Don't auto-fix when it's a comment or PHPCS annotation on a new line as
+                    // it causes fixer conflicts and can cause the meaning of annotations to change.
+                    $phpcsFile->addError($error, $stackPtr, 'SpacingAfter', $data);
+                } else {
+                    $fix = $phpcsFile->addFixableError($error, $stackPtr, 'SpacingAfter', $data);
+                    if ($fix === true) {
+                        $phpcsFile->fixer->replaceToken(($stackPtr + 1), ' ');
+                    }
                 }
-            }
+            }//end if
         }//end if
 
     }//end process()
@@ -321,6 +328,7 @@ class OperatorSpacingSniff implements Sniff
                 T_INLINE_THEN         => true,
                 T_INLINE_ELSE         => true,
                 T_CASE                => true,
+                T_OPEN_CURLY_BRACKET  => true,
             ];
 
             if (isset($invalidTokens[$tokens[$prev]['code']]) === true) {

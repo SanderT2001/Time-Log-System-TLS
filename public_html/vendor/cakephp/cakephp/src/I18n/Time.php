@@ -30,7 +30,7 @@ class Time extends MutableDateTime implements JsonSerializable
 
     /**
      * The format to use when formatting a time using `Cake\I18n\Time::i18nFormat()`
-     * and `__toString`
+     * and `__toString`. This format is also used by `parseDateTime()`.
      *
      * The format should be either the formatting constants from IntlDateFormatter as
      * described in (https://secure.php.net/manual/en/class.intldateformatter.php) or a pattern
@@ -172,7 +172,7 @@ class Time extends MutableDateTime implements JsonSerializable
      */
     public function toQuarter($range = false)
     {
-        $quarter = ceil($this->format('m') / 3);
+        $quarter = (int)ceil($this->format('m') / 3);
         if ($range === false) {
             return $quarter;
         }

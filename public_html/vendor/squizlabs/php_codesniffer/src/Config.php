@@ -23,7 +23,7 @@ class Config
      *
      * @var string
      */
-    const VERSION = '3.3.0';
+    const VERSION = '3.4.2';
 
     /**
      * Package stability; either stable, beta or alpha.
@@ -188,7 +188,7 @@ class Config
      * @param string $name The name of the property.
      *
      * @return mixed
-     * @throws RuntimeException If the setting name is invalid.
+     * @throws \PHP_CodeSniffer\Exceptions\RuntimeException If the setting name is invalid.
      */
     public function __get($name)
     {
@@ -208,7 +208,7 @@ class Config
      * @param mixed  $value The value of the property.
      *
      * @return void
-     * @throws RuntimeException If the setting name is invalid.
+     * @throws \PHP_CodeSniffer\Exceptions\RuntimeException If the setting name is invalid.
      */
     public function __set($name, $value)
     {
@@ -393,12 +393,6 @@ class Config
                 self::$overriddenDefaults['stdinContent'] = true;
             }
         }//end if
-
-        if (defined('PHP_CODESNIFFER_IN_TESTS') === true && defined('HHVM_VERSION') === true) {
-            // HHVM 3.25+ wont let us re-open STDIN after it is closed.
-            // So don't close it.
-            return;
-        }
 
         fclose($handle);
 
@@ -1298,6 +1292,8 @@ class Config
             $error .= $this->printShortUsage(true);
             throw new DeepExitException($error, 3);
         } else {
+            // Can't modify the files array directly because it's not a real
+            // class member, so need to use this little get/modify/set trick.
             $files       = $this->files;
             $files[]     = $file;
             $this->files = $files;
@@ -1370,7 +1366,7 @@ class Config
         echo '  [--standard=<standard>] [--sniffs=<sniffs>] [--exclude=<sniffs>]'.PHP_EOL;
         echo '  [--encoding=<encoding>] [--parallel=<processes>] [--generator=<generator>]'.PHP_EOL;
         echo '  [--extensions=<extensions>] [--ignore=<patterns>] [--ignore-annotations]'.PHP_EOL;
-        echo '  [--stdin-path=<stdinPath>] [--file-list=<fileList>] <file> - ...'.PHP_EOL;
+        echo '  [--stdin-path=<stdinPath>] [--file-list=<fileList>] [--filter=<filter>] <file> - ...'.PHP_EOL;
         echo PHP_EOL;
         echo ' -     Check STDIN instead of local files and directories'.PHP_EOL;
         echo ' -n    Do not print warnings (shortcut for --warning-severity=0)'.PHP_EOL;
@@ -1400,19 +1396,21 @@ class Config
         echo ' <cacheFile>    Use a specific file for caching (uses a temporary file by default)'.PHP_EOL;
         echo ' <basepath>     A path to strip from the front of file paths inside reports'.PHP_EOL;
         echo ' <bootstrap>    A comma separated list of files to run before processing begins'.PHP_EOL;
-        echo ' <file>         One or more files and/or directories to check'.PHP_EOL;
-        echo ' <fileList>     A file containing a list of files and/or directories to check (one per line)'.PHP_EOL;
         echo ' <encoding>     The encoding of the files being checked (default is utf-8)'.PHP_EOL;
         echo ' <extensions>   A comma separated list of file extensions to check'.PHP_EOL;
         echo '                The type of the file can be specified using: ext/type'.PHP_EOL;
         echo '                e.g., module/php,es/js'.PHP_EOL;
+        echo ' <file>         One or more files and/or directories to check'.PHP_EOL;
+        echo ' <fileList>     A file containing a list of files and/or directories to check (one per line)'.PHP_EOL;
+        echo ' <filter>       Use the "gitmodified" filter, or specify the path to a custom filter class'.PHP_EOL;
         echo ' <generator>    Uses either the "HTML", "Markdown" or "Text" generator'.PHP_EOL;
         echo '                (forces documentation generation instead of checking)'.PHP_EOL;
         echo ' <patterns>     A comma separated list of patterns to ignore files and directories'.PHP_EOL;
         echo ' <processes>    How many files should be checked simultaneously (default is 1)'.PHP_EOL;
         echo ' <report>       Print either the "full", "xml", "checkstyle", "csv"'.PHP_EOL;
         echo '                "json", "junit", "emacs", "source", "summary", "diff"'.PHP_EOL;
-        echo '                "svnblame", "gitblame", "hgblame" or "notifysend" report'.PHP_EOL;
+        echo '                "svnblame", "gitblame", "hgblame" or "notifysend" report,'.PHP_EOL;
+        echo '                or specify the path to a custom report class'.PHP_EOL;
         echo '                (the "full" report is printed by default)'.PHP_EOL;
         echo ' <reportFile>   Write the report to the specified file path'.PHP_EOL;
         echo ' <reportWidth>  How many columns wide screen reports should be printed'.PHP_EOL;
@@ -1439,7 +1437,7 @@ class Config
         echo '  [--severity=<severity>] [--error-severity=<severity>] [--warning-severity=<severity>]'.PHP_EOL;
         echo '  [--tab-width=<tabWidth>] [--encoding=<encoding>] [--parallel=<processes>]'.PHP_EOL;
         echo '  [--basepath=<basepath>] [--extensions=<extensions>] [--ignore=<patterns>]'.PHP_EOL;
-        echo '  [--stdin-path=<stdinPath>] [--file-list=<fileList>] <file> - ...'.PHP_EOL;
+        echo '  [--stdin-path=<stdinPath>] [--file-list=<fileList>] [--filter=<filter>] <file> - ...'.PHP_EOL;
         echo PHP_EOL;
         echo ' -     Fix STDIN instead of local files and directories'.PHP_EOL;
         echo ' -n    Do not fix warnings (shortcut for --warning-severity=0)'.PHP_EOL;
@@ -1459,12 +1457,13 @@ class Config
         echo PHP_EOL;
         echo ' <basepath>    A path to strip from the front of file paths inside reports'.PHP_EOL;
         echo ' <bootstrap>   A comma separated list of files to run before processing begins'.PHP_EOL;
-        echo ' <file>        One or more files and/or directories to fix'.PHP_EOL;
-        echo ' <fileList>    A file containing a list of files and/or directories to fix (one per line)'.PHP_EOL;
         echo ' <encoding>    The encoding of the files being fixed (default is utf-8)'.PHP_EOL;
         echo ' <extensions>  A comma separated list of file extensions to fix'.PHP_EOL;
         echo '               The type of the file can be specified using: ext/type'.PHP_EOL;
         echo '               e.g., module/php,es/js'.PHP_EOL;
+        echo ' <file>        One or more files and/or directories to fix'.PHP_EOL;
+        echo ' <fileList>    A file containing a list of files and/or directories to fix (one per line)'.PHP_EOL;
+        echo ' <filter>      Use the "gitmodified" filter, or specify the path to a custom filter class'.PHP_EOL;
         echo ' <patterns>    A comma separated list of patterns to ignore files and directories'.PHP_EOL;
         echo ' <processes>   How many files should be fixed simultaneously (default is 1)'.PHP_EOL;
         echo ' <severity>    The minimum severity required to fix an error or warning'.PHP_EOL;
@@ -1520,6 +1519,11 @@ class Config
             return $data;
         }
 
+        if ($name === "php") {
+            // For php, we know the executable path. There's no need to look it up.
+            return PHP_BINARY;
+        }
+
         if (array_key_exists($name, self::$executablePaths) === true) {
             return self::$executablePaths[$name];
         }
@@ -1554,7 +1558,7 @@ class Config
      *
      * @return bool
      * @see    getConfigData()
-     * @throws RuntimeException If the config file can not be written.
+     * @throws \PHP_CodeSniffer\Exceptions\RuntimeException If the config file can not be written.
      */
     public static function setConfigData($key, $value, $temp=false)
     {

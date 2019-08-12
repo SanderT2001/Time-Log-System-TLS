@@ -27,17 +27,17 @@ abstract class BaseNode implements NodeInterface
     const DEFAULT_PATH_SEPARATOR = '.';
 
     private static $placeholderUniquePrefix;
-    private static $placeholders = array();
+    private static $placeholders = [];
 
     protected $name;
     protected $parent;
-    protected $normalizationClosures = array();
-    protected $finalValidationClosures = array();
+    protected $normalizationClosures = [];
+    protected $finalValidationClosures = [];
     protected $allowOverwrite = true;
     protected $required = false;
     protected $deprecationMessage = null;
-    protected $equivalentValues = array();
-    protected $attributes = array();
+    protected $equivalentValues = [];
+    protected $attributes = [];
     protected $pathSeparator;
 
     private $handlingPlaceholder;
@@ -94,7 +94,7 @@ abstract class BaseNode implements NodeInterface
     public static function resetPlaceholders(): void
     {
         self::$placeholderUniquePrefix = null;
-        self::$placeholders = array();
+        self::$placeholders = [];
     }
 
     public function setAttribute($key, $value)
@@ -175,7 +175,7 @@ abstract class BaseNode implements NodeInterface
      */
     public function addEquivalentValue($originalValue, $equivalentValue)
     {
-        $this->equivalentValues[] = array($originalValue, $equivalentValue);
+        $this->equivalentValues[] = [$originalValue, $equivalentValue];
     }
 
     /**
@@ -259,7 +259,7 @@ abstract class BaseNode implements NodeInterface
      */
     public function getDeprecationMessage($node, $path)
     {
-        return strtr($this->deprecationMessage, array('%node%' => $node, '%path%' => $path));
+        return strtr($this->deprecationMessage, ['%node%' => $node, '%path%' => $path]);
     }
 
     /**
@@ -288,12 +288,7 @@ abstract class BaseNode implements NodeInterface
     final public function merge($leftSide, $rightSide)
     {
         if (!$this->allowOverwrite) {
-            throw new ForbiddenOverwriteException(sprintf(
-                'Configuration path "%s" cannot be overwritten. You have to '
-               .'define all options for this path, and any of its sub-paths in '
-               .'one configuration section.',
-                $this->getPath()
-            ));
+            throw new ForbiddenOverwriteException(sprintf('Configuration path "%s" cannot be overwritten. You have to define all options for this path, and any of its sub-paths in one configuration section.', $this->getPath()));
         }
 
         if ($leftSide !== $leftPlaceholders = self::resolvePlaceholderValue($leftSide)) {
@@ -373,7 +368,7 @@ abstract class BaseNode implements NodeInterface
      *
      * @param $value
      *
-     * @return $value The normalized array value
+     * @return The normalized array value
      */
     protected function preNormalize($value)
     {
@@ -489,7 +484,7 @@ abstract class BaseNode implements NodeInterface
      */
     protected function getValidPlaceholderTypes(): array
     {
-        return array();
+        return [];
     }
 
     private static function resolvePlaceholderValue($value)
@@ -499,8 +494,8 @@ abstract class BaseNode implements NodeInterface
                 return self::$placeholders[$value];
             }
 
-            if (0 === strpos($value, self::$placeholderUniquePrefix)) {
-                return array();
+            if (self::$placeholderUniquePrefix && 0 === strpos($value, self::$placeholderUniquePrefix)) {
+                return [];
             }
         }
 
@@ -510,7 +505,7 @@ abstract class BaseNode implements NodeInterface
     private function doValidateType($value): void
     {
         if (null !== $this->handlingPlaceholder && !$this->allowPlaceholders()) {
-            $e = new InvalidTypeException(sprintf('A dynamic value is not compatible with a "%s" node type at path "%s".', get_class($this), $this->getPath()));
+            $e = new InvalidTypeException(sprintf('A dynamic value is not compatible with a "%s" node type at path "%s".', \get_class($this), $this->getPath()));
             $e->setPath($this->getPath());
 
             throw $e;
@@ -529,8 +524,8 @@ abstract class BaseNode implements NodeInterface
             $e = new InvalidTypeException(sprintf(
                 'Invalid type for path "%s". Expected %s, but got %s.',
                 $this->getPath(),
-                1 === count($validTypes) ? '"'.reset($validTypes).'"' : 'one of "'.implode('", "', $validTypes).'"',
-                1 === count($knownTypes) ? '"'.reset($knownTypes).'"' : 'one of "'.implode('", "', $knownTypes).'"'
+                1 === \count($validTypes) ? '"'.reset($validTypes).'"' : 'one of "'.implode('", "', $validTypes).'"',
+                1 === \count($knownTypes) ? '"'.reset($knownTypes).'"' : 'one of "'.implode('", "', $knownTypes).'"'
             ));
             if ($hint = $this->getInfo()) {
                 $e->addHint($hint);

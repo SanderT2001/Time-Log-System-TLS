@@ -21,7 +21,6 @@ use Cake\TestSuite\Fixture\TestFixture;
  */
 class CategoryThreadsFixture extends TestFixture
 {
-
     /**
      * fields property
      *
@@ -31,8 +30,8 @@ class CategoryThreadsFixture extends TestFixture
         'id' => ['type' => 'integer'],
         'parent_id' => ['type' => 'integer'],
         'name' => ['type' => 'string', 'null' => false],
-        'lft' => ['type' => 'integer'],
-        'rght' => ['type' => 'integer'],
+        'lft' => ['type' => 'integer', 'unsigned' => true],
+        'rght' => ['type' => 'integer', 'unsigned' => true],
         'created' => 'datetime',
         'updated' => 'datetime',
         '_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']]]

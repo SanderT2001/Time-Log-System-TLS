@@ -77,6 +77,11 @@ class Validation
     const COMPARE_LESS_OR_EQUAL = '<=';
 
     /**
+     * Datetime ISO8601 format
+     */
+    const DATETIME_ISO8601 = 'iso8601';
+
+    /**
      * Some complex patterns needed in multiple places
      *
      * @var array
@@ -185,6 +190,29 @@ class Validation
     }
 
     /**
+     * Backwards compatibility wrapper for Validation::creditCard().
+     *
+     * @param string $check credit card number to validate
+     * @param string|array $type 'all' may be passed as a string, defaults to fast which checks format of most major credit cards
+     *    if an array is used only the values of the array are checked.
+     *    Example: ['amex', 'bankcard', 'maestro']
+     * @param bool $deep set to true this will check the Luhn algorithm of the credit card.
+     * @param string|null $regex A custom regex can also be passed, this will be used instead of the defined regex values
+     * @return bool Success
+     * @deprecated 3.7.0 Use Validation::creditCard() instead.
+     * @see \Cake\Validation\Validation::creditCard()
+     */
+    public static function cc($check, $type = 'fast', $deep = false, $regex = null)
+    {
+        deprecationWarning(
+            'Validation::cc() is deprecated. ' .
+            'Use Validation::creditCard() instead.'
+        );
+
+        return static::creditCard($check, $type, $deep, $regex);
+    }
+
+    /**
      * Validation of credit card numbers.
      * Returns true if $check is in the proper credit card format.
      *
@@ -197,7 +225,7 @@ class Validation
      * @return bool Success
      * @see \Cake\Validation\Validation::luhn()
      */
-    public static function cc($check, $type = 'fast', $deep = false, $regex = null)
+    public static function creditCard($check, $type = 'fast', $deep = false, $regex = null)
     {
         if (!is_scalar($check)) {
             return false;
@@ -540,6 +568,7 @@ class Validation
      *
      * @param string|\DateTimeInterface $check Value to check
      * @param string|array $dateFormat Format of the date part. See Validation::date() for more information.
+     *      Or `Validation::DATETIME_ISO8601` to valid an ISO8601 datetime value
      * @param string|null $regex Regex for the date part. If a custom regular expression is used this is the only validation that will occur.
      * @return bool True if the value is valid, false otherwise
      * @see \Cake\Validation\Validation::date()
@@ -553,19 +582,52 @@ class Validation
         if (is_object($check)) {
             return false;
         }
+        if ($dateFormat === static::DATETIME_ISO8601 && !static::iso8601($check)) {
+            return false;
+        }
+
         $valid = false;
         if (is_array($check)) {
             $check = static::_getDateString($check);
             $dateFormat = 'ymd';
         }
-        $parts = explode(' ', $check);
+        $parts = preg_split("/[\sT]+/", $check);
         if (!empty($parts) && count($parts) > 1) {
             $date = rtrim(array_shift($parts), ',');
             $time = implode(' ', $parts);
+            if ($dateFormat === static::DATETIME_ISO8601) {
+                $dateFormat = 'ymd';
+                $time = preg_split("/[TZ\-\+\.]/", $time);
+                $time = array_shift($time);
+            }
             $valid = static::date($date, $dateFormat, $regex) && static::time($time);
         }
 
         return $valid;
+    }
+
+    /**
+     * Validates an iso8601 datetime format
+     * ISO8601 recognize datetime like 2019 as a valid date. To validate and check date integrity, use @see \Cake\Validation\Validation::datetime()
+     *
+     * @param string|\DateTimeInterface $check Value to check
+     *
+     * @return bool True if the value is valid, false otherwise
+     *
+     * @see Regex credits: https://www.myintervals.com/blog/2009/05/20/iso-8601-date-validation-that-doesnt-suck/
+     */
+    public static function iso8601($check)
+    {
+        if ($check instanceof DateTimeInterface) {
+            return true;
+        }
+        if (is_object($check)) {
+            return false;
+        }
+
+        $regex = '/^([\+-]?\d{4}(?!\d{2}\b))((-?)((0[1-9]|1[0-2])(\3([12]\d|0[1-9]|3[01]))?|W([0-4]\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\d|[12]\d{2}|3([0-5]\d|6[1-6])))([T\s]((([01]\d|2[0-3])((:?)[0-5]\d)?|24\:?00)([\.,]\d+(?!:))?)?(\17[0-5]\d([\.,]\d+)?)?([zZ]|([\+-])([01]\d|2[0-3]):?([0-5]\d)?)?)?)?$/';
+
+        return static::_check($check, $regex);
     }
 
     /**
@@ -775,12 +837,15 @@ class Validation
     /**
      * Checks that value has a valid file extension.
      *
-     * @param string|array $check Value to check
+     * @param string|array|\Psr\Http\Message\UploadedFileInterface $check Value to check
      * @param array $extensions file extensions to allow. By default extensions are 'gif', 'jpeg', 'png', 'jpg'
      * @return bool Success
      */
     public static function extension($check, $extensions = ['gif', 'jpeg', 'png', 'jpg'])
     {
+        if ($check instanceof UploadedFileInterface) {
+            return static::extension($check->getClientFilename(), $extensions);
+        }
         if (is_array($check)) {
             $check = isset($check['name']) ? $check['name'] : array_shift($check);
 
@@ -826,6 +891,10 @@ class Validation
      */
     public static function minLength($check, $min)
     {
+        if (!is_scalar($check)) {
+            return false;
+        }
+
         return mb_strlen($check) >= $min;
     }
 
@@ -838,6 +907,10 @@ class Validation
      */
     public static function maxLength($check, $max)
     {
+        if (!is_scalar($check)) {
+            return false;
+        }
+
         return mb_strlen($check) <= $max;
     }
 
@@ -850,6 +923,10 @@ class Validation
      */
     public static function minLengthBytes($check, $min)
     {
+        if (!is_scalar($check)) {
+            return false;
+        }
+
         return strlen($check) >= $min;
     }
 
@@ -862,6 +939,10 @@ class Validation
      */
     public static function maxLengthBytes($check, $max)
     {
+        if (!is_scalar($check)) {
+            return false;
+        }
+
         return strlen($check) <= $max;
     }
 
@@ -1108,7 +1189,7 @@ class Validation
         }
 
         for ($position = ($length % 2); $position < $length; $position += 2) {
-            $number = $check[$position] * 2;
+            $number = (int)$check[$position] * 2;
             $sum += ($number < 10) ? $number : $number - 9;
         }
 
@@ -1160,7 +1241,7 @@ class Validation
             $mimeTypes[$key] = strtolower($val);
         }
 
-        return in_array($mime, $mimeTypes);
+        return in_array(strtolower($mime), $mimeTypes);
     }
 
     /**
@@ -1258,7 +1339,7 @@ class Validation
      * - `optional` - Whether or not this file is optional. Defaults to false.
      *   If true a missing file will pass the validator regardless of other constraints.
      *
-     * @param array $file The uploaded file data from PHP.
+     * @param array|\Psr\Http\Message\UploadedFileInterface $file The uploaded file data from PHP.
      * @param array $options An array of options for the validation.
      * @return bool
      */
@@ -1310,9 +1391,10 @@ class Validation
     /**
      * Validates the size of an uploaded image.
      *
-     * @param array $file The uploaded file data from PHP.
+     * @param array|\Psr\Http\Message\UploadedFileInterface $file The uploaded file data from PHP.
      * @param array $options Options to validate width and height.
      * @return bool
+     * @throws \InvalidArgumentException
      */
     public static function imageSize($file, $options)
     {
@@ -1320,13 +1402,11 @@ class Validation
             throw new InvalidArgumentException('Invalid image size validation parameters! Missing `width` and / or `height`.');
         }
 
-        if ($file instanceof UploadedFileInterface) {
-            $file = $file->getStream()->getContents();
-        } elseif (is_array($file) && isset($file['tmp_name'])) {
-            $file = $file['tmp_name'];
-        }
+        $filename = static::getFilename($file);
 
-        list($width, $height) = getimagesize($file);
+        list($width, $height) = getimagesize($filename);
+
+        $validHeight = $validWidth = null;
 
         if (isset($options['height'])) {
             $validHeight = self::comparison($height, $options['height'][0], $options['height'][1]);
@@ -1334,13 +1414,13 @@ class Validation
         if (isset($options['width'])) {
             $validWidth = self::comparison($width, $options['width'][0], $options['width'][1]);
         }
-        if (isset($validHeight, $validWidth)) {
+        if ($validHeight !== null && $validWidth !== null) {
             return ($validHeight && $validWidth);
         }
-        if (isset($validHeight)) {
+        if ($validHeight !== null) {
             return $validHeight;
         }
-        if (isset($validWidth)) {
+        if ($validWidth !== null) {
             return $validWidth;
         }
 
@@ -1351,7 +1431,7 @@ class Validation
      * Validates the image width.
      *
      * @param array $file The uploaded file data from PHP.
-     * @param string $operator Comparision operator.
+     * @param string $operator Comparison operator.
      * @param int $width Min or max width.
      * @return bool
      */
@@ -1369,7 +1449,7 @@ class Validation
      * Validates the image width.
      *
      * @param array $file The uploaded file data from PHP.
-     * @param string $operator Comparision operator.
+     * @param string $operator Comparison operator.
      * @param int $height Min or max width.
      * @return bool
      */
@@ -1511,7 +1591,7 @@ class Validation
      */
     public static function isInteger($value)
     {
-        if (!is_scalar($value) || is_float($value)) {
+        if (!is_numeric($value) || is_float($value)) {
             return false;
         }
         if (is_int($value)) {
@@ -1555,6 +1635,41 @@ class Validation
     public static function hexColor($check)
     {
         return static::_check($check, '/^#[0-9a-f]{6}$/iD');
+    }
+
+    /**
+     * Check that the input value has a valid International Bank Account Number IBAN syntax
+     * Requirements are uppercase, no whitespaces, max length 34, country code and checksum exist at right spots,
+     * body matches against checksum via Mod97-10 algorithm
+     *
+     * @param string $check The value to check
+     *
+     * @return bool Success
+     */
+    public static function iban($check)
+    {
+        if (!preg_match('/^[A-Z]{2}[0-9]{2}[A-Z0-9]{1,30}$/', $check)) {
+            return false;
+        }
+
+        $country = substr($check, 0, 2);
+        $checkInt = intval(substr($check, 2, 2));
+        $account = substr($check, 4);
+        $search = range('A', 'Z');
+        $replace = [];
+        foreach (range(10, 35) as $tmp) {
+            $replace[] = strval($tmp);
+        }
+        $numStr = str_replace($search, $replace, $account . $country . '00');
+        $checksum = intval(substr($numStr, 0, 1));
+        $numStrLength = strlen($numStr);
+        for ($pos = 1; $pos < $numStrLength; $pos++) {
+            $checksum *= 10;
+            $checksum += intval(substr($numStr, $pos, 1));
+            $checksum %= 97;
+        }
+
+        return ((98 - $checksum) === $checkInt);
     }
 
     /**

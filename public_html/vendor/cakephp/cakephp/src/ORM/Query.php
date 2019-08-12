@@ -33,6 +33,7 @@ use RuntimeException;
  *
  * @see \Cake\Collection\CollectionInterface For a full description of the collection methods supported by this class
  * @method \Cake\Collection\CollectionInterface each(callable $c) Passes each of the query results to the callable
+ * @method \Cake\Collection\CollectionInterface sortBy($callback, $dir = SORT_DESC, $type = \SORT_NUMERIC) Sorts the query with the callback
  * @method \Cake\Collection\CollectionInterface filter(callable $c = null) Keeps the results using passing the callable test
  * @method \Cake\Collection\CollectionInterface reject(callable $c) Removes the results passing the callable test
  * @method bool every(callable $c) Returns true if all the results pass the callable test
@@ -44,7 +45,7 @@ use RuntimeException;
  * @method mixed min($field, $type = SORT_NUMERIC) Returns the minimum value for a single column in all the results.
  * @method \Cake\Collection\CollectionInterface groupBy(string|callable $field) In-memory group all results by the value of a column.
  * @method \Cake\Collection\CollectionInterface indexBy(string|callable $field) Returns the results indexed by the value of a column.
- * @method int countBy(string|callable $field) Returns the number of unique values for a column
+ * @method \Cake\Collection\CollectionInterface countBy(string|callable $field) Returns the number of unique values for a column
  * @method float sumOf(string|callable $field) Returns the sum of all values for a single column
  * @method \Cake\Collection\CollectionInterface shuffle() In-memory randomize the order the results are returned
  * @method \Cake\Collection\CollectionInterface sample($size = 10) In-memory shuffle the results and return a subset of them.
@@ -65,11 +66,9 @@ use RuntimeException;
  *   with the first rows of the query and each of the items, then the second rows and so on.
  * @method \Cake\Collection\CollectionInterface chunk($size) Groups the results in arrays of $size rows each.
  * @method bool isEmpty() Returns true if this query found no results.
- * @mixin \Cake\Datasource\QueryTrait
  */
 class Query extends DatabaseQuery implements JsonSerializable, QueryInterface
 {
-
     use QueryTrait {
         cache as private _cache;
         all as private _all;
@@ -204,7 +203,7 @@ class Query extends DatabaseQuery implements JsonSerializable, QueryInterface
      * all the fields in the schema of the table or the association will be added to
      * the select clause.
      *
-     * @param array|\Cake\Database\ExpressionInterface|string|\Cake\ORM\Table|\Cake\ORM\Association $fields fields
+     * @param array|\Cake\Database\ExpressionInterface|callable|string|\Cake\ORM\Table|\Cake\ORM\Association $fields fields
      * to be added to the list.
      * @param bool $overwrite whether to reset fields with passed list or not
      * @return $this
@@ -1010,6 +1009,22 @@ class Query extends DatabaseQuery implements JsonSerializable, QueryInterface
     }
 
     /**
+     * Disable hydrating entities.
+     *
+     * Disabling hydration will cause array results to be returned for the query
+     * instead of entities.
+     *
+     * @return $this
+     */
+    public function disableHydration()
+    {
+        $this->_dirty();
+        $this->_hydrate = false;
+
+        return $this;
+    }
+
+    /**
      * Returns the current hydration mode.
      *
      * @return bool
@@ -1083,10 +1098,11 @@ class Query extends DatabaseQuery implements JsonSerializable, QueryInterface
     public function triggerBeforeFind()
     {
         if (!$this->_beforeFindFired && $this->_type === 'select') {
-            $table = $this->getRepository();
             $this->_beforeFindFired = true;
-            /* @var \Cake\Event\EventDispatcherInterface $table */
-            $table->dispatchEvent('Model.beforeFind', [
+
+            /** @var \Cake\Event\EventDispatcherInterface $repository */
+            $repository = $this->getRepository();
+            $repository->dispatchEvent('Model.beforeFind', [
                 $this,
                 new ArrayObject($this->_options),
                 !$this->isEagerLoaded()
@@ -1145,11 +1161,14 @@ class Query extends DatabaseQuery implements JsonSerializable, QueryInterface
             return;
         }
 
+        /** @var \Cake\ORM\Table $repository */
+        $repository = $this->getRepository();
+
         if (empty($this->_parts['from'])) {
-            $this->from([$this->_repository->getAlias() => $this->_repository->getTable()]);
+            $this->from([$repository->getAlias() => $repository->getTable()]);
         }
         $this->_addDefaultFields();
-        $this->getEagerLoader()->attachAssociations($this, $this->_repository, !$this->_hasFields);
+        $this->getEagerLoader()->attachAssociations($this, $repository, !$this->_hasFields);
         $this->_addDefaultSelectTypes();
     }
 
@@ -1164,13 +1183,16 @@ class Query extends DatabaseQuery implements JsonSerializable, QueryInterface
         $select = $this->clause('select');
         $this->_hasFields = true;
 
+        /** @var \Cake\ORM\Table $repository */
+        $repository = $this->getRepository();
+
         if (!count($select) || $this->_autoFields === true) {
             $this->_hasFields = false;
-            $this->select($this->getRepository()->getSchema()->columns());
+            $this->select($repository->getSchema()->columns());
             $select = $this->clause('select');
         }
 
-        $aliased = $this->aliasFields($select, $this->getRepository()->getAlias());
+        $aliased = $this->aliasFields($select, $repository->getAlias());
         $this->select($aliased, true);
     }
 
@@ -1207,7 +1229,10 @@ class Query extends DatabaseQuery implements JsonSerializable, QueryInterface
      */
     public function find($finder, array $options = [])
     {
-        return $this->getRepository()->callFinder($finder, $this, $options);
+        /** @var \Cake\ORM\Table $table */
+        $table = $this->getRepository();
+
+        return $table->callFinder($finder, $this, $options);
     }
 
     /**
@@ -1234,7 +1259,11 @@ class Query extends DatabaseQuery implements JsonSerializable, QueryInterface
      */
     public function update($table = null)
     {
-        $table = $table ?: $this->getRepository()->getTable();
+        if (!$table) {
+            /** @var \Cake\ORM\Table $repository */
+            $repository = $this->getRepository();
+            $table = $repository->getTable();
+        }
 
         return parent::update($table);
     }
@@ -1250,9 +1279,11 @@ class Query extends DatabaseQuery implements JsonSerializable, QueryInterface
      */
     public function delete($table = null)
     {
-        $repo = $this->getRepository();
-        $this->from([$repo->getAlias() => $repo->getTable()]);
+        /** @var \Cake\ORM\Table $repository */
+        $repository = $this->getRepository();
+        $this->from([$repository->getAlias() => $repository->getTable()]);
 
+        // We do not pass $table to parent class here
         return parent::delete();
     }
 
@@ -1271,7 +1302,9 @@ class Query extends DatabaseQuery implements JsonSerializable, QueryInterface
      */
     public function insert(array $columns, array $types = [])
     {
-        $table = $this->getRepository()->getTable();
+        /** @var \Cake\ORM\Table $repository */
+        $repository = $this->getRepository();
+        $table = $repository->getTable();
         $this->into($table);
 
         return parent::insert($columns, $types);
@@ -1336,6 +1369,18 @@ class Query extends DatabaseQuery implements JsonSerializable, QueryInterface
     public function enableAutoFields($value = true)
     {
         $this->_autoFields = (bool)$value;
+
+        return $this;
+    }
+
+    /**
+     * Disables automatically appending fields.
+     *
+     * @return $this
+     */
+    public function disableAutoFields()
+    {
+        $this->_autoFields = false;
 
         return $this;
     }

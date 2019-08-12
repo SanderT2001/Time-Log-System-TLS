@@ -266,7 +266,7 @@ class PHP extends Tokenizer
      * A list of tokens that end the scope.
      *
      * This array is just a unique collection of the end tokens
-     * from the _scopeOpeners array. The data is duplicated here to
+     * from the scopeOpeners array. The data is duplicated here to
      * save time during parsing of the file.
      *
      * @var array
@@ -504,7 +504,9 @@ class PHP extends Tokenizer
                 echo ": $type => $content";
             }//end if
 
-            if ($newStackPtr > 0 && $finalTokens[($newStackPtr - 1)]['code'] !== T_WHITESPACE) {
+            if ($newStackPtr > 0
+                && isset(Util\Tokens::$emptyTokens[$finalTokens[($newStackPtr - 1)]['code']]) === false
+            ) {
                 $lastNotEmptyToken = ($newStackPtr - 1);
             }
 
@@ -636,6 +638,37 @@ class PHP extends Tokenizer
             }//end if
 
             /*
+                Detect binary casting and assign the casts their own token.
+            */
+
+            if ($tokenIsArray === true
+                && $token[0] === T_CONSTANT_ENCAPSED_STRING
+                && (substr($token[1], 0, 2) === 'b"'
+                || substr($token[1], 0, 2) === "b'")
+            ) {
+                $finalTokens[$newStackPtr] = [
+                    'code'    => T_BINARY_CAST,
+                    'type'    => 'T_BINARY_CAST',
+                    'content' => 'b',
+                ];
+                $newStackPtr++;
+                $token[1] = substr($token[1], 1);
+            }
+
+            if ($tokenIsArray === true
+                && $token[0] === T_STRING_CAST
+                && preg_match('`^\(\s*binary\s*\)$`i', $token[1]) === 1
+            ) {
+                $finalTokens[$newStackPtr] = [
+                    'code'    => T_BINARY_CAST,
+                    'type'    => 'T_BINARY_CAST',
+                    'content' => $token[1],
+                ];
+                $newStackPtr++;
+                continue;
+            }
+
+            /*
                 If this is a heredoc, PHP will tokenize the whole
                 thing which causes problems when heredocs don't
                 contain real PHP code, which is almost never.
@@ -750,9 +783,9 @@ class PHP extends Tokenizer
                 && $tokens[($stackPtr + 2)][0] === T_STRING
                 && strtolower($tokens[($stackPtr + 2)][1]) === 'from'
             ) {
-                // Could be multi-line, so just just the token stack.
-                $token[0] = T_YIELD_FROM;
-                $token[1] = $token[1].$tokens[($stackPtr + 1)][1].$tokens[($stackPtr + 2)][1];
+                // Could be multi-line, so just the token stack.
+                $token[0]  = T_YIELD_FROM;
+                $token[1] .= $tokens[($stackPtr + 1)][1].$tokens[($stackPtr + 2)][1];
 
                 if (PHP_CODESNIFFER_VERBOSITY > 1) {
                     for ($i = ($stackPtr + 1); $i <= ($stackPtr + 2); $i++) {
@@ -785,8 +818,8 @@ class PHP extends Tokenizer
                     && strtolower($tokens[($stackPtr + 2)][1]) === 'from'
                 ) {
                     // Could be multi-line, so just just the token stack.
-                    $token[0] = T_YIELD_FROM;
-                    $token[1] = $token[1].$tokens[($stackPtr + 1)][1].$tokens[($stackPtr + 2)][1];
+                    $token[0]  = T_YIELD_FROM;
+                    $token[1] .= $tokens[($stackPtr + 1)][1].$tokens[($stackPtr + 2)][1];
 
                     if (PHP_CODESNIFFER_VERBOSITY > 1) {
                         for ($i = ($stackPtr + 1); $i <= ($stackPtr + 2); $i++) {
@@ -970,7 +1003,7 @@ class PHP extends Tokenizer
                         $newToken['code'] = T_NULLABLE;
                         $newToken['type'] = 'T_NULLABLE';
                         break;
-                    } else if (in_array($tokenType, [T_OPEN_TAG, T_OPEN_TAG_WITH_ECHO, '=', '{', ';']) === true) {
+                    } else if (in_array($tokenType, [T_OPEN_TAG, T_OPEN_TAG_WITH_ECHO, '=', '{', ';'], true) === true) {
                         $newToken['code'] = T_INLINE_THEN;
                         $newToken['type'] = 'T_INLINE_THEN';
 
@@ -1063,7 +1096,7 @@ class PHP extends Tokenizer
                             // Non-empty content.
                             if (is_array($tokens[$x]) === true && $tokens[$x][0] === T_USE) {
                                 // Found a use statements, so search ahead for the closing parenthesis.
-                                for ($x = ($x + 1); $x < $numTokens; $x++) {
+                                for ($x += 1; $x < $numTokens; $x++) {
                                     if (is_array($tokens[$x]) === false && $tokens[$x] === ')') {
                                         continue(2);
                                     }
@@ -1090,11 +1123,11 @@ class PHP extends Tokenizer
                         $allowed += Util\Tokens::$emptyTokens;
 
                         // Find the start of the return type.
-                        for ($x = ($x + 1); $x < $numTokens; $x++) {
+                        for ($x += 1; $x < $numTokens; $x++) {
                             if (is_array($tokens[$x]) === true
                                 && isset(Util\Tokens::$emptyTokens[$tokens[$x][0]]) === true
                             ) {
-                                // Whitespace or coments before the return type.
+                                // Whitespace or comments before the return type.
                                 continue;
                             }
 
@@ -1119,7 +1152,7 @@ class PHP extends Tokenizer
 
                         // Any T_ARRAY tokens we find between here and the next
                         // token that can't be part of the return type need to be
-                        // coverted to T_STRING tokens.
+                        // converted to T_STRING tokens.
                         for ($x; $x < $numTokens; $x++) {
                             if (is_array($tokens[$x]) === false || isset($allowed[$tokens[$x][0]]) === false) {
                                 break;
@@ -1205,64 +1238,6 @@ class PHP extends Tokenizer
             }//end if
 
             /*
-                HHVM 3.5 tokenizes "else[\s]+if" as a T_ELSEIF token while PHP
-                proper only tokenizes "elseif" as a T_ELSEIF token. So split
-                up the HHVM token to make it looks like proper PHP.
-            */
-
-            if ($tokenIsArray === true
-                && $token[0] === T_ELSEIF
-                && strtolower($token[1]) !== 'elseif'
-            ) {
-                $finalTokens[$newStackPtr] = [
-                    'content' => substr($token[1], 0, 4),
-                    'code'    => T_ELSE,
-                    'type'    => 'T_ELSE',
-                ];
-
-                $newStackPtr++;
-                $finalTokens[$newStackPtr] = [
-                    'content' => substr($token[1], 4, -2),
-                    'code'    => T_WHITESPACE,
-                    'type'    => 'T_WHITESPACE',
-                ];
-
-                $newStackPtr++;
-                $finalTokens[$newStackPtr] = [
-                    'content' => substr($token[1], -2),
-                    'code'    => T_IF,
-                    'type'    => 'T_IF',
-                ];
-
-                if (PHP_CODESNIFFER_VERBOSITY > 1) {
-                    echo "\t\t* token $stackPtr changed from T_ELSEIF to T_ELSE/T_WHITESPACE/T_IF".PHP_EOL;
-                }
-
-                $newStackPtr++;
-                continue;
-            }//end if
-
-            /*
-                HHVM 3.5 and 3.6 tokenize a hashbang line such as #!/usr/bin/php
-                as T_HASHBANG while PHP proper uses T_INLINE_HTML.
-            */
-
-            if ($tokenIsArray === true && defined('T_HASHBANG') === true && $token[0] === T_HASHBANG) {
-                $finalTokens[$newStackPtr] = [
-                    'content' => $token[1],
-                    'code'    => T_INLINE_HTML,
-                    'type'    => 'T_INLINE_HTML',
-                ];
-
-                if (PHP_CODESNIFFER_VERBOSITY > 1) {
-                    echo "\t\t* token $stackPtr changed from T_HASHBANG to T_INLINE_HTML".PHP_EOL;
-                }
-
-                $newStackPtr++;
-                continue;
-            }//end if
-
-            /*
                 If this token has newlines in its content, split each line up
                 and create a new token for each line. We do this so it's easier
                 to ascertain where errors occur on a line.
@@ -1308,6 +1283,7 @@ class PHP extends Tokenizer
                         T_NAMESPACE            => true,
                         T_PAAMAYIM_NEKUDOTAYIM => true,
                     ];
+
                     if (isset($context[$finalTokens[$lastNotEmptyToken]['code']]) === true) {
                         // Special case for syntax like: return new self
                         // where self should not be a string.
@@ -1371,9 +1347,15 @@ class PHP extends Tokenizer
                     }
 
                     if ($tokens[$i] === ')') {
+                        $parenCount = 1;
                         for ($i--; $i > 0; $i--) {
                             if ($tokens[$i] === '(') {
-                                break;
+                                $parenCount--;
+                                if ($parenCount === 0) {
+                                    break;
+                                }
+                            } else if ($tokens[$i] === ')') {
+                                $parenCount++;
                             }
                         }
 
@@ -1430,7 +1412,7 @@ class PHP extends Tokenizer
                 // where "class" should be T_STRING instead of T_CLASS.
                 if (($newToken['code'] === T_CLASS
                     || $newToken['code'] === T_FUNCTION)
-                    && $finalTokens[($newStackPtr - 1)]['code'] === T_DOUBLE_COLON
+                    && $finalTokens[$lastNotEmptyToken]['code'] === T_DOUBLE_COLON
                 ) {
                     $newToken['code'] = T_STRING;
                     $newToken['type'] = 'T_STRING';
@@ -1441,7 +1423,7 @@ class PHP extends Tokenizer
                 // and T_CONST.
                 if (($newToken['code'] === T_FUNCTION
                     || $newToken['code'] === T_CONST)
-                    && $finalTokens[$lastNotEmptyToken]['code'] === T_USE
+                    && ($finalTokens[$lastNotEmptyToken]['code'] === T_USE || $insideUseGroup === true)
                 ) {
                     $newToken['code'] = T_STRING;
                     $newToken['type'] = 'T_STRING';
@@ -1650,15 +1632,6 @@ class PHP extends Tokenizer
                 }
 
                 continue;
-            } else if ($this->tokens[$i]['code'] === T_ECHO && $this->tokens[$i]['content'] === '<?=') {
-                // HHVM tokenizes <?= as T_ECHO but it should be T_OPEN_TAG_WITH_ECHO.
-                $this->tokens[$i]['code'] = T_OPEN_TAG_WITH_ECHO;
-                $this->tokens[$i]['type'] = 'T_OPEN_TAG_WITH_ECHO';
-
-                if (PHP_CODESNIFFER_VERBOSITY > 1) {
-                    $line = $this->tokens[$i]['line'];
-                    echo "\t* token $i on line $line changed from T_ECHO to T_OPEN_TAG_WITH_ECHO".PHP_EOL;
-                }
             } else if ($this->tokens[$i]['code'] === T_TRUE
                 || $this->tokens[$i]['code'] === T_FALSE
                 || $this->tokens[$i]['code'] === T_NULL
@@ -2002,6 +1975,9 @@ class PHP extends Tokenizer
             break;
         case '|':
             $newToken['type'] = 'T_BITWISE_OR';
+            break;
+        case '~':
+            $newToken['type'] = 'T_BITWISE_NOT';
             break;
         case '<':
             $newToken['type'] = 'T_LESS_THAN';
