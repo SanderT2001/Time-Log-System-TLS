@@ -34,7 +34,7 @@
     <body>
         <!-- @TODO (Sander) Load nav -->
 
-        <div class="container clearfix">
+        <div class="container-fluid clearfix h-100 p-0">
             <?= $this->fetch('content'); ?>
         </div>
     </body>

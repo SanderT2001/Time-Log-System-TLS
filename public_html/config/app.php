@@ -93,6 +93,14 @@ return [
     ],
 
     /**
+     * Stores the version of every custom asset in /webroot.
+     */
+    'WebrootAssetVersions' => [
+        'bootstrap' => '4-3-1',
+        'jquery'    => '3-4-1'
+    ],
+
+    /**
      * Configure the cache adapters.
      */
     'Cache' => [

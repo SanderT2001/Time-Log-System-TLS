@@ -14,6 +14,7 @@
 namespace App\View;
 
 use Cake\View\View;
+use Cake\Core\Configure;
 
 /**
  * Application View
@@ -24,8 +25,8 @@ use Cake\View\View;
  */
 class AppView extends View
 {
-    private const BOOTSTRAP_VERSION = '4-3-1';
-    private const JQUERY_VERSION    = '3-4-1';
+    public  $helpers = [ 'Form', 'Html' ];
+    private $useMinified = true;
 
     /**
      * Initialization hook method.
@@ -38,7 +39,8 @@ class AppView extends View
      */
     public function initialize()
     {
-        $this->loadHelper('Html');
+        // Use the minified assets if in production.
+        $this->useMinified = !Configure::read('debug');
 
         /**
          * Bootstrap & Jquery will be loaded with block set to true, because these are items that will always be needed.
@@ -55,15 +57,21 @@ class AppView extends View
      */
     private function setBootstrap()
     {
+        $bootstrapVersion = Configure::readOrFail('WebrootAssetVersions.bootstrap');
+        $baseFilename = 'bootstrap';
+        if ($this->useMinified) {
+            $baseFilename .= '.min';
+        }
+
         $this->Html->css(
-            'bootstrap-'.$this::BOOTSTRAP_VERSION.'/bootstrap.css',
+            'bootstrap-'.$bootstrapVersion.DS.$baseFilename.'.css',
             [
                 'block' => true
             ]
         );
 
         $this->Html->script(
-            'bootstrap-'.$this::BOOTSTRAP_VERSION.'/bootstrap.js',
+            'bootstrap-'.$bootstrapVersion.DS.$baseFilename.'.js',
             [
                 'block' => true
             ]
@@ -75,8 +83,14 @@ class AppView extends View
      */
     private function setJquery()
     {
+        $jqueryVersion = Configure::readOrFail('WebrootAssetVersions.jquery');
+        $baseFilename = 'jquery';
+        if ($this->useMinified) {
+            $baseFilename .= '.min';
+        }
+
         $this->Html->script(
-            'jquery-'.$this::JQUERY_VERSION.'/jquery.js',
+            'jquery-'.$jqueryVersion.DS.$baseFilename.'.js',
             [
                 'block' => true
             ]
