@@ -1,0 +1,11 @@
+/*-----------------------------------------*\
+ * sidebar.css
+ *
+ * Used by: default.ctp (when logged in)
+\*-----------------------------------------*/
+#sidebar {
+    width: var(--sidebar-width);
+    min-height: 100vh;
+
+    top: 0;
+}

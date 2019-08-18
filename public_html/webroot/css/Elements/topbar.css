@@ -1,0 +1,8 @@
+/*-----------------------------------------*\
+ * topbar.css
+ *
+ * Used by: default.ctp (when logged in)
+\*-----------------------------------------*/
+#topbar {
+    margin-left: var(--sidebar-width);
+}

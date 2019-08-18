@@ -64,14 +64,14 @@ class AppView extends View
         }
 
         $this->Html->css(
-            'bootstrap-'.$bootstrapVersion.DS.$baseFilename.'.css',
+            'Bootstrap-'.$bootstrapVersion.DS.$baseFilename.'.css',
             [
                 'block' => true
             ]
         );
 
         $this->Html->script(
-            'bootstrap-'.$bootstrapVersion.DS.$baseFilename.'.js',
+            'Bootstrap-'.$bootstrapVersion.DS.$baseFilename.'.js',
             [
                 'block' => true
             ]
@@ -90,7 +90,7 @@ class AppView extends View
         }
 
         $this->Html->script(
-            'jquery-'.$jqueryVersion.DS.$baseFilename.'.js',
+            'Jquery-'.$jqueryVersion.DS.$baseFilename.'.js',
             [
                 'block' => true
             ]

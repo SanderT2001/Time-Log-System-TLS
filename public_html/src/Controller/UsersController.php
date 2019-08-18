@@ -5,7 +5,7 @@ namespace App\Controller;
 /**
  * Users Controller
  *
- * This controller will handle all actions regarding to the User.
+ * This Controller will handle all actions regarding to the User Entity.
  */
 class UsersController extends AppController
 {
@@ -14,11 +14,6 @@ class UsersController extends AppController
         parent::initialize();
 
         $this->Auth->allow(['add']);
-    }
-
-    public function index()
-    {
-        die("HIER");
     }
 
     public function add()
@@ -30,8 +25,7 @@ class UsersController extends AppController
         $user = $this->Users->newEntity();
         $user = $this->Users->patchEntity($user, $this->request->getData());
         if (!$this->Users->save($user)) {
-            // @TODO (Sander)
-            return $this->Flash->error('Could not create');
+            return $this->Flash->error(__('Could not create a new user.'));
         }
 
         return $this->redirect(['action' => 'login']);

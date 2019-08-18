@@ -23,8 +23,11 @@
         </title>
         <?= $this->Html->meta('icon'); ?>
 
-        <?= $this->Html->css('base.css'); ?>
-        <?= $this->Html->css('style.css'); ?>
+        <?= $this->Html->css('Cake/base.css'); ?>
+        <?= $this->Html->css('Cake/style.css'); ?>
+
+        <!-- CSS Global Styling/Variables -->
+        <?= $this->Html->css('globals.css'); ?>
 
         <!-- View Specific Meta/JS/CSS -->
         <?= $this->fetch('meta'); ?>
@@ -32,9 +35,20 @@
         <?= $this->fetch('script'); ?>
     </head>
     <body>
-        <!-- @TODO (Sander) Load nav -->
+        <?
+            // Always render the Flashes in queue.
+            $this->Flash->render();
 
-        <div class="container-fluid clearfix h-100 p-0">
+            // Logged in
+            if ($loggedIn) {
+                echo $this->Element('topbar');
+                echo $this->Element('sidebar');
+
+                $sidebarOffsetClass = 'sidebar-offset';
+            }
+        ?>
+
+        <div id="content" class="clearfix p-0 <?= $sidebarOffsetClass ?? ''; ?>">
             <?= $this->fetch('content'); ?>
         </div>
     </body>

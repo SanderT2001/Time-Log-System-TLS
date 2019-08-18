@@ -60,5 +60,8 @@ class AppController extends Controller
                 'action'     => 'login'
             ]
         ]);
+
+        // Tell the default view whether or not to show the side/top-bar.
+        $this->set('loggedIn', ($this->Auth->user() !== null));
     }
 }

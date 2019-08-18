@@ -1,0 +1,25 @@
+/*-----------------------------------------*\
+ * globals.css
+ *
+ * Used by: default.ctp
+\*-----------------------------------------*/
+
+/* Global Variables */
+:root {
+    --sidebar-width: 15rem;
+}
+
+body {
+    overflow-y: hidden;
+}
+
+#content {
+    height: 100%;
+}
+
+/* Content Offset when the sidebar is visible */
+.sidebar-offset {
+    /* Use !important, because the id styling (@see #content) has more importance than class styling */
+    height: calc(100% - 40px) !important;
+    margin-left: var(--sidebar-width) !important;
+}

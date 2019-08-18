@@ -48,6 +48,7 @@ return [
      *   paths for plugins, view templates and locale files respectively.
      */
     'App' => [
+        'name' => env('APP_NAME', 'Time Spending Log System - TSLS'),
         'namespace' => 'App',
         'encoding' => env('APP_ENCODING', 'UTF-8'),
         'defaultLocale' => env('APP_DEFAULT_LOCALE', 'en_US'),

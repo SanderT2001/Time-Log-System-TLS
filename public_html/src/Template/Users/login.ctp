@@ -1,7 +1,6 @@
 <?= $this->Html->css('Users/login'); ?>
-<?= $this->Flash->render(); ?>
 
-<div class="d-flex justify-content-center h-100">
+<div class="container-fluid p-0 d-flex justify-content-center h-100">
     <div class="login-credentials align-self-center col-sm-4 card p-0">
         <? // @TODO (Sander) Icons
         ?>
