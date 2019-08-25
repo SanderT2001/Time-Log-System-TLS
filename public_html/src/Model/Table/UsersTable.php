@@ -64,6 +64,15 @@ class UsersTable extends Table
             ->maxLength('password', 255, ValidationMessages::getMaxLength(255));
 
         $validator
+            ->requirePresence('confirm_password', 'create', ValidationMessages::getNotPresent())
+            ->notEmpty('confirm_password', ValidationMessages::getEmpty())
+            ->add('confirm_password', 'compareWith', [
+                'rule' => [ 'compareWith', 'password' ],
+                'message' => __('Confirm Password does not match Password value')
+            ]);
+
+
+        $validator
             ->dateTime('created_at');
 
         $validator

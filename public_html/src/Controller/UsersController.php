@@ -13,22 +13,32 @@ class UsersController extends AppController
     {
         parent::initialize();
 
-        $this->Auth->allow(['add']);
+        $this->Auth->allow([
+            'add',
+            'login'
+        ]);
     }
 
+    /**
+     * Creates a new User.
+     *
+     * @uses array $_POST (@see $this->request->getData();) for the User info to create.
+     */
     public function add()
     {
-        if (!$this->request->is('post')) {
-            return;
-        }
-
         $user = $this->Users->newEntity();
-        $user = $this->Users->patchEntity($user, $this->request->getData());
-        if (!$this->Users->save($user)) {
-            return $this->Flash->error(__('Could not create a new user.'));
-        }
+        if ($this->request->is('post'))
+        {
+            $user = $this->Users->patchEntity($user, $this->request->getData());
 
-        return $this->redirect(['action' => 'login']);
+            if ($this->Users->save($user)) {
+                $this->Flash->success(__('User successfully created!'));
+                return $this->redirect(['action' => 'login']);
+            }
+
+            $this->Flash->error(__('Could not create a new user.'));
+        }
+        $this->set('user', $user);
     }
 
     /**

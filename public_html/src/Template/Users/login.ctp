@@ -12,15 +12,26 @@
 
                     // Email
                     echo $this->Form->control('email', [
-                        'type' => 'email'
+                        'type'     => 'email',
+                        'required' => true
                     ]);
 
                     // Password
                     echo $this->Form->control(__('password'), [
-                        'type' => 'password'
+                        'type'     => 'password',
+                        'required' => true
                     ]);
 
-                    // @TODO (Sander) Alter de formhelper om dan een nieuwe __() automatisch eraan toe te voegen?
+                    // To Register / Add Page
+                    echo $this->Html->link(
+                        __('Register'),
+                        '/users/add',
+                        [
+                            'class' => 'btn btn-primary float-left'
+                        ]
+                    );
+
+                    // Login / Submit
                     echo $this->Form->button(__('Login'), [
                         'type'  => 'submit',
                         'class' => 'btn btn-success float-right'
