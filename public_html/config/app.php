@@ -49,6 +49,7 @@ return [
      */
     'App' => [
         'name' => env('APP_NAME', 'Time Spending Log System - TSLS'),
+        'shortName' => env('APP_SHORT', 'TSLS'),
         'namespace' => 'App',
         'encoding' => env('APP_ENCODING', 'UTF-8'),
         'defaultLocale' => env('APP_DEFAULT_LOCALE', 'en_US'),

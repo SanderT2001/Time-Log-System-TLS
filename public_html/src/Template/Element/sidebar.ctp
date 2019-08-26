@@ -2,8 +2,17 @@
 <?= $this->Html->css('Elements/sidebar'); ?>
 
 <div id="sidebar" class="position-absolute list-group list-group-flush border-right">
-    <!-- @TODO (Sander) spelen met .active -->
-    <a href="#" class="list-group-item list-group-item-action active">TSLS</a>
-    <a href="#" class="list-group-item list-group-item-action">Dashboard</a>
-    <a href="#" class="list-group-item list-group-item-action">Users</a>
+    <?
+        foreach ($sidebar_items as $item)
+        {
+            $name  = $item['displayName'];
+            $url   = $this->Url
+                          ->build($item['link']);
+            $class = $item['class'] ?? '';
+
+            echo '
+                <a href="'.$url.'" class="list-group-item list-group-item-action '.$class.'">'.$name.'</a>
+            ';
+        }
+    ?>
 </div>

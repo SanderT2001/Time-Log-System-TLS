@@ -25,7 +25,7 @@ use Cake\Core\Configure;
  */
 class AppView extends View
 {
-    public  $helpers = [ 'Form', 'Html' ];
+    public  $helpers     = [ 'Form', 'Html' ];
     private $useMinified = true;
 
     /**
@@ -40,7 +40,7 @@ class AppView extends View
     public function initialize()
     {
         // Use the minified assets if in production.
-        $this->useMinified = !Configure::read('debug');
+        $this->useMinified = (!Configure::read('debug'));
 
         /**
          * Bootstrap & Jquery will be loaded with block set to true, because these are items that will always be needed.
@@ -50,10 +50,14 @@ class AppView extends View
 
         // Set jQuery
         $this->setJquery();
+
+        $this->set([
+            'sidebar_items' => $this->getSidebarItems()
+        ]);
     }
 
     /**
-     * Set the Boostrap CSS & JS for the Views.
+     * Sets the Boostrap CSS & JS for the Views.
      */
     private function setBootstrap()
     {
@@ -79,7 +83,7 @@ class AppView extends View
     }
 
     /**
-     * Set the jQuery JS for the Views.
+     * Sets the jQuery JS for the Views.
      */
     private function setJquery()
     {
@@ -95,5 +99,63 @@ class AppView extends View
                 'block' => true
             ]
         );
+    }
+
+    /**
+     * Gets the sidebar menu items.
+     */
+    private function getSidebarItems()
+    {
+        return [
+            'title' => [
+                'displayName' => Configure::read('App.shortName'),
+                'link' => [
+                    'plugin'     => false,
+                    'controller' => 'Dashboards',
+                    'action'     => 'index'
+                ],
+                'class' => 'active'
+            ],
+            'timeTypes' =>[
+                'displayName' =>  __('Time Types'),
+                'link' => [
+                    'plugin'     => false,
+                    'controller' => 'TimeTypes',
+                    'action'     => 'index'
+                ]
+            ],
+            'clients' => [
+                'displayName' => __('Clients'),
+                'link' => [
+                    'plugin'     => false,
+                    'controller' => 'Clients',
+                    'action'     => 'index'
+                ]
+            ],
+            'projects' => [
+                'displayName' => __('Projects'),
+                'link' => [
+                    'plugin'     => false,
+                    'controller' => 'Projects',
+                    'action'     => 'index'
+                ]
+            ],
+            'logbook' => [
+                'displayName' => __('Logbook'),
+                'link' => [
+                    'plugin'     => false,
+                    'controller' => 'Logbooks',
+                    'action'     => 'index'
+                ]
+            ],
+            'export' => [
+                'displayName' => __('Export'),
+                'link' => [
+                    'plugin'     => false,
+                    'controller' => 'Exports',
+                    'action'     => 'index'
+                ]
+            ]
+        ];
     }
 }
