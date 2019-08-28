@@ -5,4 +5,5 @@
 \*-----------------------------------------*/
 #topbar {
     margin-left: var(--sidebar-width);
+    height: var(--topbar-height);
 }
