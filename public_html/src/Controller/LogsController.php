@@ -17,5 +17,14 @@ class LogsController extends AppController
     public function dashboard()
     {
     }
-}
 
+    public function index()
+    {
+        $this->set('logs', $this->Logs
+                                ->getAll());
+    }
+
+    public function add()
+    {
+    }
+}

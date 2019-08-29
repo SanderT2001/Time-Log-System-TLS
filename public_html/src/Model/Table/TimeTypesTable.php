@@ -7,6 +7,7 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 // Used for having consistent Validation Messages.
 use App\Model\Components\ValidationMessages;
+use Cake\Routing\Router;
 
 /**
  * TimeTypes Table Model
@@ -23,7 +24,7 @@ use App\Model\Components\ValidationMessages;
  */
 class TimeTypesTable extends Table
 {
-    public $userId = null;
+    private $userId = null;
 
     /**
      * Public Function validationDefault
@@ -52,6 +53,8 @@ class TimeTypesTable extends Table
     public function initialize(array $config)
     {
         parent::initialize($config);
+
+        $this->userId = Router::getRequest()->getSession()->read('Auth.User.ID');
     }
 
     /**
@@ -75,7 +78,7 @@ class TimeTypesTable extends Table
         $primary
     ) {
         $query->where([
-            'user_id' => $this->userId
+            'TimeTypes.user_id' => $this->userId
         ]);
 
         return $query;

@@ -44,12 +44,14 @@ class AppView extends View
 
         /**
          * Bootstrap & Jquery will be loaded with block set to true, because these are items that will always be needed.
+         *
+         * Note! Bootstrap depends on jQuery, so first load jQuery!
          */
-        // Set the Bootstrap CSS & JS.
-        $this->setBootstrap();
-
         // Set jQuery
         $this->setJquery();
+
+        // Set the Bootstrap CSS & JS.
+        $this->setBootstrap();
 
         $this->set([
             'sidebar_items' => $this->getSidebarItems()

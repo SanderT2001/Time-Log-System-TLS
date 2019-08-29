@@ -3,12 +3,12 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
-
+use \DateTime;
 
 /**
- * Client Entity
+ * Log Entity
  *
- * Enitity defining a Client.
+ * Enitity defining a Log.
  *
  * @package Cake\ORM\Entity
  *
@@ -19,7 +19,7 @@ use Cake\ORM\Entity;
  *
  * @author Sander Tuinstra <sandert2001@hotmail.com>
  */
-class Client extends Entity
+class Log extends Entity
 {
     /**
      * @var array _fields
@@ -31,11 +31,12 @@ class Client extends Entity
     protected $_fields = [
         'ID',
         'user_id',
-        'first_name',
-        'middle_name',
-        'last_name',
-        'email',
-        'description'
+        'time_types_id',
+        'project_id',
+        'summary',
+        'description',
+        'start_date',
+        'end_date'
     ];
 
     /**
@@ -47,11 +48,12 @@ class Client extends Entity
      */
     protected $_accessible = [
         'user_id',
-        'first_name',
-        'middle_name',
-        'last_name',
-        'email',
-        'description'
+        'time_types_id',
+        'project_id',
+        'summary',
+        'description',
+        'start_date',
+        'end_date'
     ];
 
     /**
@@ -66,20 +68,26 @@ class Client extends Entity
     ];
 
     /**
-     * Protected Function _getFullName
+     * Protected Function _getTimeDiff
      *
-     * Virtual Field containing the Fullname of the Client.
+     * Virtual Field containing the Time Difference between the \Model\Entity\Log::start_date and \Model\Entity\Log::end_date.
      *
      * @access protected
      *
-     * @return string => Containing the Fullname of the Client.
+     * @uses \DateTime => For calculating the Time Difference.
+     *
+     * @return string => Containing the Time Difference.
      */
-    protected function _getFullName()
+    protected function _getTimeDiff()
     {
-        $middle_name = '';
-        if (!empty($this->middle_name)) {
-            $middle_name = $this->middle_name.' ';
+        if (empty($this->end_date)) {
+            return '';
         }
-        return ($this->first_name.' '.$middle_name.$this->last_name);
+
+        $start_date = new DateTime($this->start_date);
+        $end_date   = new DateTime($this->end_date);
+
+        $diff = $start_date->diff($end_date);
+        return $diff->format('%H:%i');
     }
 }

@@ -12,10 +12,6 @@ class ClientsController extends AppController
     public function initialize()
     {
         parent::initialize();
-
-        // Make the current User ID available to the Table Object, so it can be added to every query automatically.
-        $this->Clients->userId = $this->Auth
-                                        ->user()['ID'];
     }
 
     public function index()

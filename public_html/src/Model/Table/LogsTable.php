@@ -10,7 +10,7 @@ use App\Model\Components\ValidationMessages;
 use Cake\Routing\Router;
 
 /**
- * Clients Table Model
+ * Logs Table Model
  *
  * @package Cake\ORM\Table
  * @package Cake\Validation\Validator
@@ -22,7 +22,7 @@ use Cake\Routing\Router;
  *
  * @author Sander Tuinstra <sandert2001@hotmail.com>
  */
-class ClientsTable extends Table
+class LogsTable extends Table
 {
     private $userId = null;
 
@@ -55,6 +55,9 @@ class ClientsTable extends Table
         parent::initialize($config);
 
         $this->userId = Router::getRequest()->getSession()->read('Auth.User.ID');
+
+        $this->belongsTo('Projects');
+        $this->belongsTo('TimeTypes');
     }
 
     /**
@@ -78,7 +81,7 @@ class ClientsTable extends Table
         $primary
     ) {
         $query->where([
-            'Clients.user_id' => $this->userId
+            'Logs.user_id' => $this->userId
         ]);
 
         return $query;
@@ -93,6 +96,11 @@ class ClientsTable extends Table
      */
     public function getAll()
     {
-        return $this->find('all')->all();
+        return $this->find('all')
+                    ->contain([
+                        'Projects',
+                        'TimeTypes'
+                    ])
+                    ->all();
     }
 }

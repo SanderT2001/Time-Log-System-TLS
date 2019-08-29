@@ -1,0 +1,9 @@
+/*-----------------------------------------*\
+ * index.css
+ *
+ * Used by: /logs/index
+\*-----------------------------------------*/
+#logs-overview #add-log-button {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
