@@ -29,7 +29,7 @@ class User extends Entity
      *
      * @access protected
      *
-     * Contains all the Fields in the Users Table.
+     * Contains all the Fields in the Table.
      */
     // @TODO (Sander) Schema ophalen uit db!
     protected $_fields = [
@@ -49,7 +49,7 @@ class User extends Entity
      *
      * @access protected
      *
-     * Contains all the Fields in the Users Table that may be updated.
+     * Contains all the Fields in the Table that may be updated.
      */
     protected $_accessible = [
         'first_name'  => true,
@@ -67,7 +67,7 @@ class User extends Entity
      *
      * @access protected
      *
-     * Contains all the Fields in the Users Table that won't be visible in the output.
+     * Contains all the Fields in the Table that won't be visible in the output.
      */
     protected $_hidden = [
         'password',
