@@ -6,9 +6,9 @@ use Cake\ORM\Entity;
 
 
 /**
- * TimeType Entity
+ * Project Entity
  *
- * Enitity defining a TimeType.
+ * Enitity defining a Project.
  *
  * @package Cake\ORM\Entity
  *
@@ -19,7 +19,7 @@ use Cake\ORM\Entity;
  *
  * @author Sander Tuinstra <sandert2001@hotmail.com>
  */
-class TimeType extends Entity
+class Project extends Entity
 {
     /**
      * @var array _fields
@@ -31,8 +31,12 @@ class TimeType extends Entity
     protected $_fields = [
         'ID',
         'user_id',
+        'client_id',
         'name',
-        'description'
+        'description',
+        'progress',
+        'start_date',
+        'end_date'
     ];
 
     /**
@@ -44,8 +48,12 @@ class TimeType extends Entity
      */
     protected $_accessible = [
         'user_id',
+        'client_id',
         'name',
-        'description'
+        'description',
+        'progress',
+        'start_date',
+        'end_date'
     ];
 
     /**

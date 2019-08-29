@@ -1,9 +1,9 @@
 <!-- Card CSS -->
 <?= $this->Html->css('Elements/card'); ?>
 
-<div id="time-types-overview" class="col-md-12 d-flex">
+<div id="clients-overview" class="col-md-12 d-flex">
     <?php
-        foreach ($time_types as $time_type)
+        foreach ($clients as $client)
         {
             echo '
                 <div class="card">
@@ -13,8 +13,8 @@
                     ]).'
 
                     <div class="card-body">
-                        <h5 class="card-title">'.$time_type->name       .'</h5>
-                        <p class="card-text">'.  $time_type->description.'</p>
+                        <h5 class="card-title">'.$client->full_name.'</h5>
+                        <p class="card-text">'.  $client->email    .'</p>
                     </div>
                 </div>
             ';

@@ -9,7 +9,7 @@ use Cake\Validation\Validator;
 use App\Model\Components\ValidationMessages;
 
 /**
- * TimeTypes Table Model
+ * Projects Table Model
  *
  * @package Cake\ORM\Table
  * @package Cake\Validation\Validator
@@ -21,7 +21,7 @@ use App\Model\Components\ValidationMessages;
  *
  * @author Sander Tuinstra <sandert2001@hotmail.com>
  */
-class TimeTypesTable extends Table
+class ProjectsTable extends Table
 {
     public $userId = null;
 

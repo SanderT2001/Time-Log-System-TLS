@@ -144,7 +144,7 @@ class AppView extends View
                 'displayName' => __('Logbook'),
                 'link' => [
                     'plugin'     => false,
-                    'controller' => 'Logbooks',
+                    'controller' => 'Logs',
                     'action'     => 'index'
                 ]
             ],

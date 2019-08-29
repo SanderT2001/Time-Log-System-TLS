@@ -6,9 +6,9 @@ use Cake\ORM\Entity;
 
 
 /**
- * TimeType Entity
+ * Client Entity
  *
- * Enitity defining a TimeType.
+ * Enitity defining a Client.
  *
  * @package Cake\ORM\Entity
  *
@@ -19,7 +19,7 @@ use Cake\ORM\Entity;
  *
  * @author Sander Tuinstra <sandert2001@hotmail.com>
  */
-class TimeType extends Entity
+class Client extends Entity
 {
     /**
      * @var array _fields
@@ -31,7 +31,10 @@ class TimeType extends Entity
     protected $_fields = [
         'ID',
         'user_id',
-        'name',
+        'first_name',
+        'middle_name',
+        'last_name',
+        'email',
         'description'
     ];
 
@@ -44,7 +47,10 @@ class TimeType extends Entity
      */
     protected $_accessible = [
         'user_id',
-        'name',
+        'first_name',
+        'middle_name',
+        'last_name',
+        'email',
         'description'
     ];
 
@@ -58,4 +64,22 @@ class TimeType extends Entity
     protected $_hidden = [
         'user_id'
     ];
+
+    /**
+     * Protected Function _getFullName()
+     *
+     * Virtual Field containing the Fullname of the Client.
+     *
+     * @access protected
+     *
+     * @return string => Containing the Fullname of the Client.
+     */
+    protected function _getFullName()
+    {
+        $middle_name = '';
+        if (!empty($this->middle_name)) {
+            $middle_name = $this->middle_name.' ';
+        }
+        return $this->first_name.' '.$middle_name.$this->last_name;
+    }
 }
