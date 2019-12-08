@@ -26,5 +26,7 @@ class LogsController extends AppController
 
     public function add()
     {
+        $this->viewBuilder()
+             ->setLayout('ajax');
     }
 }

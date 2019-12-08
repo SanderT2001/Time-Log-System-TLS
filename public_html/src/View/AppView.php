@@ -25,7 +25,7 @@ use Cake\Core\Configure;
  */
 class AppView extends View
 {
-    public  $helpers     = [ 'Form', 'Html' ];
+    public  $helpers     = ['Form', 'Html'];
     private $useMinified = true;
 
     /**
@@ -43,15 +43,13 @@ class AppView extends View
         $this->useMinified = (!Configure::read('debug'));
 
         /**
-         * Bootstrap & Jquery will be loaded with block set to true, because these are items that will always be needed.
-         *
+         * The below set Vendors will be loaded with block set to true, because these are items that will always be needed.
          * Note! Bootstrap depends on jQuery, so first load jQuery!
          */
-        // Set jQuery
         $this->setJquery();
-
-        // Set the Bootstrap CSS & JS.
         $this->setBootstrap();
+        $this->setFontAwesome();
+        $this->setCustomGlobalCss();
 
         $this->set([
             'sidebar_items' => $this->getSidebarItems()
@@ -102,6 +100,32 @@ class AppView extends View
             ]
         );
     }
+
+    /**
+     * Sets the FontAwesome CSS for the Views.
+     * @TODO Download and serve locally.
+     */
+    private function setFontAwesome()
+    {
+        $this->Html->css('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
+            [
+                'block' => true
+            ]
+        );
+    }
+
+    /**
+     * Loads the other Custom CSS Here.
+     */
+    private function setCustomGlobalCss()
+    {
+        $this->Html->css('globals.css',
+            [
+                'block' => true
+            ]
+        );
+    }
+
 
     /**
      * Gets the sidebar menu items.

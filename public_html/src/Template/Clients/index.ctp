@@ -1,23 +1,31 @@
 <!-- Card CSS -->
 <?= $this->Html->css('Elements/card'); ?>
 
-<div id="clients-overview" class="col-md-12 d-flex">
+<!-- Save Modal -->
+<?= $this->Element('Modals/save', [
+    'title'        => __('Edit Client'),
+    'formElement'  => 'Clients/save-form'
+]); ?>
+
+<!-- Content -->
+<div id="clients-overview" class="col-md-12 d-flex flex-wrap">
     <?php
         foreach ($clients as $client)
         {
-            echo '
-                <div class="card">
-                    '.$this->Html->image('Elements/grey_background.jpg', [
-                        'class' => 'card-img-top',
-                        'alt'   => __('Time Types Logo')
-                    ]).'
-
-                    <div class="card-body">
-                        <h5 class="card-title">'.$client->full_name.'</h5>
-                        <p class="card-text">'.  $client->email    .'</p>
-                    </div>
-                </div>
-            ';
+            echo $this->Element('card', [
+                'front' => [
+                    'title' => $client->full_name,
+                    'text'  => $client->email
+                ],
+                'back' => [
+                    'text'         => $client->description,
+                    'callToAction' => $this->Form->button(__('Edit'), [
+                        'class'       => 'btn btn-outline-secondary',
+                        'data-toggle' => 'modal',
+                        'data-target' => '#saveModal'
+                    ])
+                ]
+            ]);
         }
     ?>
 </div>

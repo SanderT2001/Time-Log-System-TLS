@@ -13,7 +13,35 @@
 
             <!-- Start: Modal Body -->
             <div class="modal-body">
-                <p>Test</p>
+                <?
+                    echo $this->Form->create('log', [
+                        'url' => [
+                            'plugin'     => false,
+                            'controller' => 'Logs',
+                            'action'     => 'add'
+                        ]
+                    ]);
+
+                        // Summary
+                        echo $this->Form->control(__('summary'), [
+                            'type'     => 'text',
+                            'required' => true
+                        ]);
+
+                        // Description
+                        echo $this->Form->control(__('description'), [
+                            'type'     => 'text',
+                            'required' => true
+                        ]);
+
+                        // Add / Submit Button
+                        echo $this->Form->button(__('Add'), [
+                            'type'  => 'submit',
+                            'class' => 'btn btn-success float-right'
+                        ]);
+
+                    echo $this->Form->end();
+                ?>
             </div>
             <!-- End: Modal Body -->
 

@@ -26,10 +26,7 @@
         <?= $this->Html->css('Cake/base.css'); ?>
         <?= $this->Html->css('Cake/style.css'); ?>
 
-        <!-- CSS Global Styling/Variables -->
-        <?= $this->Html->css('globals.css'); ?>
-
-        <!-- View Specific Meta/JS/CSS -->
+        <!-- View Specific given Meta/JS/CSS -->
         <?= $this->fetch('meta'); ?>
         <?= $this->fetch('css'); ?>
         <?= $this->fetch('script'); ?>

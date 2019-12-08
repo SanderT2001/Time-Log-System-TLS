@@ -19,4 +19,8 @@ class ClientsController extends AppController
         $this->set('clients', $this->Clients
                                    ->getAll());
     }
+
+    public function add()
+    {
+    }
 }

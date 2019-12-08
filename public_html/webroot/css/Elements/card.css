@@ -1,9 +1,37 @@
 /*-----------------------------------------*\
  * card.css
  *
- * Used by: /TimeTypes/index.ctp
+ * Used by: app\src\Template\Elements\card.ctp
 \*-----------------------------------------*/
 .card {
     width: 18rem;
     margin: .5rem;
+}
+
+/* Makes Bootstrap Cards Flippable */
+.card-flippable > div {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    backface-visibility: hidden;
+    transition: transform 300ms;
+    transition-timing-function: linear;
+}
+
+.card-flippable .card-front {
+    transform: rotateY(0deg);
+}
+
+.card-flippable .card-back {
+    position: absolute;
+    top: 0;
+    transform: rotateY(180deg);
+}
+
+.card-flippable:hover .card-front {
+    transform: rotateY(-180deg);
+}
+
+.card-flippable:hover .card-back {
+    transform: rotateY(0deg);
 }
