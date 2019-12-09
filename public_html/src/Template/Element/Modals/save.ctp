@@ -30,8 +30,7 @@
                     // Allows HTML to be parsed in the Button Text.
                     'escape'       => false
                 ]); ?>
-            </div>
-            <!-- End: Modal Header -->
+            </div> <!-- End: Modal Header -->
 
             <!-- Start: Modal Body -->
             <div class="modal-body">
