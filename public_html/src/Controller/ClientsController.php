@@ -22,5 +22,6 @@ class ClientsController extends AppController
 
     public function add()
     {
+        die('ADD');
     }
 }

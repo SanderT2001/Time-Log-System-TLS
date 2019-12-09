@@ -42,14 +42,15 @@
             <div class="modal-footer justify-content-between">
                 <div class="left">
                     <?= $this->Form->button(__('Delete'), [
-                        'class' => 'btn btn-danger'
+                        'type' => 'button',
+                        'class' => 'form-delete btn btn-danger'
                     ]); ?>
                 </div>
 
                 <div class="right">
                     <?= $this->Form->button(__('Save'), [
                         'type'  => 'submit',
-                        'class' => 'btn btn-success'
+                        'class' => 'form-submit btn btn-success'
                     ]); ?>
                 </div>
             </div>
@@ -59,7 +60,14 @@
 </div>
 
 <!-- Javascript -->
-<?= $this->Html->script('Modals/save_modal_handler'); ?>
+<?= $this->Html->script('Forms/FormHandler'); ?>
 <script type="text/javascript">
-    var handler = new SaveModalHandler();
+    /**
+     * On Document Ready
+     */
+    $(() =>
+    {
+        var handler = new FormHandler($('#saveModal'));
+    });
 </script>
+
