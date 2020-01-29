@@ -19,17 +19,24 @@ class LogsController extends AppController
      * Gathering all the records in logs and the corresponding TimeTypes and Projects. 
      * After gathering compacting those variables (that data) to the index.ctp (index view).
      */
-    public function index(int $projectId = null)
+    public function index(int $projectId = null, bool $all = false)
     {
         $this->paginate = [
             'contain' => ['TimeTypes', 'Projects']
         ];
 
-        $conditions = [];
+        $conditions = [
+            'Logs.by_user' => $this->Auth->user('ID')
+        ];
+        if (!$all) {
+            $conditions = array_merge([
+                'YEAR(Logs.log_date)' => date('Y')
+            ], $conditions);
+        }
         if (!empty($projectId)) {
-            $conditions = [
+            $conditions = array_merge([
                 'Logs.project_id' => $projectId
-            ];
+            ], $conditions);
         }
 
         $logs = $this->paginate($this->Logs->find('all', [
@@ -111,9 +118,10 @@ class LogsController extends AppController
             $log = $this->Logs->newEntity();
 
             $log = $this->Logs->patchEntity($log, $this->request->getData());
-            $log->log_date = $this->request->getData(log_date);
-            $log->log_start_time = $this->request->getData(log_start_time);
-            $log->log_end_time = $this->request->getData(log_end_time);
+            $log->log_date = $this->request->getData('log_date');
+            $log->log_start_time = $this->request->getData('log_start_time');
+            $log->log_end_time = $this->request->getData('log_end_time');
+            $log->by_user = $this->Auth->user('ID');
 
             if ($this->Logs->save($log)) 
             {
@@ -143,9 +151,10 @@ class LogsController extends AppController
             $log = $this->Logs->get($id);
 
             $log = $this->Logs->patchEntity($log, $this->request->getData());
-            $log->log_date = $this->request->getData(log_date);
-            $log->log_start_time = $this->request->getData(log_start_time);
-            $log->log_end_time = $this->request->getData(log_end_time);
+            $log->log_date = $this->request->getData('log_date');
+            $log->log_start_time = $this->request->getData('log_start_time');
+            $log->log_end_time = $this->request->getData('log_end_time');
+            $log->by_user = $this->Auth->user('ID');
 
             if ($this->Logs->save($log)) 
             {
@@ -174,7 +183,11 @@ class LogsController extends AppController
 
         if ($this->request->is(array('ajax')))
         {
-            $log = $this->Logs->get($id);
+            $log = $this->Logs->get($id, [
+                'conditions' => [
+                    'Logs.by_user' => $this->Auth->user('ID')
+                ]
+            ]);
 
             if ($this->Logs->delete($log)) 
             {
