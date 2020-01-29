@@ -28,5 +28,18 @@ class LogsController extends AppController
     {
         $this->viewBuilder()
              ->setLayout('ajax');
+
+        $log = $this->Logs->newEntity();
+        if ($this->request->is('post')) {
+            $log = $this->Logs->patchEntity($log, $this->request->getData());
+
+            if ($this->Logs->save($log)) {
+                $this->Flash->success(__('Log successfully created!'));
+                return $this->redirect(['action' => 'index']);
+            }
+
+            $this->Flash->error(__('Could not create a new log.'));
+        }
+        $this->set('log', $log);
     }
 }
