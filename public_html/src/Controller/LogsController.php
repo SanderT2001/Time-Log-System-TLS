@@ -19,13 +19,22 @@ class LogsController extends AppController
      * Gathering all the records in logs and the corresponding TimeTypes and Projects. 
      * After gathering compacting those variables (that data) to the index.ctp (index view).
      */
-    public function index()
+    public function index(int $projectId = null)
     {
         $this->paginate = [
             'contain' => ['TimeTypes', 'Projects']
         ];
 
-        $logs = $this->paginate($this->Logs);
+        $conditions = [];
+        if (!empty($projectId)) {
+            $conditions = [
+                'Logs.project_id' => $projectId
+            ];
+        }
+
+        $logs = $this->paginate($this->Logs->find('all', [
+            'conditions' => $conditions
+        ]));
 
         $timeTypes = $this->Logs->TimeTypes->find('list');
         $projects = $this->Logs->Projects->find('list');
