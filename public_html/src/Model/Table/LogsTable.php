@@ -24,7 +24,7 @@ use Cake\Routing\Router;
  */
 class LogsTable extends Table
 {
-    private $userId = null;
+    public $userId = null;
 
     /**
      * Public Function validationDefault

@@ -22,6 +22,18 @@
                         ]
                     ]);
 
+                        // Time Type
+                        echo $this->Form->control(__('time_type_id'), [
+                            'type'     => 'text',
+                            'required' => true
+                        ]);
+
+                        // Project ID
+                        echo $this->Form->control(__('project_id'), [
+                            'type'     => 'text',
+                            'required' => true
+                        ]);
+
                         // Summary
                         echo $this->Form->control(__('summary'), [
                             'type'     => 'text',

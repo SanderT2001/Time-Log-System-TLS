@@ -47,13 +47,13 @@ class Log extends Entity
      * Contains all the Fields in the Table that may be updated.
      */
     protected $_accessible = [
-        'user_id',
-        'time_types_id',
-        'project_id',
-        'summary',
-        'description',
-        'start_date',
-        'end_date'
+        'user_id' => true,
+        'time_types_id' => true,
+        'project_id' => true,
+        'summary' => true,
+        'description' => true,
+        'start_date' => true,
+        'end_date' => true
     ];
 
     /**

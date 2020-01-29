@@ -32,6 +32,7 @@ class LogsController extends AppController
         $log = $this->Logs->newEntity();
         if ($this->request->is('post')) {
             $log = $this->Logs->patchEntity($log, $this->request->getData());
+            $log->user_id = $this->Logs->userId;
 
             if ($this->Logs->save($log)) {
                 $this->Flash->success(__('Log successfully created!'));
