@@ -43,10 +43,20 @@ class LogsController extends AppController
             'conditions' => $conditions
         ]));
 
-        $timeTypes = $this->Logs->TimeTypes->find('list');
-        $projects = $this->Logs->Projects->find('list');
+        $timeTypes = $this->Logs->TimeTypes->find('list', [
+            'conditions' => [
+                'TimeTypes.by_user' => $this->Auth->user('ID')
+            ]
+        ]);
+        $projectConditions = [
+            'conditions' => [
+                'Projects.by_user' => $this->Auth->user('ID')
+            ]
+        ];
+        $projects = $this->Logs->Projects->find('list', $projectConditions);
+        $projectsAsObject = $this->Logs->Projects->find('all', $projectConditions);
 
-        $this->set(compact('logs', 'timeTypes', 'projects'));
+        $this->set(compact('logs', 'timeTypes', 'projects', 'projectsAsObject', 'projectId', 'date'));
     }
 
     /**

@@ -68,6 +68,20 @@
     </div>
 </div>
 
+<?php
+// Determine selected project.
+$currentProjectIndex = 0;
+foreach ($projectsAsObject as $key => $project) {
+    if ($project->ID == ($projectId ?? 0)) {
+        foreach ($projects as $projectnameKey => $projectname) {
+            if ($projectname == $project->project_name) {
+                $currentProjectIndex = $projectnameKey;
+            }
+        }
+    }
+}
+?>
+
 <!-- Enlarged View of Data Modal -->
 <div class= "modal fade" id= "viewDataModal" role= "dialog">
     <div class= "modal-dialog">
@@ -138,7 +152,7 @@
                         <?= $this->Form->control('Time Type', array('empty' => true, 'class' => 'form-control', 'id' => 'add-modal-time-type')); ?>
                     </div>
                     <div class= "form-group">
-                        <?= $this->Form->control('Project', array('empty' => true, 'class' => 'form-control', 'id' => 'add-modal-project')); ?>
+                        <?= $this->Form->control('Project', array('empty' => true, 'class' => 'form-control', 'id' => 'add-modal-project', 'value' => $currentProjectIndex)); ?>
                     </div>
                     <div class= "form-group">
                         <?= $this->Form->control('Summary', array('class' => 'form-control', 'required' => true, 'id' => 'add-modal-summary')); ?>
@@ -150,13 +164,13 @@
                         <?= $this->Form->control('Retrospective', array('type' => 'textarea', 'class' => 'form-control', 'required' => true, 'id' => 'add-modal-retrospective')); ?>
                     </div>	
                     <div class= "form-group">
-                        <?= $this->Form->control('Date', array('class' => 'form-control', 'required' => true, 'id' => 'add-modal-date')); ?>
+                        <?= $this->Form->control('Date', array('class' => 'form-control', 'required' => true, 'id' => 'add-modal-date', 'value' => date('Y-m-d'))); ?>
                     </div>
                     <div class= "form-group">
-                        <?= $this->Form->control('Start time', array('class' => 'form-control', 'required' => true, 'id' => 'add-modal-start-time')); ?>
+                        <?= $this->Form->control('Start time', array('class' => 'form-control', 'required' => true, 'id' => 'add-modal-start-time', 'value' => date('H:i'))); ?>
                     </div>
                     <div class= "form-group">
-                        <?= $this->Form->control('End time', array('class' => 'form-control', 'required' => true, 'id' => 'add-modal-end-time')); ?>
+                        <?= $this->Form->control('End time', array('class' => 'form-control', 'required' => true, 'id' => 'add-modal-end-time', 'value' => date('H:i'))); ?>
                     </div>
                 </div>
 
