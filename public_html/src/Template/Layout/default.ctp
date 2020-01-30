@@ -107,6 +107,7 @@
 								<li><?= $this->Html->link('&nbsp;<span class= "glyphicon glyphicon-folder-open"></span>&nbsp;Projects', ['controller' => 'Projects', 'action' => 'index'], ['escape' => false]); ?></li>
 								<li><?= $this->Html->link('&nbsp;<span class= "glyphicon glyphicon-credit-card"></span>&nbsp;Clients', ['controller' => 'Clients', 'action' => 'index'], ['escape' => false]); ?></li>
 								<li><?= $this->Html->link('&nbsp;<span class= "glyphicon glyphicon-book"></span>&nbsp;Logbook', ['controller' => 'Logs', 'action' => 'index'], ['escape' => false]); ?></li>
+								<li><?= $this->Html->link('&nbsp;<span class= "glyphicon glyphicon-export"></span>&nbsp;Export', ['controller' => 'Logs', 'action' => 'exportSettings'], ['escape' => false]); ?></li>
 							</ul> 
 						</div>
 					</div>

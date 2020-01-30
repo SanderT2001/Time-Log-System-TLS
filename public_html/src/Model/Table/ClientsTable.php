@@ -56,19 +56,18 @@ class ClientsTable extends Table
 
         $validator
             ->scalar('client_first_name')
-            ->maxLength('client_first_name', 255)
+            ->maxLength('client_first_name', 35)
             ->requirePresence('client_first_name', 'create')
             ->notEmpty('client_first_name');
 
         $validator
             ->scalar('client_middle_name')
-            ->maxLength('client_middle_name', 255)
-            ->requirePresence('client_middle_name', 'create')
-            ->notEmpty('client_middle_name');
+            ->maxLength('client_middle_name', 35)
+            ->allowEmpty('client_middle_name');
 
         $validator
             ->scalar('client_last_name')
-            ->maxLength('client_last_name', 255)
+            ->maxLength('client_last_name', 35)
             ->requirePresence('client_last_name', 'create')
             ->notEmpty('client_last_name');
 
@@ -79,43 +78,47 @@ class ClientsTable extends Table
 
         $validator
             ->scalar('client_phone')
-            ->maxLength('client_phone', 255)
+            ->maxLength('client_phone', 12)
             ->allowEmpty('client_phone');
 
         $validator
             ->scalar('client_mobile_phone')
-            ->maxLength('client_mobile_phone', 255)
+            ->maxLength('client_mobile_phone', 12)
             ->allowEmpty('client_mobile_phone');
 
         $validator
             ->scalar('client_house_number')
-            ->maxLength('client_house_number', 255)
+            ->maxLength('client_house_number', 12)
             ->allowEmpty('client_house_number');
 
         $validator
             ->scalar('client_street')
-            ->maxLength('client_street', 255)
+            ->maxLength('client_street', 100)
             ->allowEmpty('client_street');
 
         $validator
             ->scalar('client_place')
-            ->maxLength('client_place', 255)
+            ->maxLength('client_place', 100)
             ->allowEmpty('client_place');
 
         $validator
             ->scalar('client_postal_code')
-            ->maxLength('client_postal_code', 255)
+            ->maxLength('client_postal_code', 35)
             ->allowEmpty('client_postal_code');
 
         $validator
             ->scalar('client_country')
-            ->maxLength('client_country', 255)
+            ->maxLength('client_country', 100)
             ->allowEmpty('client_country');
 
         $validator
             ->scalar('client_description')
-            ->maxLength('client_description', 255)
             ->allowEmpty('client_description');
+
+        $validator
+            ->integer('by_user')
+            ->requirePresence('by_user', 'create')
+            ->notEmpty('by_user');
 
         return $validator;
     }

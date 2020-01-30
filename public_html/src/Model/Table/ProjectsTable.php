@@ -66,18 +66,15 @@ class ProjectsTable extends Table
 
         $validator
             ->scalar('project_description')
-            ->maxLength('project_description', 255)
             ->requirePresence('project_description', 'create')
             ->notEmpty('project_description');
 
         $validator
             ->scalar('project_retrospective')
-            ->maxLength('project_retrospective', 255)
             ->allowEmpty('project_retrospective');
 
         $validator
             ->scalar('project_progress')
-            ->maxLength('project_progress', 255)
             ->allowEmpty('project_progress');
 
         $validator
@@ -87,6 +84,11 @@ class ProjectsTable extends Table
         $validator
             ->date('project_end_date')
             ->allowEmpty('project_end_date');
+
+        $validator
+            ->integer('by_user')
+            ->requirePresence('by_user', 'create')
+            ->notEmpty('by_user');
 
         return $validator;
     }

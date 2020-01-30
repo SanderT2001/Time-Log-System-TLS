@@ -29,6 +29,7 @@ class TimeType extends Entity
         'type_name' => true,
         'type_description' => true,
         'type_global_name' => true,
+        'by_user' => true,
         'logs' => true
     ];
 }

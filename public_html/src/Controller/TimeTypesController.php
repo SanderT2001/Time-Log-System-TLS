@@ -20,6 +20,10 @@ class TimeTypesController extends AppController
      */
     public function index()
     {
+        $this->paginate = [
+            'conditions' => ['TimeTypes.by_user =' => $this->Auth->user('ID')]
+        ];
+
         $timeTypes = $this->paginate($this->TimeTypes);
 
         $this->set(compact('timeTypes'));

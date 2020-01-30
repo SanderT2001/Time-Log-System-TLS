@@ -97,6 +97,11 @@ class LogsTable extends Table
             ->requirePresence('log_time_diff_min', 'create')
             ->notEmpty('log_time_diff_min');
 
+        $validator
+            ->integer('by_user')
+            ->requirePresence('by_user', 'create')
+            ->notEmpty('by_user');
+
         return $validator;
     }
 

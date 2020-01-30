@@ -212,4 +212,90 @@ class LogsController extends AppController
             return $this->response;
         }
     }
+
+    /**
+     * exportSettings
+     *
+     * This is a method for just showing off the export-settings ctp.
+     */
+    public function exportSettings()
+    {
+    }
+
+    /**
+     * exportData
+     *
+     * @param $exportOf, used for the selection of which column to create an export of. Time Type, Projects or a export of all the records.
+     * @param $from, used for the selection of which type to create an export of from the @var $exportOf, for example "School" from "Time Types" ($from - $exportOf)
+     * To create an export between two dates, the @param $startData and @param $endDate are used.
+     *
+     * @var $exportOfConverted is the variable used to get the right column. For example, @var $exportOf == "Time Time" => @var $exportOfConverted == "time_type_id".
+     */
+    public function exportData($exportOf, $from, $startDate, $endDate)
+    {
+        $this->autoRender = false;
+
+        $exportOfConverted;
+
+        switch ($exportOf)
+        {
+            case "Time Type":
+                $exportOfConverted = "time_type_id";
+                break;
+
+            case "Projects":
+                $exportOfConverted = "project_id";
+                break;
+
+            case "All":
+                $exportOfConverted = "all";
+                break;
+        }
+
+        if ($startDate == "all")
+        {
+            if ($exportOfConverted != "all")
+            {
+                $logs = $this->Logs->find('all', [
+                    'conditions' => ['Logs.'.$exportOfConverted.' =' => $from, 'Logs.by_user =' => $this->Auth->user('ID')],
+                    'contain' => ['TimeTypes', 'Projects']
+                ]);
+            }
+            else
+            {
+                $logs = $this->Logs->find('all', [
+                    'conditions' => ['Logs.by_user =' => $this->Auth->user('ID')],
+                    'contain' => ['TimeTypes', 'Projects']
+                ]);
+            }
+        }
+        else
+        {
+            if ($exportOfConverted != "all")
+            {
+                $logs = $this->Logs->find('all', [
+                    'conditions' => ['Logs.'.$exportOfConverted.' =' => $from, 'Logs.log_date BETWEEN "'.$startDate.'" and "'.$endDate.'"', 'Logs.by_user =' => $this->Auth->user('ID')],
+                    'contain' => ['TimeTypes', 'Projects']
+                ]);
+            }
+            else
+            {
+                $logs = $this->Logs->find('all', [
+                    'conditions' => ['Logs.log_date BETWEEN "'.$startDate.'" and "'.$endDate.'"', 'Logs.by_user =' => $this->Auth->user('ID')],
+                    'contain' => ['TimeTypes', 'Projects']
+                ]);
+            }
+        }
+
+        $timeTypes = $this->Logs->TimeTypes->find('list', [
+            'conditions' => ['timeTypes.by_user =' => $this->Auth->user('ID')]
+        ]);
+
+        $projects = $this->Logs->Projects->find('list', [
+            'conditions' => ['projects.by_user =' => $this->Auth->user('ID')]
+        ]);
+
+        $this->set(compact('logs', 'timeTypes', 'projects'));
+        $this->render('export');
+    }
 }

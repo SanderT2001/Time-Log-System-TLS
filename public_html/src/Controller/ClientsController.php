@@ -12,7 +12,6 @@ use App\Controller\AppController;
  */
 class ClientsController extends AppController
 {
-
     /**
      * Index method
      *
@@ -20,6 +19,10 @@ class ClientsController extends AppController
      */
     public function index()
     {
+        $this->paginate = [
+            'conditions' => ['Clients.by_user =' => $this->Auth->user('ID')]
+        ];
+
         $clients = $this->paginate($this->Clients);
 
         $this->set(compact('clients'));
