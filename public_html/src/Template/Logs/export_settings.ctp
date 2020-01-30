@@ -14,14 +14,14 @@
                 <h4><b>Create export from a Time Type</b></h4>
 
                 <div class= "form-group">
-                    <?= $this->Form->control('Export of', array('empty' => true, 'class' => 'form-control', 'id' => 'export-field-export-of')); ?>
-                    <?= $this->Form->control('From', array('empty' => true, 'class' => 'form-control', 'id' => 'export-field-from')); ?>
+                    <?= $this->Form->control('Export of', array('empty' => true, 'class' => 'form-control', 'id' => 'export-field-export-of', 'value' => 'All')); ?>
+                    <?= $this->Form->control('Project', array('empty' => true, 'label' => 'From project', 'class' => 'form-control', 'id' => 'export-field-from')); ?>
 
-                    <?= $this->Form->control('Start date', array('class' => 'form-control date',  'id' => 'export-field-time-type-start-date')); ?>
-                    <?= $this->Form->control('End date', array('class' => 'form-control date',   'id' => 'export-field-time-type-end-date')); ?>
+                    <?= $this->Form->control('Start date', array('class' => 'form-control date', 'id' => 'export-field-time-type-start-date')); ?>
+                    <?= $this->Form->control('End date', array('class' => 'form-control date',  'id' => 'export-field-time-type-end-date')); ?>
                 </div>
 
-                <a href= "#" onclick= "exportData('timeType')" id= "createExportLink">Create export</a>
+                <a href= "#" onclick= "exportData('timeType')" id= "createExportLink" class="btn btn-success">Create export</a>
 
             <?= $this->Form->end() ?>
 

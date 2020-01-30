@@ -220,6 +220,14 @@ class LogsController extends AppController
      */
     public function exportSettings()
     {
+        $projectConditions = [
+            'conditions' => [
+                'Projects.by_user' => $this->Auth->user('ID')
+            ]
+        ];
+        $projects = $this->Logs->Projects->find('list', $projectConditions);
+
+        $this->set(compact('projects'));
     }
 
     /**
