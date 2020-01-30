@@ -201,8 +201,11 @@ function editData(logId)
  */
 function deleteData(logId)
 {
-    var log;
+    if (confirm('Sure?') == false) {
+        return false;
+    }
 
+    var log;
     log = (logId == null) ? $("#modal-id").val() : logId;
 
     $.ajax (
