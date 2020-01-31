@@ -22,10 +22,11 @@
             <table class= "table table-bordred table-striped">
                 <thead>
                     <th scope= "col"><?= $this->Paginator->sort('time_type_id', 'Time Type') ?></th>
+                    <? if (empty($projectId)): ?>
                     <th scope= "col"><?= $this->Paginator->sort('project_id', 'Project') ?></th>
+                    <? endif; ?>
                     <th scope= "col"><?= $this->Paginator->sort('log_summary', 'Summary') ?></th>
                     <th scope= "col"><?= $this->Paginator->sort('log_description', 'Description') ?></th>
-                    <th scope= "col"><?= $this->Paginator->sort('log_retrospective', 'Retrospective') ?></th>
                     <th scope= "col"><?= $this->Paginator->sort('log_date', 'Date') ?></th>
                     <th scope= "col"><?= $this->Paginator->sort('log_start_time', 'Start time') ?></th>
                     <th scope= "col"><?= $this->Paginator->sort('log_end_time', 'End time') ?></th>
@@ -38,10 +39,11 @@
                     <?php foreach ($logs as $log): ?>
                         <tr id= <?= $log->ID ?>>
                             <td><?= $log->has('time_type') ? $log->time_type->type_name : '' ?></td>
+                            <? if (empty($projectId)): ?>
                             <td><?= $log->has('project') ? $log->project->project_name : '' ?></td>
+                            <? endif; ?>
                             <td><?= $log->log_summary ?></td>
-                            <td><?= $log->log_description ?></td>
-                            <td><?= $log->log_retrospective ?></td>
+                            <td class="col-md-5"><?= $log->log_description ?></td>
                             <td><?= $log->log_date->i18nFormat('dd-MM-yyyy') ?></td>
                             <td><?= $log->log_start_time->i18nFormat('HH:mm:ss') ?></td>
                             <td><?= $log->log_end_time->i18nFormat('HH:mm:ss') ?></td>
@@ -110,9 +112,6 @@ foreach ($projectsAsObject as $key => $project) {
                         <?= $this->Form->control('Description', array('type' => 'textarea', 'class' => 'form-control readonly', 'id' => 'modal-description')); ?>
                     </div>
                     <div class= "form-group">
-                        <?= $this->Form->control('Retrospective', array('type' => 'textarea', 'class' => 'form-control readonly', 'id' => 'modal-retrospective')); ?>
-                    </div>	
-                    <div class= "form-group">
                         <?= $this->Form->control('Date', array('class' => 'form-control readonly', 'id' => 'modal-date')); ?>
                     </div>
                     <div class= "form-group">
@@ -160,9 +159,6 @@ foreach ($projectsAsObject as $key => $project) {
                     <div class= "form-group">
                         <?= $this->Form->control('Description', array('type' => 'textarea', 'class' => 'form-control', 'required' => true, 'id' => 'add-modal-description')); ?>
                     </div>
-                    <div class= "form-group">
-                        <?= $this->Form->control('Retrospective', array('type' => 'textarea', 'class' => 'form-control', 'required' => true, 'id' => 'add-modal-retrospective')); ?>
-                    </div>	
                     <div class= "form-group">
                         <?= $this->Form->control('Date', array('class' => 'form-control', 'required' => true, 'id' => 'add-modal-date', 'value' => date('Y-m-d'))); ?>
                     </div>
