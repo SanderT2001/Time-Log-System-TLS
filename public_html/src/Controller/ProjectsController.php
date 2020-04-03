@@ -21,6 +21,7 @@ class ProjectsController extends AppController
     public function index()
     {
         $this->paginate = [
+			'conditions' => ['Projects.by_user =' => $this->Auth->user('ID')],
             'contain' => ['Clients']
         ];
         $projects = $this->paginate($this->Projects);

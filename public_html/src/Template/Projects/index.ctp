@@ -32,7 +32,7 @@
                 <tbody>
                     <?php foreach ($projects as $project): ?>
                         <tr id= <?= $project->ID ?>>
-                            <td><?= ($project->project_name) ?></td>
+                            <td><?= $this->Html->link($project->project_name, ['controller' => 'Logs', 'action' => 'index', $project->ID]); ?></td>
                             <td><?= ($project->project_description) ?></td>
                             <td><?= ($project->project_retrospective) ?></td>
                             <td><?= $project->has('client') ? $this->Html->link($project->client->client_first_name.' '.$project->client->client_middle_name.' '.$project->client->client_last_name, ['controller' => 'Clients', 'action' => 'view', $project->client->ID]) : '' ?></td>

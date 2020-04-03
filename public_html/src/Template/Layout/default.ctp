@@ -65,22 +65,32 @@
 					}
 
 					#side-bar {
-						position: absolute;
-						height: 100vh;
+						position: fixed;
+						height: 100%;
+                        -webkit-border-radius: 0;
+                        -moz-border-radius: 0;
+                        border-radius: 0;
 					}
+
+                    .margin-right-5 {
+                        margin-right: 5px;
+                    }
+
+                    li.active {
+                        background-color: #eee;
+                    }
 				</style>
 
-				<nav class= "navbar navbar-default navbar-static-top pull-right col-xs-6 col-sm-9 col-md-10"  id= "header">
-					<div class= "container-full">
-						<div class= "row">
-							<ul class= "nav">
-								<a>&nbsp;<input type= "button" value= "Add log" class= "btn btn-success pull-left" id= "add-log-button" onclick= "addData('view');"></input></a>
-								<li class= "dropdown pull-right">
-									<a class= "dropdown-toggle" data-toggle= "dropdown" href= "#"><span class= "glyphicon glyphicon-user"></span><span class= "caret"></span></a>
+				<nav class="navbar navbar-default navbar-static-top pull-right col-xs-6 col-sm-9 col-md-10"  id="header">
+					<div class="container-full">
+						<div class="row">
+							<ul class="nav">
+								<li class="dropdown pull-right">
+									<a class="dropdown-toggle" data-toggle= "dropdown" href= "#"><span class= "glyphicon glyphicon-user"></span><span class= "caret"></span></a>
 								
-									<ul class= "dropdown-menu">
-										<li><a href= "#"><span class= "glyphicon glyphicon-list-alt"></span>&nbsp;My Profile</a></li>	
-										<li><a href= "#"><span class= "glyphicon glyphicon-pencil"></span>&nbsp;Edit Profile</a></li>	
+									<ul class="dropdown-menu">
+										<li><a href="#"><span class= "glyphicon glyphicon-list-alt"></span>&nbsp;My Profile</a></li>	
+										<li><a href="#"><span class= "glyphicon glyphicon-pencil"></span>&nbsp;Edit Profile</a></li>	
 									
 										<li class= "divider"></li>
 					
@@ -92,31 +102,48 @@
 					</div>
 				</nav>
 
-				<nav class= "navbar navbar-default col-xs-6 col-sm-3 col-md-2" id= "side-bar">
-					<div class= "container-full">
-						<div class= "row">
+				<nav class="navbar navbar-default col-xs-6 col-sm-3 col-md-2" id="side-bar">
+					<div class="container-full">
+						<div class="row">
 							<div class= "navbar-header">
 								<?= $this->Html->link('&nbsp;Time Log System - TLS', ['controller' => 'Dashboard', 'action' => 'dashboard'], ['class' => 'navbar-brand', 'escape' => false]); ?>
 							</div>
 						</div>
 						
-						<div class= "row">
-							<ul class= "nav navbar-nav-pills navbar-nav-stacked">
-								<li><?= $this->Html->link('&nbsp;<span class= "glyphicon glyphicon-home"></span>&nbsp;Dashboard', ['controller'=> 'Dashboard', 'action' => 'dashboard'], ['escape' => false]); ?></li>
-								<li><?= $this->Html->link('&nbsp;<span class= "glyphicon glyphicon-time"></span>&nbsp;Time Types', ['controller' => 'TimeTypes', 'action' => 'index'], ['escape' => false]); ?></li>
-								<li><?= $this->Html->link('&nbsp;<span class= "glyphicon glyphicon-folder-open"></span>&nbsp;Projects', ['controller' => 'Projects', 'action' => 'index'], ['escape' => false]); ?></li>
-								<li><?= $this->Html->link('&nbsp;<span class= "glyphicon glyphicon-credit-card"></span>&nbsp;Clients', ['controller' => 'Clients', 'action' => 'index'], ['escape' => false]); ?></li>
-								<li><?= $this->Html->link('&nbsp;<span class= "glyphicon glyphicon-book"></span>&nbsp;Logbook', ['controller' => 'Logs', 'action' => 'index'], ['escape' => false]); ?></li>
-							</ul> 
+						<div class="row">
+							<ul class="nav navbar-nav-pills navbar-nav-stacked">
+<?php
+            $choices = [
+                'Dashboard',
+                'TimeTypes',
+                'Projects',
+                'Clients',
+                'Logs',
+                'Export'
+            ];
+            foreach ($choices as $choice) {
+                $choices[$choice]['class'] = ($choice === $this->request['controller']) ? 'active' : '';
+            }
+
+            if ($this->request['controller'] === 'Logs' && $this->request['action'] === 'exportSettings') {
+                $choices['Logs']['class'] = '';
+                $choices['Export']['class'] = 'active';
+            }
+?>
+                                <li class="<?= $choices['Dashboard']['class']; ?>"><?= $this->Html->link('&nbsp;<span class="glyphicon glyphicon-home margin-right-5"></span>&nbsp;Dashboard', ['controller'=> 'Dashboard', 'action' => 'dashboard'], ['escape' => false]); ?></li>
+                                <li class="<?= $choices['TimeTypes']['class']; ?>"><?= $this->Html->link('&nbsp;<span class="glyphicon glyphicon-time margin-right-5"></span>&nbsp;Time Types', ['controller' => 'TimeTypes', 'action' => 'index'], ['escape' => false]); ?></li>
+                                <li class="<?= $choices['Projects']['class']; ?>"><?= $this->Html->link('&nbsp;<span class="glyphicon glyphicon-folder-open margin-right-5"></span>&nbsp;Projects', ['controller' => 'Projects', 'action' => 'index'], ['escape' => false]); ?></li>
+                                <li class="<?= $choices['Clients']['class']; ?>"><?= $this->Html->link('&nbsp;<span class="glyphicon glyphicon-credit-card margin-right-5"></span>&nbsp;Clients', ['controller' => 'Clients', 'action' => 'index'], ['escape' => false]); ?></li>
+                                <li class="<?= $choices['Logs']['class']; ?>"><?= $this->Html->link('&nbsp;<span class="glyphicon glyphicon-book margin-right-5"></span>&nbsp;Logbook', ['controller' => 'Logs', 'action' => 'index'], ['escape' => false]); ?></li>
+                                <li class="<?= $choices['Export']['class']; ?>"><?= $this->Html->link('&nbsp;<span class="glyphicon glyphicon-export margin-right-5"></span>&nbsp;Export', ['controller' => 'Logs', 'action' => 'exportSettings'], ['escape' => false]); ?></li>
+							</ul>
 						</div>
 					</div>
 				</nav>
 				
-				<div class= "content col-xs-6 col-xs-offset-6 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
-					<div class= "container-full">
-						<div class= "row">
-							<?= $this->fetch('content') ?>
-						</div>
+				<div class="content col-xs-6 col-xs-offset-6 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
+					<div class="container-full">
+                        <?= $this->fetch('content') ?>
 					</div>
 				</div>
 			</div>

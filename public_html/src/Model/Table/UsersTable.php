@@ -59,18 +59,18 @@ class UsersTable extends Table
 
         $validator
             ->scalar('first_name')
-            ->maxLength('first_name', 255)
+            ->maxLength('first_name', 35)
             ->requirePresence('first_name', 'create')
             ->notEmpty('first_name');
 
         $validator
             ->scalar('middle_name')
-            ->maxLength('middle_name', 255)
+            ->maxLength('middle_name', 35)
             ->allowEmpty('middle_name');
 
         $validator
             ->scalar('last_name')
-            ->maxLength('last_name', 255)
+            ->maxLength('last_name', 35)
             ->requirePresence('last_name', 'create')
             ->notEmpty('last_name');
 

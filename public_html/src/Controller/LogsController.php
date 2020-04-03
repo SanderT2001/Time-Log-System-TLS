@@ -19,18 +19,44 @@ class LogsController extends AppController
      * Gathering all the records in logs and the corresponding TimeTypes and Projects. 
      * After gathering compacting those variables (that data) to the index.ctp (index view).
      */
-    public function index()
+    public function index(int $projectId = null, bool $all = false)
     {
         $this->paginate = [
             'contain' => ['TimeTypes', 'Projects']
         ];
 
-        $logs = $this->paginate($this->Logs);
+        $conditions = [
+            'Logs.by_user' => $this->Auth->user('ID')
+        ];
+        if (!$all) {
+            $conditions = array_merge([
+                'YEAR(Logs.log_date)' => date('Y')
+            ], $conditions);
+        }
+        if (!empty($projectId)) {
+            $conditions = array_merge([
+                'Logs.project_id' => $projectId
+            ], $conditions);
+        }
 
-        $timeTypes = $this->Logs->TimeTypes->find('list');
-        $projects = $this->Logs->Projects->find('list');
+        $logs = $this->paginate($this->Logs->find('all', [
+            'conditions' => $conditions
+        ]));
 
-        $this->set(compact('logs', 'timeTypes', 'projects'));
+        $timeTypes = $this->Logs->TimeTypes->find('list', [
+            'conditions' => [
+                'TimeTypes.by_user' => $this->Auth->user('ID')
+            ]
+        ]);
+        $projectConditions = [
+            'conditions' => [
+                'Projects.by_user' => $this->Auth->user('ID')
+            ]
+        ];
+        $projects = $this->Logs->Projects->find('list', $projectConditions);
+        $projectsAsObject = $this->Logs->Projects->find('all', $projectConditions);
+
+        $this->set(compact('logs', 'timeTypes', 'projects', 'projectsAsObject', 'projectId'));
     }
 
     /**
@@ -102,9 +128,10 @@ class LogsController extends AppController
             $log = $this->Logs->newEntity();
 
             $log = $this->Logs->patchEntity($log, $this->request->getData());
-            $log->log_date = $this->request->getData(log_date);
-            $log->log_start_time = $this->request->getData(log_start_time);
-            $log->log_end_time = $this->request->getData(log_end_time);
+            $log->log_date = $this->request->getData('log_date');
+            $log->log_start_time = $this->request->getData('log_start_time');
+            $log->log_end_time = $this->request->getData('log_end_time');
+            $log->by_user = $this->Auth->user('ID');
 
             if ($this->Logs->save($log)) 
             {
@@ -134,9 +161,10 @@ class LogsController extends AppController
             $log = $this->Logs->get($id);
 
             $log = $this->Logs->patchEntity($log, $this->request->getData());
-            $log->log_date = $this->request->getData(log_date);
-            $log->log_start_time = $this->request->getData(log_start_time);
-            $log->log_end_time = $this->request->getData(log_end_time);
+            $log->log_date = $this->request->getData('log_date');
+            $log->log_start_time = $this->request->getData('log_start_time');
+            $log->log_end_time = $this->request->getData('log_end_time');
+            $log->by_user = $this->Auth->user('ID');
 
             if ($this->Logs->save($log)) 
             {
@@ -165,7 +193,11 @@ class LogsController extends AppController
 
         if ($this->request->is(array('ajax')))
         {
-            $log = $this->Logs->get($id);
+            $log = $this->Logs->get($id, [
+                'conditions' => [
+                    'Logs.by_user' => $this->Auth->user('ID')
+                ]
+            ]);
 
             if ($this->Logs->delete($log)) 
             {
@@ -179,5 +211,99 @@ class LogsController extends AppController
             $this->response->type('html');
             return $this->response;
         }
+    }
+
+    /**
+     * exportSettings
+     *
+     * This is a method for just showing off the export-settings ctp.
+     */
+    public function exportSettings()
+    {
+        $projectConditions = [
+            'conditions' => [
+                'Projects.by_user' => $this->Auth->user('ID')
+            ]
+        ];
+        $projects = $this->Logs->Projects->find('list', $projectConditions);
+
+        $this->set(compact('projects'));
+    }
+
+    /**
+     * exportData
+     *
+     * @param $exportOf, used for the selection of which column to create an export of. Time Type, Projects or a export of all the records.
+     * @param $from, used for the selection of which type to create an export of from the @var $exportOf, for example "School" from "Time Types" ($from - $exportOf)
+     * To create an export between two dates, the @param $startData and @param $endDate are used.
+     *
+     * @var $exportOfConverted is the variable used to get the right column. For example, @var $exportOf == "Time Time" => @var $exportOfConverted == "time_type_id".
+     */
+    public function exportData($exportOf, $from, $startDate, $endDate)
+    {
+        $this->autoRender = false;
+
+        $exportOfConverted;
+
+        switch (strtolower($exportOf))
+        {
+            case "time_type":
+                $exportOfConverted = "time_type_id";
+                break;
+
+            case "project":
+                $exportOfConverted = "project_id";
+                break;
+
+            case "all":
+                $exportOfConverted = "all";
+                break;
+        }
+
+        if ($startDate == "all")
+        {
+            if ($exportOfConverted != "all")
+            {
+                $logs = $this->Logs->find('all', [
+                    'conditions' => ['Logs.'.$exportOfConverted.' =' => $from, 'Logs.by_user =' => $this->Auth->user('ID')],
+                    'contain' => ['TimeTypes', 'Projects']
+                ]);
+            }
+            else
+            {
+                $logs = $this->Logs->find('all', [
+                    'conditions' => ['Logs.by_user =' => $this->Auth->user('ID')],
+                    'contain' => ['TimeTypes', 'Projects']
+                ]);
+            }
+        }
+        else
+        {
+            if ($exportOfConverted != "all")
+            {
+                $logs = $this->Logs->find('all', [
+                    'conditions' => ['Logs.'.$exportOfConverted.' =' => $from, 'Logs.log_date BETWEEN "'.$startDate.'" and "'.$endDate.'"', 'Logs.by_user =' => $this->Auth->user('ID')],
+                    'contain' => ['TimeTypes', 'Projects']
+                ]);
+            }
+            else
+            {
+                $logs = $this->Logs->find('all', [
+                    'conditions' => ['Logs.log_date BETWEEN "'.$startDate.'" and "'.$endDate.'"', 'Logs.by_user =' => $this->Auth->user('ID')],
+                    'contain' => ['TimeTypes', 'Projects']
+                ]);
+            }
+        }
+
+        $timeTypes = $this->Logs->TimeTypes->find('list', [
+            'conditions' => ['timeTypes.by_user =' => $this->Auth->user('ID')]
+        ]);
+
+        $projects = $this->Logs->Projects->find('list', [
+            'conditions' => ['projects.by_user =' => $this->Auth->user('ID')]
+        ]);
+
+        $this->set(compact('logs', 'timeTypes', 'projects'));
+        $this->render('export');
     }
 }

@@ -6,6 +6,12 @@ var timeDiffInMin;
  * addData function
  *
  * This is a function which makes an ajax call to the addData method in the LogsController and then close the addData modal.
+ *
+ * @param operation,'View' or 'Add':
+ * 		View => Show an empty modal,
+ * 		Add => Sent the filled modal
+ *
+ * 	When adding, the time difference is also being calculaed to be sent to the database.
  */
 function addData(operation)
 {
@@ -21,14 +27,15 @@ function addData(operation)
         $.ajax(
             {
                 type: 'put',
-                url: window.location + '/addData',
+                url: '/projects/Time-Log-System-TLS/public_html/logs/addData/',
                 headers: { 'X-CSRF-Token': $('[name= "_csrfToken"]').val() },
                 data: "time_type_id= " + $("#add-modal-time-type").val() + "&project_id= " + $("#add-modal-project").val() + "&log_summary= " + $("#add-modal-summary").val() + "&log_description= " + $("#add-modal-description").val() + "&log_retrospective= " + $("#add-modal-retrospective").val() + "&log_date= " + $("#add-modal-date").val() + "&log_start_time= " + $("#add-modal-start-time").val() + "&log_end_time= " + $("#add-modal-end-time").val() + "&log_time_diff_min= " + timeDiffInMin,
                 dataType: 'html',
 
                 success: function(response)
                 {
-                    $("#addDataModal").modal("hide");
+                    //$("#addDataModal").modal("hide");
+                    location.reload();
                 },
 
                 error: function(e)
@@ -44,13 +51,17 @@ function addData(operation)
  * enlargeButtonClick function
  *
  * This is a function which makes an ajax call to the getData method in the LogsController and then sets modal values before displaying the modal filled with ajax returned data. 
+ *
+ * @param operation, Empty or 'Edit':
+ * 		Empty => Show the modal with the returned data in it,
+ * 		Edit => Call the editData() method
  */
 function enlargeButtonClick(logId, action)
 {
     $.ajax (
         {
             type: 'get',
-            url: window.location + '/getData/' + logId,
+            url: '/projects/Time-Log-System-TLS/public_html/logs/getData/' + logId,
             dataType: 'json',
             contentType: 'json',
 
@@ -116,6 +127,8 @@ function enlargeButtonClick(logId, action)
  * This function is meant to handle the whole edit data events on the Logbook, but also to handle the difference between 'Edit data' and 'Save data'.
  * 'Edit data' => The stage in which you specifically select that you want to edit the shown data.
  * 'Save data' => The stage in which you get after you click on 'Edit data'. If you click on the button when 'Save data' is being displayed, there will be an ajax call to update the edited data.
+ *
+ * Before the editData ajax call is being made, the time difference in minutes is being calculated to update that field in the database by calling the 'calcTimeDiffMin()' function.
  */
 function editData(logId)
 {
@@ -160,14 +173,14 @@ function editData(logId)
         $.ajax(
             {
                 type: 'put',
-                url: window.location + '/editData/' + log,
+                url: '/projects/Time-Log-System-TLS/public_html/logs/editData/' + log,
                 headers: { 'X-CSRF-Token': $('[name= "_csrfToken"]').val() },
                 data: "time_type_id= " + $("#modal-time-type").val() + "&project_id= " + $("#modal-project").val() + "&log_summary= " + $("#modal-summary").val() + "&log_description= " + $("#modal-description").val() + "&log_retrospective= " + $("#modal-retrospective").val() + "&log_date= " + $("#modal-date").attr("value") + "&log_start_time= " + $("#modal-start-time").val() + "&log_end_time= " + $("#modal-end-time").val() + "&log_time_diff_min= " + $("#modal-difference-time").val(),
                 dataType: 'html',
 
                 success: function(response)
                 {
-
+                    location.reload();
                 },
 
                 error: function(e)
@@ -188,14 +201,17 @@ function editData(logId)
  */
 function deleteData(logId)
 {
-    var log;
+    if (confirm('Sure?') == false) {
+        return false;
+    }
 
+    var log;
     log = (logId == null) ? $("#modal-id").val() : logId;
 
     $.ajax (
         {
             type: 'post',
-            url: window.location + '/deleteData/' + log,
+            url: '/projects/Time-Log-System-TLS/public_html/logs/deleteData/' + log,
             headers : { 'X-CSRF-Token': $('[name= "_csrfToken"]').val() },
             dataType: 'html',
 
@@ -222,4 +238,58 @@ function deleteData(logId)
 function calcTimeDiffMin(startTime, endTime)
 {
     timeDiffInMin = (new Date("2018-08-27 " + endTime) - new Date("2018-08-27 " + startTime)) / 1000 / 60;
+}
+
+/*
+ * exportData function
+ *
+ * This function created the link to the controller with the requested time type. 
+ * After that the link is being inserted into the <a > tag in export.ctp.
+ */
+function exportData(column)
+{
+    var exportOf = $("#export-field-export-of").val();
+    var from = $("#export-field-from").val();
+    if (from === '') {
+        from = 'all';
+    }
+
+    var startDate = $("#export-field-time-type-start-date").val();
+    var endDate = $("#export-field-time-type-end-date").val();
+
+    if ((startDate == "") && (endDate == ""))
+    {
+        if (startDate == "")
+        {
+            startDate = "all";	
+        }
+
+        if (endDate == "")
+        {
+            endDate = "all";
+        }
+    }
+    else
+    {
+        var date = new Date();
+
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDay() + 2;
+
+        var bindedDate = year + "-" + month + "-" + day; 
+
+        if ((startDate == "") && (endDate != ""))
+        {
+            startDate = bindedDate;
+        }
+
+        if ((startDate != "") && (endDate == ""))
+        {
+            endDate = bindedDate;
+        }
+    }
+
+    var link = "./export-data/" + exportOf + "/" + from + "/" + startDate + "/" + endDate;
+    $("#createExportLink").attr("href", link);
 }

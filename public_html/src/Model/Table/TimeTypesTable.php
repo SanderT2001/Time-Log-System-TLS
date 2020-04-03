@@ -62,7 +62,6 @@ class TimeTypesTable extends Table
 
         $validator
             ->scalar('type_description')
-            ->maxLength('type_description', 255)
             ->requirePresence('type_description', 'create')
             ->notEmpty('type_description');
 
@@ -71,6 +70,11 @@ class TimeTypesTable extends Table
             ->maxLength('type_global_name', 255)
             ->requirePresence('type_global_name', 'create')
             ->notEmpty('type_global_name');
+
+        $validator
+            ->integer('by_user')
+            ->requirePresence('by_user', 'create')
+            ->notEmpty('by_user');
 
         return $validator;
     }

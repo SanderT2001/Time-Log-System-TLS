@@ -49,8 +49,7 @@ class Client extends Entity
         'client_postal_code' => true,
         'client_country' => true,
         'client_description' => true,
-        'assignments' => true,
-        'others' => true,
+        'by_user' => true,
         'projects' => true
     ];
 }

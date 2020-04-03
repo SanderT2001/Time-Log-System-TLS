@@ -38,6 +38,7 @@ class Project extends Entity
         'project_progress' => true,
         'project_start_date' => true,
         'project_end_date' => true,
+        'by_user' => true,
         'client' => true,
         'logs' => true
     ];

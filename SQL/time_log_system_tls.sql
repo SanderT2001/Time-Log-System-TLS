@@ -1,6 +1,4 @@
--- phpMyAdmin SQL Dump
--- version 4.8.4
--- https://www.phpmyadmin.net/
+-- SQL Dump
 --
 -- Host: localhost
 -- Generation Time: May 23, 2019 at 03:36 PM
@@ -17,12 +15,6 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `time_log_system_tls_production`
---
-
--- --------------------------------------------------------
 
 --
 -- Table structure for table `clients`

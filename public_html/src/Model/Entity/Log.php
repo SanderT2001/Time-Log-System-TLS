@@ -42,6 +42,7 @@ class Log extends Entity
         'log_start_time' => true,
         'log_end_time' => true,
         'log_time_diff_min' => true,
+        'by_user' => true,
         'time_type' => true,
         'project' => true
     ];

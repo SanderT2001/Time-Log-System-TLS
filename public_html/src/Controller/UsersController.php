@@ -172,7 +172,10 @@ class UsersController extends AppController
                 $userData->$field = Time::now();
                 $table->save($userData);
 
-                $this->redirect($this->Auth->redirectUrl('/'));
+                $this->redirect([
+                    'controller' => 'Logs',
+                    'action' => 'index'
+                ]);
 
             }
             else
