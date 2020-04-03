@@ -14,7 +14,16 @@
                 <h4><b>Create export from a Time Type</b></h4>
 
                 <div class= "form-group">
-                    <?= $this->Form->control('Export of', array('empty' => true, 'class' => 'form-control', 'id' => 'export-field-export-of', 'value' => 'All')); ?>
+                    <?= $this->Form->select('Export of', [
+                        'all' => 'All',
+                        'project' => 'Projects',
+                        'time_type' => 'Time Type'
+                    ], [
+                        'empty' => true,
+                        'class' => 'form-control',
+                        'id' => 'export-field-export-of',
+                        'default' => 'all'
+                    ]); ?>
                     <?= $this->Form->control('Project', array('empty' => true, 'label' => 'From project', 'class' => 'form-control', 'id' => 'export-field-from')); ?>
 
                     <?= $this->Form->control('Start date', array('class' => 'form-control date', 'id' => 'export-field-time-type-start-date')); ?>
@@ -22,7 +31,6 @@
                 </div>
 
                 <a href= "#" onclick= "exportData('timeType')" id= "createExportLink" class="btn btn-success">Create export</a>
-
             <?= $this->Form->end() ?>
 
         </div>

@@ -56,7 +56,7 @@ class LogsController extends AppController
         $projects = $this->Logs->Projects->find('list', $projectConditions);
         $projectsAsObject = $this->Logs->Projects->find('all', $projectConditions);
 
-        $this->set(compact('logs', 'timeTypes', 'projects', 'projectsAsObject', 'projectId', 'date'));
+        $this->set(compact('logs', 'timeTypes', 'projects', 'projectsAsObject', 'projectId'));
     }
 
     /**
@@ -245,17 +245,17 @@ class LogsController extends AppController
 
         $exportOfConverted;
 
-        switch ($exportOf)
+        switch (strtolower($exportOf))
         {
-            case "Time Type":
+            case "time_type":
                 $exportOfConverted = "time_type_id";
                 break;
 
-            case "Projects":
+            case "project":
                 $exportOfConverted = "project_id";
                 break;
 
-            case "All":
+            case "all":
                 $exportOfConverted = "all";
                 break;
         }

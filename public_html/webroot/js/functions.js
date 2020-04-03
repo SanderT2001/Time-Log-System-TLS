@@ -250,6 +250,9 @@ function exportData(column)
 {
     var exportOf = $("#export-field-export-of").val();
     var from = $("#export-field-from").val();
+    if (from === '') {
+        from = 'all';
+    }
 
     var startDate = $("#export-field-time-type-start-date").val();
     var endDate = $("#export-field-time-type-end-date").val();
