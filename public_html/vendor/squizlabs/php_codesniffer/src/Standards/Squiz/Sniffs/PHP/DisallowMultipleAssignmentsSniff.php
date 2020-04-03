@@ -9,8 +9,8 @@
 
 namespace PHP_CodeSniffer\Standards\Squiz\Sniffs\PHP;
 
-use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Files\File;
+use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
 
 class DisallowMultipleAssignmentsSniff implements Sniff
@@ -49,6 +49,18 @@ class DisallowMultipleAssignmentsSniff implements Sniff
             $closer = $tokens[$function]['parenthesis_closer'];
             if ($opener < $stackPtr && $closer > $stackPtr) {
                 return;
+            }
+        }
+
+        // Ignore assignments in WHILE loop conditions.
+        if (isset($tokens[$stackPtr]['nested_parenthesis']) === true) {
+            $nested = $tokens[$stackPtr]['nested_parenthesis'];
+            foreach ($nested as $opener => $closer) {
+                if (isset($tokens[$opener]['parenthesis_owner']) === true
+                    && $tokens[$tokens[$opener]['parenthesis_owner']]['code'] === T_WHILE
+                ) {
+                    return;
+                }
             }
         }
 
@@ -122,10 +134,10 @@ class DisallowMultipleAssignmentsSniff implements Sniff
 
         // Ignore the first part of FOR loops as we are allowed to
         // assign variables there even though the variable is not the
-        // first thing on the line. Also ignore WHILE loops.
+        // first thing on the line.
         if ($tokens[$varToken]['code'] === T_OPEN_PARENTHESIS && isset($tokens[$varToken]['parenthesis_owner']) === true) {
             $owner = $tokens[$varToken]['parenthesis_owner'];
-            if ($tokens[$owner]['code'] === T_FOR || $tokens[$owner]['code'] === T_WHILE) {
+            if ($tokens[$owner]['code'] === T_FOR) {
                 return;
             }
         }
@@ -141,8 +153,28 @@ class DisallowMultipleAssignmentsSniff implements Sniff
             return;
         }
 
-        $error = 'Assignments must be the first block of code on a line';
-        $phpcsFile->addError($error, $stackPtr, 'Found');
+        $error     = 'Assignments must be the first block of code on a line';
+        $errorCode = 'Found';
+
+        if (isset($nested) === true) {
+            $controlStructures = [
+                T_IF     => T_IF,
+                T_ELSEIF => T_ELSEIF,
+                T_SWITCH => T_SWITCH,
+                T_CASE   => T_CASE,
+                T_FOR    => T_FOR,
+            ];
+            foreach ($nested as $opener => $closer) {
+                if (isset($tokens[$opener]['parenthesis_owner']) === true
+                    && isset($controlStructures[$tokens[$tokens[$opener]['parenthesis_owner']]['code']]) === true
+                ) {
+                    $errorCode .= 'InControlStructure';
+                    break;
+                }
+            }
+        }
+
+        $phpcsFile->addError($error, $stackPtr, $errorCode);
 
     }//end process()
 

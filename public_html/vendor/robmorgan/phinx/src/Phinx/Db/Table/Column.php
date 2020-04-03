@@ -69,7 +69,12 @@ class Column
     /**
      * @var integer
      */
-    protected $precision;
+    protected $seed;
+
+    /**
+     * @var integer
+     */
+    protected $increment;
 
     /**
      * @var integer
@@ -336,7 +341,7 @@ class Column
      */
     public function setPrecision($precision)
     {
-        $this->precision = $precision;
+        $this->setLimit($precision);
 
         return $this;
     }
@@ -351,7 +356,53 @@ class Column
      */
     public function getPrecision()
     {
-        return $this->precision;
+        return $this->limit;
+    }
+
+    /**
+     * Gets the column identity seed.
+     *
+     * @return int
+     */
+    public function getSeed()
+    {
+        return $this->seed;
+    }
+
+    /**
+     * Gets the column identity increment.
+     *
+     * @return int
+     */
+    public function getIncrement()
+    {
+        return $this->increment;
+    }
+
+    /**
+     * Sets the column identity seed.
+     *
+     * @param int $seed Number seed
+     * @return \Phinx\Db\Table\Column
+     */
+    public function setSeed($seed)
+    {
+        $this->seed = $seed;
+
+        return $this;
+    }
+
+    /**
+     * Sets the column identity increment.
+     *
+     * @param int $increment Number increment
+     * @return \Phinx\Db\Table\Column
+     */
+    public function setIncrement($increment)
+    {
+        $this->increment = $increment;
+
+        return $this;
     }
 
     /**
@@ -395,7 +446,7 @@ class Column
      */
     public function setPrecisionAndScale($precision, $scale)
     {
-        $this->precision = $precision;
+        $this->setLimit($precision);
         $this->scale = $scale;
 
         return $this;
@@ -622,7 +673,6 @@ class Column
             'default',
             'null',
             'identity',
-            'precision',
             'scale',
             'after',
             'update',
@@ -633,6 +683,8 @@ class Column
             'values',
             'collation',
             'encoding',
+            'seed',
+            'increment',
         ];
     }
 
@@ -645,6 +697,7 @@ class Column
     {
         return [
             'length' => 'limit',
+            'precision' => 'limit',
         ];
     }
 

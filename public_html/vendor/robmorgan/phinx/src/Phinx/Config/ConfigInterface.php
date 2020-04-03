@@ -82,6 +82,13 @@ interface ConfigInterface extends \ArrayAccess
     public function getAlias($alias);
 
     /**
+     * Get all the aliased values.
+     *
+     * @return string[]
+     */
+    public function getAliases();
+
+    /**
      * Gets the config file path.
      *
      * @return string
@@ -129,6 +136,13 @@ interface ConfigInterface extends \ArrayAccess
      * @return bool
      */
     public function isVersionOrderCreationTime();
+
+    /**
+     * Get the bootstrap file path
+     *
+     * @return string|false
+     */
+    public function getBootstrapFile();
 
     /**
      * Gets the base class name for migrations.

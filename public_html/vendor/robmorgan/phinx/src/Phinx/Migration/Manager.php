@@ -39,6 +39,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Manager
 {
+    const BREAKPOINT_TOGGLE = 1;
+    const BREAKPOINT_SET = 2;
+    const BREAKPOINT_UNSET = 3;
+
     /**
      * @var \Phinx\Config\ConfigInterface
      */
@@ -96,8 +100,8 @@ class Manager
     /**
      * Prints the specified environment's migration status.
      *
-     * @param string $environment
-     * @param null $format
+     * @param string $environment environment to print status of
+     * @param string|null $format format to print status in (either text, json, or null)
      * @return int 0 if all migrations are up, or an error code
      */
     public function printStatus($environment, $format = null)
@@ -109,6 +113,11 @@ class Manager
         $migrationCount = 0;
         $missingCount = 0;
         $pendingMigrationCount = 0;
+        $finalMigrations = [];
+        $verbosity = $output->getVerbosity();
+        if ($format === 'json') {
+            $output->setVerbosity(OutputInterface::VERBOSITY_QUIET);
+        }
         if (count($migrations)) {
             // TODO - rewrite using Symfony Table Helper as we already have this library
             // included and it will fix formatting issues (e.g drawing the lines)
@@ -180,7 +189,8 @@ class Manager
                             if ($missingVersion['start_time'] > $version['start_time']) {
                                 break;
                             } elseif ($missingVersion['start_time'] == $version['start_time'] &&
-                                $missingVersion['version'] > $version['version']) {
+                                $missingVersion['version'] > $version['version']
+                            ) {
                                 break;
                             }
                         }
@@ -202,8 +212,8 @@ class Manager
                     '%s %14.0f  %19s  %19s  <comment>%s</comment>',
                     $status,
                     $migration->getVersion(),
-                    $version['start_time'],
-                    $version['end_time'],
+                    ($version ? $version['start_time'] : ''),
+                    ($version ? $version['end_time'] : ''),
                     $migration->getName()
                 ));
 
@@ -211,7 +221,7 @@ class Manager
                     $output->writeln('         <error>BREAKPOINT SET</error>');
                 }
 
-                $migrations[] = ['migration_status' => trim(strip_tags($status)), 'migration_id' => sprintf('%14.0f', $migration->getVersion()), 'migration_name' => $migration->getName()];
+                $finalMigrations[] = ['migration_status' => trim(strip_tags($status)), 'migration_id' => sprintf('%14.0f', $migration->getVersion()), 'migration_name' => $migration->getName()];
                 unset($versions[$migration->getVersion()]);
             }
 
@@ -229,15 +239,17 @@ class Manager
 
         // write an empty line
         $output->writeln('');
+
         if ($format !== null) {
             switch ($format) {
                 case 'json':
+                    $output->setVerbosity($verbosity);
                     $output->writeln(json_encode(
                         [
                             'pending_count' => $pendingMigrationCount,
                             'missing_count' => $missingCount,
                             'total_count' => $migrationCount + $missingCount,
-                            'migrations' => $migrations
+                            'migrations' => $finalMigrations
                         ]
                     ));
                     break;
@@ -387,6 +399,7 @@ class Manager
         $this->getEnvironment($name)->executeMigration($migration, $direction, $fake);
         $end = microtime(true);
 
+        $migration->postFlightCheck($direction);
         $this->getOutput()->writeln(
             ' ==' .
             ' <info>' . $migration->getVersion() . ' ' . $migration->getName() . ':</info>' .
@@ -516,7 +529,8 @@ class Manager
 
                 if (!$targetMustMatchVersion) {
                     if (($this->getConfig()->isVersionOrderCreationTime() && $executedVersion['version'] <= $target) ||
-                        (!$this->getConfig()->isVersionOrderCreationTime() && $executedVersion['start_time'] <= $target)) {
+                        (!$this->getConfig()->isVersionOrderCreationTime() && $executedVersion['start_time'] <= $target)
+                    ) {
                         break;
                     }
                 }
@@ -686,7 +700,7 @@ class Manager
                 $this->getOutput()->writeln(
                     array_map(
                         function ($phpFile) {
-                            return '    ' . $phpFile;
+                            return "    <info>{$phpFile}</info>";
                         },
                         $phpFiles
                     )
@@ -701,15 +715,7 @@ class Manager
             foreach ($phpFiles as $filePath) {
                 if (Util::isValidMigrationFileName(basename($filePath))) {
                     if ($this->getOutput()->getVerbosity() >= OutputInterface::VERBOSITY_DEBUG) {
-                        $this->getOutput()->writeln('Valid migration file');
-                        $this->getOutput()->writeln(
-                            array_map(
-                                function ($phpFile) {
-                                    return '    ' . $phpFile;
-                                },
-                                $phpFiles
-                            )
-                        );
+                        $this->getOutput()->writeln("Valid migration file <info>{$filePath}</info>.");
                     }
 
                     $version = Util::getVersionFromFileName(basename($filePath));
@@ -735,7 +741,7 @@ class Manager
                     $fileNames[$class] = basename($filePath);
 
                     if ($this->getOutput()->getVerbosity() >= OutputInterface::VERBOSITY_DEBUG) {
-                        $this->getOutput()->writeln("Loading class $class from $filePath");
+                        $this->getOutput()->writeln("Loading class <info>$class</info> from <info>$filePath</info>.");
                     }
 
                     // load the migration file
@@ -753,7 +759,7 @@ class Manager
                     }
 
                     if ($this->getOutput()->getVerbosity() >= OutputInterface::VERBOSITY_DEBUG) {
-                        $this->getOutput()->writeln("Running $class");
+                        $this->getOutput()->writeln("Running <info>$class</info>.");
                     }
 
                     // instantiate it
@@ -770,15 +776,7 @@ class Manager
                     $versions[$version] = $migration;
                 } else {
                     if ($this->getOutput()->getVerbosity() >= OutputInterface::VERBOSITY_DEBUG) {
-                        $this->getOutput()->writeln('Invalid migration file');
-                        $this->getOutput()->writeln(
-                            array_map(
-                                function ($phpFile) {
-                                    return '  ' . $phpFile;
-                                },
-                                $phpFiles
-                            )
-                        );
+                        $this->getOutput()->writeln("Invalid migration file <error>{$filePath}</error>.");
                     }
                 }
             }
@@ -797,23 +795,7 @@ class Manager
      */
     protected function getMigrationFiles()
     {
-        $config = $this->getConfig();
-        $paths = $config->getMigrationPaths();
-        $files = [];
-
-        foreach ($paths as $path) {
-            $files = array_merge(
-                $files,
-                Util::glob($path . DIRECTORY_SEPARATOR . '*.php')
-            );
-        }
-        // glob() can return the same file multiple times
-        // This will cause the migration to fail with a
-        // false assumption of duplicate migrations
-        // http://php.net/manual/en/function.glob.php#110340
-        $files = array_unique($files);
-
-        return $files;
+        return Util::getFiles($this->getConfig()->getMigrationPaths());
     }
 
     /**
@@ -944,23 +926,7 @@ class Manager
      */
     protected function getSeedFiles()
     {
-        $config = $this->getConfig();
-        $paths = $config->getSeedPaths();
-        $files = [];
-
-        foreach ($paths as $path) {
-            $files = array_merge(
-                $files,
-                Util::glob($path . DIRECTORY_SEPARATOR . '*.php')
-            );
-        }
-        // glob() can return the same file multiple times
-        // This will cause the migration to fail with a
-        // false assumption of duplicate migrations
-        // http://php.net/manual/en/function.glob.php#110340
-        $files = array_unique($files);
-
-        return $files;
+        return Util::getFiles($this->getConfig()->getSeedPaths());
     }
 
     /**
@@ -995,6 +961,20 @@ class Manager
      */
     public function toggleBreakpoint($environment, $version)
     {
+        $this->markBreakpoint($environment, $version, self::BREAKPOINT_TOGGLE);
+    }
+
+    /**
+     * Toggles the breakpoint for a specific version.
+     *
+     * @param string $environment The required environment
+     * @param int|null $version The version of the target migration
+     * @param int $mark The state of the breakpoint as defined by self::BREAKPOINT_xxxx constants.
+     *
+     * @return void
+     */
+    protected function markBreakpoint($environment, $version, $mark)
+    {
         $migrations = $this->getMigrations($environment);
         $this->getMigrations($environment);
         $env = $this->getEnvironment($environment);
@@ -1018,7 +998,21 @@ class Manager
             return;
         }
 
-        $env->getAdapter()->toggleBreakpoint($migrations[$version]);
+        switch ($mark) {
+            case self::BREAKPOINT_TOGGLE:
+                $env->getAdapter()->toggleBreakpoint($migrations[$version]);
+                break;
+            case self::BREAKPOINT_SET:
+                if ($versions[$version]['breakpoint'] == 0) {
+                    $env->getAdapter()->setBreakpoint($migrations[$version]);
+                }
+                break;
+            case self::BREAKPOINT_UNSET:
+                if ($versions[$version]['breakpoint'] == 1) {
+                    $env->getAdapter()->unsetBreakpoint($migrations[$version]);
+                }
+                break;
+        }
 
         $versions = $env->getVersionLog();
 
@@ -1032,7 +1026,7 @@ class Manager
     /**
      * Remove all breakpoints
      *
-     * @param string $environment
+     * @param string $environment The required environment
      * @return void
      */
     public function removeBreakpoints($environment)
@@ -1041,5 +1035,31 @@ class Manager
             ' %d breakpoints cleared.',
             $this->getEnvironment($environment)->getAdapter()->resetAllBreakpoints()
         ));
+    }
+
+    /**
+     * Set the breakpoint for a specific version.
+     *
+     * @param string $environment The required environment
+     * @param int|null $version The version of the target migration
+     *
+     * @return void
+     */
+    public function setBreakpoint($environment, $version)
+    {
+        $this->markBreakpoint($environment, $version, self::BREAKPOINT_SET);
+    }
+
+    /**
+     * Unset the breakpoint for a specific version.
+     *
+     * @param string $environment The required environment
+     * @param int|null $version The version of the target migration
+     *
+     * @return void
+     */
+    public function unsetBreakpoint($environment, $version)
+    {
+        $this->markBreakpoint($environment, $version, self::BREAKPOINT_UNSET);
     }
 }

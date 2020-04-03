@@ -39,6 +39,8 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class Create extends AbstractCommand
 {
+    protected static $defaultName = 'create';
+
     /**
      * The name of the interface that any external template creation class is required to implement.
      */
@@ -51,8 +53,7 @@ class Create extends AbstractCommand
     {
         parent::configure();
 
-        $this->setName($this->getName() ?: 'create')
-            ->setDescription('Create a new migration')
+        $this->setDescription('Create a new migration')
             ->addArgument('name', InputArgument::REQUIRED, 'What is the name of the migration (in CamelCase)?')
             ->setHelp(sprintf(
                 '%sCreates a new database migration%s',
@@ -146,7 +147,7 @@ class Create extends AbstractCommand
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
-     * @return void
+     * @return int 0 on success
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -278,7 +279,7 @@ class Create extends AbstractCommand
 
         // inject the class names appropriate to this migration
         $classes = [
-            '$namespaceDefinition' => $namespace !== null ? ('namespace ' . $namespace . ';') : '',
+            '$namespaceDefinition' => $namespace !== null ? (PHP_EOL . 'namespace ' . $namespace . ';' . PHP_EOL) : '',
             '$namespace' => $namespace,
             '$useClassName' => $this->getConfig()->getMigrationBaseClassName(false),
             '$className' => $className,
@@ -310,5 +311,7 @@ class Create extends AbstractCommand
         }
 
         $output->writeln('<info>created</info> ' . str_replace(getcwd() . DIRECTORY_SEPARATOR, '', $filePath));
+
+        return 0;
     }
 }

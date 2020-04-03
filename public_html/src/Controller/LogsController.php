@@ -135,7 +135,7 @@ class LogsController extends AppController
 
             if ($this->Logs->save($log)) 
             {
-                $this->Flash->success('The log has been saved.');
+                //$this->Flash->success('The log has been saved.');
             }
         }
 
@@ -168,7 +168,7 @@ class LogsController extends AppController
 
             if ($this->Logs->save($log)) 
             {
-                $this->Flash->success("Edited");
+                //$this->Flash->success("Edited");
             }
         }
 
@@ -201,7 +201,7 @@ class LogsController extends AppController
 
             if ($this->Logs->delete($log)) 
             {
-                $this->Flash->success(__('The log has been deleted.'));
+                //$this->Flash->success(__('The log has been deleted.'));
             } 
             else 
             {
