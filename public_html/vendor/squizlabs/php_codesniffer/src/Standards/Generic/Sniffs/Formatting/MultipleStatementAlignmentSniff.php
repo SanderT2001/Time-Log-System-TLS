@@ -12,8 +12,8 @@
 
 namespace PHP_CodeSniffer\Standards\Generic\Sniffs\Formatting;
 
-use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Files\File;
+use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
 
 class MultipleStatementAlignmentSniff implements Sniff
@@ -77,6 +77,14 @@ class MultipleStatementAlignmentSniff implements Sniff
 
         // Ignore assignments used in a condition, like an IF or FOR.
         if (isset($tokens[$stackPtr]['nested_parenthesis']) === true) {
+            // If the parenthesis is on the same line as the assignment,
+            // then it should be ignored as it is specifically being grouped.
+            $parens    = $tokens[$stackPtr]['nested_parenthesis'];
+            $lastParen = array_pop($parens);
+            if ($tokens[$lastParen]['line'] === $tokens[$stackPtr]['line']) {
+                return;
+            }
+
             foreach ($tokens[$stackPtr]['nested_parenthesis'] as $start => $end) {
                 if (isset($tokens[$start]['parenthesis_owner']) === true) {
                     return;
@@ -96,10 +104,12 @@ class MultipleStatementAlignmentSniff implements Sniff
      * @param \PHP_CodeSniffer\Files\File $phpcsFile The file being scanned.
      * @param int                         $stackPtr  The position of the current token
      *                                               in the stack passed in $tokens.
+     * @param int                         $end       The token where checking should end.
+     *                                               If NULL, the entire file will be checked.
      *
      * @return int
      */
-    public function checkAlignment($phpcsFile, $stackPtr)
+    public function checkAlignment($phpcsFile, $stackPtr, $end=null)
     {
         $tokens = $phpcsFile->getTokens();
 
@@ -112,6 +122,10 @@ class MultipleStatementAlignmentSniff implements Sniff
         $lastSemi    = null;
         $arrayEnd    = null;
 
+        if ($end === null) {
+            $end = $phpcsFile->numTokens;
+        }
+
         $find = Tokens::$assignmentTokens;
         unset($find[T_DOUBLE_ARROW]);
 
@@ -120,7 +134,7 @@ class MultipleStatementAlignmentSniff implements Sniff
         unset($scopes[T_ANON_CLASS]);
         unset($scopes[T_OBJECT]);
 
-        for ($assign = $stackPtr; $assign < $phpcsFile->numTokens; $assign++) {
+        for ($assign = $stackPtr; $assign < $end; $assign++) {
             if ($tokens[$assign]['level'] < $tokens[$stackPtr]['level']) {
                 // Statement is in a different context, so the block is over.
                 break;
@@ -191,17 +205,34 @@ class MultipleStatementAlignmentSniff implements Sniff
             }//end if
 
             if ($assign !== $stackPtr) {
-                // Has to be nested inside the same conditions as the first assignment.
                 if ($tokens[$assign]['level'] > $tokens[$stackPtr]['level']) {
+                    // Has to be nested inside the same conditions as the first assignment.
+                    // We've gone one level down, so process this new block.
                     $assign   = $this->checkAlignment($phpcsFile, $assign);
                     $lastCode = $assign;
                     continue;
                 } else if ($tokens[$assign]['level'] < $tokens[$stackPtr]['level']) {
+                    // We've gone one level up, so the block we are processing is done.
                     break;
+                } else if ($arrayEnd !== null) {
+                    // Assignments inside arrays are not part of
+                    // the original block, so process this new block.
+                    $assign   = ($this->checkAlignment($phpcsFile, $assign, $arrayEnd) - 1);
+                    $arrayEnd = null;
+                    $lastCode = $assign;
+                    continue;
                 }
 
                 // Make sure it is not assigned inside a condition (eg. IF, FOR).
                 if (isset($tokens[$assign]['nested_parenthesis']) === true) {
+                    // If the parenthesis is on the same line as the assignment,
+                    // then it should be ignored as it is specifically being grouped.
+                    $parens    = $tokens[$assign]['nested_parenthesis'];
+                    $lastParen = array_pop($parens);
+                    if ($tokens[$lastParen]['line'] === $tokens[$assign]['line']) {
+                        break;
+                    }
+
                     foreach ($tokens[$assign]['nested_parenthesis'] as $start => $end) {
                         if (isset($tokens[$start]['parenthesis_owner']) === true) {
                             break(2);

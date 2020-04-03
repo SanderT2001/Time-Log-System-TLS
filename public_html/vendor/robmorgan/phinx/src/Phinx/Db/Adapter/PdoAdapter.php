@@ -33,6 +33,8 @@ use Phinx\Db\Action\AddColumn;
 use Phinx\Db\Action\AddForeignKey;
 use Phinx\Db\Action\AddIndex;
 use Phinx\Db\Action\ChangeColumn;
+use Phinx\Db\Action\ChangeComment;
+use Phinx\Db\Action\ChangePrimaryKey;
 use Phinx\Db\Action\DropForeignKey;
 use Phinx\Db\Action\DropIndex;
 use Phinx\Db\Action\DropTable;
@@ -68,7 +70,8 @@ abstract class PdoAdapter extends AbstractAdapter implements DirectActionInterfa
     protected function verboseLog($message)
     {
         if (!$this->isDryRunEnabled() &&
-             $this->getOutput()->getVerbosity() < OutputInterface::VERBOSITY_VERY_VERBOSE) {
+             $this->getOutput()->getVerbosity() < OutputInterface::VERBOSITY_VERY_VERBOSE
+        ) {
             return;
         }
 
@@ -156,6 +159,7 @@ abstract class PdoAdapter extends AbstractAdapter implements DirectActionInterfa
      */
     public function execute($sql)
     {
+        $sql = rtrim($sql, "; \t\n\r\0\x0B") . ';';
         $this->verboseLog($sql);
 
         if ($this->isDryRunEnabled()) {
@@ -260,6 +264,17 @@ abstract class PdoAdapter extends AbstractAdapter implements DirectActionInterfa
             return 'null';
         }
 
+        return $this->getConnection()->quote($value);
+    }
+
+    /**
+     * Quotes a database string.
+     *
+     * @param string $value  The string to quote
+     * @return string
+     */
+    protected function quoteString($value)
+    {
         return $this->getConnection()->quote($value);
     }
 
@@ -380,7 +395,7 @@ abstract class PdoAdapter extends AbstractAdapter implements DirectActionInterfa
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function toggleBreakpoint(MigrationInterface $migration)
     {
@@ -401,7 +416,7 @@ abstract class PdoAdapter extends AbstractAdapter implements DirectActionInterfa
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function resetAllBreakpoints()
     {
@@ -414,6 +429,47 @@ abstract class PdoAdapter extends AbstractAdapter implements DirectActionInterfa
                 $this->quoteColumnName('start_time')
             )
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setBreakpoint(MigrationInterface $migration)
+    {
+        return $this->markBreakpoint($migration, true);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function unsetBreakpoint(MigrationInterface $migration)
+    {
+        return $this->markBreakpoint($migration, false);
+    }
+
+    /**
+     * Mark a migration breakpoint.
+     *
+     * @param \Phinx\Migration\MigrationInterface $migration The migration target for the breakpoint
+     * @param bool $state The required state of the breakpoint
+     *
+     * @return \Phinx\Db\Adapter\AdapterInterface
+     */
+    protected function markBreakpoint(MigrationInterface $migration, $state)
+    {
+        $this->query(
+            sprintf(
+                'UPDATE %1$s SET %2$s = %3$s, %4$s = %4$s WHERE %5$s = \'%6$s\';',
+                $this->getSchemaTableName(),
+                $this->quoteColumnName('breakpoint'),
+                $this->castToBool($state),
+                $this->quoteColumnName('start_time'),
+                $this->quoteColumnName('version'),
+                $migration->getVersion()
+            )
+        );
+
+        return $this;
     }
 
     /**
@@ -441,11 +497,13 @@ abstract class PdoAdapter extends AbstractAdapter implements DirectActionInterfa
             'string',
             'char',
             'text',
+            'smallinteger',
             'integer',
             'biginteger',
             'bit',
             'float',
             'decimal',
+            'double',
             'datetime',
             'timestamp',
             'time',
@@ -522,7 +580,7 @@ abstract class PdoAdapter extends AbstractAdapter implements DirectActionInterfa
     public function addColumn(Table $table, Column $column)
     {
         $instructions = $this->getAddColumnInstructions($table, $column);
-        $this->executeAlterSteps($table, $instructions);
+        $this->executeAlterSteps($table->getName(), $instructions);
     }
 
     /**
@@ -733,6 +791,42 @@ abstract class PdoAdapter extends AbstractAdapter implements DirectActionInterfa
     /**
      * {@inheritdoc}
      */
+    public function changePrimaryKey(Table $table, $newColumns)
+    {
+        $instructions = $this->getChangePrimaryKeyInstructions($table, $newColumns);
+        $this->executeAlterSteps($table->getName(), $instructions);
+    }
+
+    /**
+     * Returns the instructions to change the primary key for the specified database table.
+     *
+     * @param Table $table Table
+     * @param string|array|null $newColumns Column name(s) to belong to the primary key, or null to drop the key
+     * @return AlterInstructions
+     */
+    abstract protected function getChangePrimaryKeyInstructions(Table $table, $newColumns);
+
+    /**
+     * {@inheritdoc}
+     */
+    public function changeComment(Table $table, $newComment)
+    {
+        $instructions = $this->getChangeCommentInstructions($table, $newComment);
+        $this->executeAlterSteps($table->getName(), $instructions);
+    }
+
+    /**
+     * Returns the instruction to change the comment for the specified database table.
+     *
+     * @param Table $table Table
+     * @param string|null $newComment New comment string, or null to drop the comment
+     * @return AlterInstructions
+     */
+    abstract protected function getChangeCommentInstructions(Table $table, $newComment);
+
+    /**
+     * {@inheritdoc}
+     */
     public function executeActions(Table $table, array $actions)
     {
         $instructions = new AlterInstructions();
@@ -812,6 +906,20 @@ abstract class PdoAdapter extends AbstractAdapter implements DirectActionInterfa
                     $instructions->merge($this->getRenameTableInstructions(
                         $table->getName(),
                         $action->getNewName()
+                    ));
+                    break;
+
+                case ($action instanceof ChangePrimaryKey):
+                    $instructions->merge($this->getChangePrimaryKeyInstructions(
+                        $table,
+                        $action->getNewColumns()
+                    ));
+                    break;
+
+                case ($action instanceof ChangeComment):
+                    $instructions->merge($this->getChangeCommentInstructions(
+                        $table,
+                        $action->getNewComment()
                     ));
                     break;
 

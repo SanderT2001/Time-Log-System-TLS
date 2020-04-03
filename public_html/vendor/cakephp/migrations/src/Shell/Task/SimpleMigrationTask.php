@@ -15,7 +15,7 @@ namespace Migrations\Shell\Task;
 
 use Bake\Shell\Task\SimpleBakeTask;
 use Cake\Console\ConsoleOptionParser;
-use Cake\Core\Plugin;
+use Cake\Core\Plugin as CorePlugin;
 use Cake\Utility\Inflector;
 use Phinx\Util\Util;
 
@@ -130,8 +130,8 @@ abstract class SimpleMigrationTask extends SimpleBakeTask
         $parser = new ConsoleOptionParser($name);
 
         $bakeThemes = [];
-        foreach (Plugin::loaded() as $plugin) {
-            $path = Plugin::classPath($plugin);
+        foreach (CorePlugin::loaded() as $plugin) {
+            $path = CorePlugin::classPath($plugin);
             if (is_dir($path . 'Template' . DS . 'Bake')) {
                 $bakeThemes[] = $plugin;
             }
@@ -142,22 +142,22 @@ abstract class SimpleMigrationTask extends SimpleBakeTask
         )
         ->addOption('plugin', [
             'short' => 'p',
-            'help' => 'Plugin to bake into.'
+            'help' => 'Plugin to bake into.',
         ])
         ->addOption('force', [
             'short' => 'f',
             'boolean' => true,
-            'help' => 'Force overwriting existing file if a migration already exists with the same name.'
+            'help' => 'Force overwriting existing file if a migration already exists with the same name.',
         ])
         ->addOption('connection', [
             'short' => 'c',
             'default' => 'default',
-            'help' => 'The datasource connection to get data from.'
+            'help' => 'The datasource connection to get data from.',
         ])
         ->addOption('theme', [
             'short' => 't',
             'help' => 'The theme to use when baking code.',
-            'choices' => $bakeThemes
+            'choices' => $bakeThemes,
         ]);
 
         return $parser;

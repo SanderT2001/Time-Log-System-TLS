@@ -236,7 +236,7 @@ abstract class AdapterWrapper implements AdapterInterface, WrapperInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function toggleBreakpoint(MigrationInterface $migration)
     {
@@ -246,11 +246,31 @@ abstract class AdapterWrapper implements AdapterInterface, WrapperInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function resetAllBreakpoints()
     {
         return $this->getAdapter()->resetAllBreakpoints();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setBreakpoint(MigrationInterface $migration)
+    {
+        $this->getAdapter()->setBreakpoint($migration);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function unsetBreakpoint(MigrationInterface $migration)
+    {
+        $this->getAdapter()->unsetBreakpoint($migration);
+
+        return $this;
     }
 
     /**
@@ -384,6 +404,14 @@ abstract class AdapterWrapper implements AdapterInterface, WrapperInterface
     /**
      * {@inheritdoc}
      */
+    public function hasPrimaryKey($tableName, $columns, $constraint = null)
+    {
+        return $this->getAdapter()->hasPrimaryKey($tableName, $columns, $constraint);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function hasForeignKey($tableName, $columns, $constraint = null)
     {
         return $this->getAdapter()->hasForeignKey($tableName, $columns, $constraint);
@@ -410,7 +438,7 @@ abstract class AdapterWrapper implements AdapterInterface, WrapperInterface
      */
     public function hasDatabase($name)
     {
-        $this->getAdapter()->hasDatabase($name);
+        return $this->getAdapter()->hasDatabase($name);
     }
 
     /**

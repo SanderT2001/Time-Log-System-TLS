@@ -31,7 +31,7 @@
                 'escape' => false,
                 'class' => 'btn btn-success w-100',
                 'id' => 'add-log-button',
-                'onclick' => 'addData("view");'
+                'onclick' => "addData('view')"
             ]); ?>
 
             <table class= "table table-bordred table-striped">

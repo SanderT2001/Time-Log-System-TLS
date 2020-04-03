@@ -235,6 +235,14 @@ class Config implements ConfigInterface, NamespaceAwareInterface
     /**
      * {@inheritdoc}
      */
+    public function getAliases()
+    {
+        return !empty($this->values['aliases']) ? $this->values['aliases'] : [];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getConfigFilePath()
     {
         return $this->configFilePath;
@@ -337,6 +345,20 @@ class Config implements ConfigInterface, NamespaceAwareInterface
         $versionOrder = $this->getVersionOrder();
 
         return $versionOrder == self::VERSION_ORDER_CREATION_TIME;
+    }
+
+    /**
+     * Get the bootstrap file path
+     *
+     * @return string|false
+     */
+    public function getBootstrapFile()
+    {
+        if (!isset($this->values['paths']['bootstrap'])) {
+            return false;
+        }
+
+        return $this->values['paths']['bootstrap'];
     }
 
     /**

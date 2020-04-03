@@ -32,8 +32,9 @@ use Phinx\Db\Action\AddColumn;
 use Phinx\Db\Action\AddForeignKey;
 use Phinx\Db\Action\AddIndex;
 use Phinx\Db\Action\ChangeColumn;
+use Phinx\Db\Action\ChangeComment;
+use Phinx\Db\Action\ChangePrimaryKey;
 use Phinx\Db\Action\CreateTable;
-use Phinx\Db\Action\DropColumn;
 use Phinx\Db\Action\DropForeignKey;
 use Phinx\Db\Action\DropIndex;
 use Phinx\Db\Action\DropTable;
@@ -147,6 +148,16 @@ class Table
     }
 
     /**
+     * Does the table have pending actions?
+     *
+     * @return bool
+     */
+    public function hasPendingActions()
+    {
+        return count($this->actions->getActions()) > 0 || count($this->data) > 0;
+    }
+
+    /**
      * Does the table exist?
      *
      * @return bool
@@ -182,6 +193,32 @@ class Table
     }
 
     /**
+     * Changes the primary key of the database table.
+     *
+     * @param string|array|null $columns Column name(s) to belong to the primary key, or null to drop the key
+     * @return $this
+     */
+    public function changePrimaryKey($columns)
+    {
+        $this->actions->addAction(new ChangePrimaryKey($this->table, $columns));
+
+        return $this;
+    }
+
+    /**
+     * Changes the comment of the database table.
+     *
+     * @param string|null $comment New comment string, or null to drop the comment
+     * @return $this
+     */
+    public function changeComment($comment)
+    {
+        $this->actions->addAction(new ChangeComment($this->table, $comment));
+
+        return $this;
+    }
+
+    /**
      * Gets an array of the table columns.
      *
      * @return \Phinx\Db\Table\Column[]
@@ -189,6 +226,24 @@ class Table
     public function getColumns()
     {
         return $this->getAdapter()->getColumns($this->getName());
+    }
+
+    /**
+     * Gets a table column if it exists.
+     *
+     * @param string $name Column name
+     * @return \Phinx\Db\Table\Column|null
+     */
+    public function getColumn($name)
+    {
+        $columns = array_filter(
+            $this->getColumns(),
+            function ($column) use ($name) {
+                return $column->getName() === $name;
+            }
+        );
+
+        return array_pop($columns);
     }
 
     /**
@@ -352,12 +407,12 @@ class Table
     /**
      * Removes the given index from a table.
      *
-     * @param array $columns Columns
+     * @param string|array $columns Columns
      * @return \Phinx\Db\Table
      */
-    public function removeIndex(array $columns)
+    public function removeIndex($columns)
     {
-        $action = DropIndex::build($this->table, $columns);
+        $action = DropIndex::build($this->table, is_string($columns) ? [$columns] : $columns);
         $this->actions->addAction($action);
 
         return $this;
@@ -533,14 +588,19 @@ class Table
     public function insert($data)
     {
         // handle array of array situations
-        if (isset($data[0]) && is_array($data[0])) {
+        $keys = array_keys($data);
+        $firstKey = array_shift($keys);
+        if ($firstKey !== null && is_array($data[$firstKey])) {
             foreach ($data as $row) {
                 $this->data[] = $row;
             }
 
             return $this;
         }
-        $this->data[] = $data;
+
+        if (count($data) > 0) {
+            $this->data[] = $data;
+        }
 
         return $this;
     }

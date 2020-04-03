@@ -34,6 +34,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Migrate extends AbstractCommand
 {
+    protected static $defaultName = 'migrate';
+
     /**
      * {@inheritdoc}
      */
@@ -43,8 +45,7 @@ class Migrate extends AbstractCommand
 
         $this->addOption('--environment', '-e', InputOption::VALUE_REQUIRED, 'The target environment');
 
-        $this->setName($this->getName() ?: 'migrate')
-            ->setDescription('Migrate the database')
+        $this->setDescription('Migrate the database')
             ->addOption('--target', '-t', InputOption::VALUE_REQUIRED, 'The version number to migrate to')
             ->addOption('--date', '-d', InputOption::VALUE_REQUIRED, 'The date to migrate to')
             ->addOption('--dry-run', '-x', InputOption::VALUE_NONE, 'Dump query to standard output instead of executing it')
@@ -85,6 +86,12 @@ EOT
             $output->writeln('<info>using environment</info> ' . $environment);
         }
 
+        if (!$this->getConfig()->hasEnvironment($environment)) {
+            $output->writeln(sprintf('<error>The environment "%s" does not exist</error>', $environment));
+
+            return 1;
+        }
+
         $envOptions = $this->getConfig()->getEnvironment($environment);
         if (isset($envOptions['adapter'])) {
             $output->writeln('<info>using adapter</info> ' . $envOptions['adapter']);
@@ -113,14 +120,24 @@ EOT
             $output->writeln('<comment>warning</comment> performing fake migrations');
         }
 
-        // run the migrations
-        $start = microtime(true);
-        if ($date !== null) {
-            $this->getManager()->migrateToDateTime($environment, new \DateTime($date), $fake);
-        } else {
-            $this->getManager()->migrate($environment, $version, $fake);
+        try {
+            // run the migrations
+            $start = microtime(true);
+            if ($date !== null) {
+                $this->getManager()->migrateToDateTime($environment, new \DateTime($date), $fake);
+            } else {
+                $this->getManager()->migrate($environment, $version, $fake);
+            }
+            $end = microtime(true);
+        } catch (\Exception $e) {
+            $output->writeln('<error>' . $e->__toString() . '</error>');
+
+            return 1;
+        } catch (\Throwable $e) {
+            $output->writeln('<error>' . $e->__toString() . '</error>');
+
+            return 1;
         }
-        $end = microtime(true);
 
         $output->writeln('');
         $output->writeln('<comment>All Done. Took ' . sprintf('%.4fs', $end - $start) . '</comment>');
