@@ -2,6 +2,15 @@
     $this->assign('page', 'Export Settings');
 ?>
 
+<style>
+    .form-control {
+        margin-bottom: 10px;
+    }
+
+    .w-100 {
+        width: 100%;
+    }
+</style>
 
 <div class= "container-full">
     <div class= "row">
@@ -30,7 +39,7 @@
                     <?= $this->Form->control('End date', array('class' => 'form-control date',  'id' => 'export-field-time-type-end-date')); ?>
                 </div>
 
-                <a href= "#" onclick= "exportData('timeType')" id= "createExportLink" class="btn btn-success">Create export</a>
+                <a href= "#" onclick= "exportData('timeType')" id= "createExportLink" class="btn btn-success w-100">Create export</a>
             <?= $this->Form->end() ?>
 
         </div>
