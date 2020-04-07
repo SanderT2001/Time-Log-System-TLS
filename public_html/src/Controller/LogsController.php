@@ -30,7 +30,7 @@ class LogsController extends AppController
         ];
         if (!$all) {
             $conditions = array_merge([
-                'YEAR(Logs.log_date)' => date('Y')
+                'Logs.log_date' => date('Y-m-d')
             ], $conditions);
         }
         if (!empty($projectId)) {
