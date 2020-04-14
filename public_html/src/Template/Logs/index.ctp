@@ -142,8 +142,8 @@ foreach ($projectsAsObject as $key => $project) {
 
                 <div class= "modal-footer">
                     <button type= "button" class= "btn btn-secondary" data-dismiss= "modal">Close</button>
-                    <button type= "button" class= "btn btn-danger" id= "delete-data-button" onclick= "deleteData();">Delete data</button>
-                    <button type= "button" class= "btn btn-success" id= "edit-data-button" onclick= "editData();">Edit data</button>
+                    <button type= "button" class= "btn btn-danger" id= "delete-data-button" onclick= "deleteData();">Delete</button>
+                    <button type= "button" class= "btn btn-success" id= "edit-data-button" onclick= "editData();">Edit</button>
                 </div>	
             <?= $this->Form->end() ?>
         </div>	
